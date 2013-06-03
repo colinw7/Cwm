@@ -1,0 +1,121 @@
+CC = g++
+AR = ar
+RM = rm
+
+CDEBUG = -g -DSHAPE -DCWM_USE_XT
+LDEBUG = -g
+
+INC_DIR = ../include
+OBJ_DIR = ../obj
+LIB_DIR = ../lib
+BIN_DIR = ../bin
+
+all: $(BIN_DIR)/Cwm
+
+SRC = \
+CwmCmdIcon.cpp \
+CwmColormapMgr.cpp \
+CwmColorMgr.cpp \
+CwmConfig.cpp \
+Cwm.cpp \
+CwmCursorMgr.cpp \
+CwmCustomIcon.cpp \
+CwmDebug.cpp \
+CwmDecorationClose.cpp \
+CwmDecorationContainer.cpp \
+CwmDecoration.cpp \
+CwmDecorationESide.cpp \
+CwmDecorationMaximize.cpp \
+CwmDecorationMenu.cpp \
+CwmDecorationMinimize.cpp \
+CwmDecorationNECorner.cpp \
+CwmDecorationNSide.cpp \
+CwmDecorationNWCorner.cpp \
+CwmDecorationSECorner.cpp \
+CwmDecorationSSide.cpp \
+CwmDecorationSWCorner.cpp \
+CwmDecorationTitle.cpp \
+CwmDecorationWindow.cpp \
+CwmDecorationWSide.cpp \
+CwmDeskIcon.cpp \
+CwmDeskMgr.cpp \
+CwmEventMgr.cpp \
+CwmFocusMgr.cpp \
+CwmFontMgr.cpp \
+CwmFrameWindow.cpp \
+CwmFunctionDef.cpp \
+CwmGnome.cpp \
+CwmGrab.cpp \
+CwmGraphics.cpp \
+CwmGrid.cpp \
+CwmHints.cpp \
+CwmIdle.cpp \
+CwmImageMgr.cpp \
+CwmInfo.cpp \
+CwmLog.cpp \
+CwmMachine.cpp \
+CwmMailMgr.cpp \
+CwmMain.cpp \
+CwmMask.cpp \
+CwmMenu.cpp \
+CwmMessage.cpp \
+CwmMoveFeedback.cpp \
+CwmMoveWindow.cpp \
+CwmPaste.cpp \
+CwmResizeFeedback.cpp \
+CwmResizeWindow.cpp \
+CwmResourceData.cpp \
+CwmRoot.cpp \
+CwmScreen.cpp \
+CwmScreenMenu.cpp \
+CwmTabWindow.cpp \
+CwmToolBarClock.cpp \
+CwmToolBarCmd.cpp \
+CwmToolBar.cpp \
+CwmToolBarIconArea.cpp \
+CwmToolBarIconDef.cpp \
+CwmToolBarMenu.cpp \
+CwmUnixCmd.cpp \
+CwmUserWindow.cpp \
+CwmWindow.cpp \
+CwmWindowImageList.cpp \
+CwmWindowMenu.cpp \
+CwmWindowStack.cpp \
+CwmWMWindow.cpp \
+CwmXEvent.cpp \
+CwmXPixmap.cpp \
+CConfig.cpp \
+CConfigFile.cpp \
+CGradient.cpp \
+CImageDraw.cpp \
+CImageGC.cpp \
+CTimer.cpp \
+CWindow.cpp \
+CXrtFont.cpp \
+CFont.cpp \
+CFontMgr.cpp \
+CFmtString.cpp \
+CRGBName.cpp \
+
+OBJS = $(patsubst %.cpp,$(OBJ_DIR)/%.o,$(SRC))
+
+LIBS = -lCXLib -lCImageLib -lCArgs -lCFile -lCOS -lCGlob -lCStrUtil -lXt -lX11 -lpng
+
+CPPFLAGS = -I$(INC_DIR) -I. -DSHAPE
+
+LFLAGS = -L$(LIB_DIR)
+
+clean:
+	$(RM) -f $(OBJ_DIR)/*.o
+	$(RM) -f $(BIN_DIR)/Cwm
+
+$(OBJS): $(OBJ_DIR)/%.o: %.cpp
+	$(CC) $(CDEBUG) -c $< -o $(OBJ_DIR)/$*.o $(CPPFLAGS)
+
+.SUFFIXES: .cpp
+
+$(OBJ_DIR)/main.o: main.cpp
+	$(CC) $(CDEBUG) -o $(OBJ_DIR)/main.o -c main.cpp -I$(INC_DIR) -I.
+
+$(BIN_DIR)/Cwm: $(OBJS)
+	$(CC) $(LDEBUG) -o $(BIN_DIR)/Cwm $(OBJS) $(LFLAGS) $(LIBS)

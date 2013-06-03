@@ -1,0 +1,1 @@
+../../CImageLib/include/CImagePtr.h
