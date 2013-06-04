@@ -1,1 +1,0 @@
-../../CImageLib/include/CImageAnim.h

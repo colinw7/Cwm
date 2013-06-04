@@ -84,24 +84,31 @@ CwmWindowStack.cpp \
 CwmWMWindow.cpp \
 CwmXEvent.cpp \
 CwmXPixmap.cpp \
-CConfig.cpp \
-CConfigFile.cpp \
 CGradient.cpp \
 CImageDraw.cpp \
 CImageGC.cpp \
-CTimer.cpp \
-CWindow.cpp \
-CXrtFont.cpp \
-CFont.cpp \
-CFontMgr.cpp \
-CFmtString.cpp \
 CRGBName.cpp \
 
 OBJS = $(patsubst %.cpp,$(OBJ_DIR)/%.o,$(SRC))
 
-LIBS = -lCXLib -lCImageLib -lCArgs -lCFile -lCOS -lCGlob -lCStrUtil -lXt -lX11 -lpng
+LIBS = \
+-lCXLib -lCTimer -lCImageLib -lCArgs -lCConfig -lCFile -lCOS \
+-lCGlob -lCStrUtil -lXt -lX11 -lpng
 
-CPPFLAGS = -I$(INC_DIR) -I. -DSHAPE
+CPPFLAGS = \
+-DSHAPE \
+-I$(INC_DIR) \
+-I../../CXLib/include \
+-I../../CImageLib/include \
+-I../../COS/include \
+-I../../CArgs/include \
+-I../../CConfig/include \
+-I../../CFile/include \
+-I../../CMath/include \
+-I../../CGlob/include \
+-I../../CStrUtil/include \
+-I../../CUtil/include \
+-I. \
 
 LFLAGS = -L$(LIB_DIR)
 
