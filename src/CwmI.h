@@ -3,6 +3,7 @@
 #include <CXNamedEvent.h>
 #include <CImageLib.h>
 #include <CAlignType.h>
+#include <CFuncs.h>
 #include <CGlob.h>
 #include <CFile.h>
 #include <CStrUtil.h>
@@ -24,21 +25,6 @@ using std::string;
 using std::map;
 using std::vector;
 using std::list;
-
-struct CDeletePointer {
-  template<class T>
-  void operator()(const T *p) const {
-    delete p;
-  }
-};
-
-template<class T>
-class CDeleteMapSecond {
- public:
-  void operator()(typename T::value_type &p) const {
-    delete p.second;
-  }
-};
 
 #include <CwmLib.h>
 

@@ -3,6 +3,7 @@
 #include <CXNamedEvent.h>
 #include <CImageLib.h>
 #include <CAlignType.h>
+#include <CFuncs.h>
 #include <CStrUtil.h>
 #include <CFmtString.h>
 #include <CGlob.h>
@@ -21,13 +22,6 @@ using std::string;
 using std::map;
 using std::vector;
 using std::list;
-
-struct CDeletePointer {
-  template<class T>
-  void operator()(const T *p) const {
-    delete p;
-  }
-};
 
 #include "CwmLib.h"
 #include "CwmToolBar.h"
