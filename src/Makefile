@@ -93,7 +93,7 @@ OBJS = $(patsubst %.cpp,$(OBJ_DIR)/%.o,$(SRC))
 
 LIBS = \
 -lCXLib -lCTimer -lCImageLib -lCArgs -lCConfig -lCFile -lCOS \
--lCGlob -lCStrUtil -lXt -lX11 -lpng
+-lCGlob -lCStrUtil -lXt -lX11 -lpng -ljpeg
 
 CPPFLAGS = \
 -DSHAPE \
