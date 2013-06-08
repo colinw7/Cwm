@@ -110,7 +110,18 @@ CPPFLAGS = \
 -I../../CUtil/include \
 -I. \
 
-LFLAGS = -L$(LIB_DIR)
+LFLAGS = \
+-L$(LIB_DIR) \
+-L../../CXLib/lib \
+-L../../CImageLib/lib \
+-L../../COS/lib \
+-L../../CArgs/lib \
+-L../../CConfig/lib \
+-L../../CTimer/lib \
+-L../../CFile/lib \
+-L../../CMath/lib \
+-L../../CGlob/lib \
+-L../../CStrUtil/lib \
 
 clean:
 	$(RM) -f $(OBJ_DIR)/*.o
