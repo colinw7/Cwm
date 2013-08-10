@@ -92,7 +92,7 @@ CRGBName.cpp \
 OBJS = $(patsubst %.cpp,$(OBJ_DIR)/%.o,$(SRC))
 
 LIBS = \
--lCXLib -lCTimer -lCImageLib -lCArgs -lCConfig -lCFile -lCOS \
+-lCXLib -lCTimer -lCImageLib -lCFont -lCArgs -lCConfig -lCFile -lCOS \
 -lCGlob -lCStrUtil -lXt -lX11 -lpng -ljpeg
 
 CPPFLAGS = \
@@ -100,6 +100,7 @@ CPPFLAGS = \
 -I$(INC_DIR) \
 -I../../CXLib/include \
 -I../../CImageLib/include \
+-I../../CFont/include \
 -I../../COS/include \
 -I../../CArgs/include \
 -I../../CConfig/include \
@@ -114,6 +115,7 @@ LFLAGS = \
 -L$(LIB_DIR) \
 -L../../CXLib/lib \
 -L../../CImageLib/lib \
+-L../../CFont/lib \
 -L../../COS/lib \
 -L../../CArgs/lib \
 -L../../CConfig/lib \
