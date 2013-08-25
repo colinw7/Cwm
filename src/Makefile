@@ -87,13 +87,8 @@ CwmXPixmap.cpp \
 CGradient.cpp \
 CImageDraw.cpp \
 CImageGC.cpp \
-CRGBName.cpp \
 
 OBJS = $(patsubst %.cpp,$(OBJ_DIR)/%.o,$(SRC))
-
-LIBS = \
--lCXLib -lCTimer -lCImageLib -lCFont -lCArgs -lCConfig -lCFile -lCOS \
--lCGlob -lCStrUtil -lXt -lX11 -lpng -ljpeg
 
 CPPFLAGS = \
 -DSHAPE \
@@ -108,6 +103,8 @@ CPPFLAGS = \
 -I../../CMath/include \
 -I../../CGlob/include \
 -I../../CStrUtil/include \
+-I../../CRGBName/include \
+-I../../CTimer/include \
 -I../../CUtil/include \
 -I. \
 
@@ -123,7 +120,13 @@ LFLAGS = \
 -L../../CFile/lib \
 -L../../CMath/lib \
 -L../../CGlob/lib \
+-L../../CRGBName/lib \
 -L../../CStrUtil/lib \
+
+LIBS = \
+-lCXLib -lCTimer -lCImageLib -lCFont -lCArgs -lCConfig -lCFile -lCOS \
+-lCGlob -lCStrUtil -lCRGBName \
+-lXt -lX11 -lpng -ljpeg
 
 clean:
 	$(RM) -f $(OBJ_DIR)/*.o
