@@ -122,9 +122,10 @@ LFLAGS = \
 -L../../CGlob/lib \
 -L../../CRGBName/lib \
 -L../../CStrUtil/lib \
+-L../../CUtil/lib \
 
 LIBS = \
--lCXLib -lCTimer -lCImageLib -lCFont -lCArgs -lCConfig -lCFile -lCOS \
+-lCXLib -lCTimer -lCImageLib -lCFont -lCArgs -lCConfig -lCFile -lCUtil -lCOS \
 -lCGlob -lCStrUtil -lCRGBName \
 -lXt -lX11 -lpng -ljpeg
 
