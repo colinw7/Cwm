@@ -539,7 +539,7 @@ copyArea(CwmWindow *src, CwmWindow *dest, int src_x, int src_y,
          int src_width, int src_height, int desy_x, int desy_y)
 {
   CwmMachineInst->copyArea(src->getXWin(), dest->getXWin(), gc_,
-                            src_x, src_y, src_width, src_height, desy_x, desy_y);
+                           src_x, src_y, src_width, src_height, desy_x, desy_y);
 }
 
 void
@@ -549,11 +549,11 @@ copyArea(CwmXPixmap *src, CwmWindow *dest, int src_x, int src_y,
 {
   if (src->getDepth() == screen_.getDepth())
     CwmMachineInst->copyArea(src->getXPixmap(), dest->getXWin(), gc_,
-                              src_x, src_y, src_width, src_height, desy_x, desy_y);
+                             src_x, src_y, src_width, src_height, desy_x, desy_y);
   else
     CwmMachineInst->copyPlanes(src->getXPixmap(), src->getDepth(),
-                                dest->getXWin(), screen_.getDepth(),
-                                gc_, src_x, src_y, src_width, src_height, desy_x, desy_y);
+                               dest->getXWin(), screen_.getDepth(),
+                               gc_, src_x, src_y, src_width, src_height, desy_x, desy_y);
 }
 
 void
@@ -563,13 +563,11 @@ copyArea(CwmWindow *src, CwmXPixmap *dest, int src_x, int src_y,
 {
   if (dest->getDepth() == screen_.getDepth())
     CwmMachineInst->copyArea(src->getXWin(), dest->getXPixmap(), gc_,
-                              src_x, src_y, src_width, src_height,
-                              desy_x, desy_y);
+                             src_x, src_y, src_width, src_height, desy_x, desy_y);
   else
     CwmMachineInst->copyPlanes(src->getXWin(), screen_.getDepth(),
-                                dest->getXPixmap(), dest->getDepth(),
-                                gc_, src_x, src_y, src_width, src_height,
-                                desy_x, desy_y);
+                               dest->getXPixmap(), dest->getDepth(),
+                               gc_, src_x, src_y, src_width, src_height, desy_x, desy_y);
 }
 
 void
@@ -579,13 +577,11 @@ copyArea(CwmXPixmap *src, CwmXPixmap *dest, int src_x, int src_y,
 {
   if (dest->getDepth() == src->getDepth())
     CwmMachineInst->copyArea(src->getXPixmap(), dest->getXPixmap(), gc_,
-                              src_x, src_y, src_width, src_height,
-                              desy_x, desy_y);
+                             src_x, src_y, src_width, src_height, desy_x, desy_y);
   else
     CwmMachineInst->copyPlanes(src->getXPixmap(), src->getDepth(),
-                                dest->getXPixmap(), dest->getDepth(),
-                                gc_, src_x, src_y, src_width, src_height,
-                                desy_x, desy_y);
+                               dest->getXPixmap(), dest->getDepth(),
+                               gc_, src_x, src_y, src_width, src_height, desy_x, desy_y);
 }
 
 void
