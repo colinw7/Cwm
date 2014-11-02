@@ -1,4 +1,4 @@
-#include "CwmI.h"
+#include <CwmI.h>
 
 CwmResizeFeedback::
 CwmResizeFeedback(CwmScreen &screen1) :
@@ -24,7 +24,7 @@ CwmResizeFeedback(CwmScreen &screen1) :
 
   int width, height;
 
-  string max_str = "8888x8888";
+  std::string max_str = "8888x8888";
 
   graphics->getTextSize(max_str, &width, &height);
 
@@ -118,7 +118,7 @@ update(CwmWMWindow *size_window, int dwidth, int dheight)
 
   CwmUserWindow *user = size_window->getUser();
 
-  if (user == NULL)
+  if (! user)
     return;
 
   int width1  = user->getWidth()  + dwidth  - size_window->getBaseWidthHint();
@@ -127,7 +127,7 @@ update(CwmWMWindow *size_window, int dwidth, int dheight)
   width1  = (width1  + size_window->getWidthIncHint() /2)/size_window->getWidthIncHint() ;
   height1 = (height1 + size_window->getHeightIncHint()/2)/size_window->getHeightIncHint();
 
-  string size_string = CStrUtil::toString(width1 ) + "x" + CStrUtil::toString(height1);
+  std::string size_string = CStrUtil::toString(width1 ) + "x" + CStrUtil::toString(height1);
 
   graphics->drawTextCentered(xwindow, 4, 4, xwindow->getWidth () - 8,
                              xwindow->getHeight() - 8, size_string);

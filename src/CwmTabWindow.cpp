@@ -1,8 +1,8 @@
-#include "CwmI.h"
+#include <CwmI.h>
 
 CwmTabWindow::
 CwmTabWindow(CwmScreen &screen) :
- screen_(screen), xwindow_(NULL), graphics_(NULL)
+ screen_(screen), xwindow_(0), graphics_(0)
 {
   init();
 }
@@ -16,7 +16,7 @@ CwmTabWindow::
 
 void
 CwmTabWindow::
-show(const string &str)
+show(const std::string &str)
 {
   int x = screen_.getWidth ()/2;
   int y = screen_.getHeight()/2;
@@ -31,7 +31,7 @@ show(const string &str)
   x -= width /2;
   y -= height/2;
 
-  if (xwindow_ != NULL  && str_    == str    &&
+  if (xwindow_ != 0  && str_    == str    &&
       x_       == x     && y_      == y      &&
       width_   == width && height_ == height)
     return;
@@ -44,22 +44,16 @@ show(const string &str)
   width_  = width;
   height_ = height;
 
-  xwindow_ =
-    new CwmWindow(screen_, screen_.getRoot(),
-                  x_, y_, width_, height_,
-                  0, CWM_CURSOR_TITLE);
+  xwindow_ = new CwmWindow(screen_, screen_.getRoot(), x_, y_, width_, height_,
+                           0, CWM_CURSOR_TITLE);
 
   xwindow_->setBackground(graphics_);
 
   xwindow_->mapRaised();
 
-  graphics_->drawTextCentered(xwindow_,
-                              2, 2, width_ - 4, height_ - 4,
-                              str_);
+  graphics_->drawTextCentered(xwindow_, 2, 2, width_ - 4, height_ - 4, str_);
 
-  graphics_->drawButtonOut(xwindow_,
-                           0, 0, width_, height_,
-                           1);
+  graphics_->drawButtonOut(xwindow_, 0, 0, width_, height_, 1);
 }
 
 void
@@ -68,7 +62,7 @@ hide()
 {
   delete xwindow_;
 
-  xwindow_ = NULL;
+  xwindow_ = 0;
 }
 
 void

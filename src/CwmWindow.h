@@ -2,12 +2,6 @@
 #define CWM_WINDOW_H
 
 class CwmXWindowCallback {
- private:
-  CwmWindow          *xwindow_;
-  CwmXWindowCallType  type_;
-  CwmXWindowCallProc  proc_;
-  CwmData             data_;
-
  public:
   CwmXWindowCallback(CwmWindow *xwindow, CwmXWindowCallType type,
                      CwmXWindowCallProc proc, CwmData data);
@@ -16,22 +10,15 @@ class CwmXWindowCallback {
   void invokeIfType(CwmXWindowCallType type, CwmData detail);
   void invoke(CwmData detail);
   bool match(CwmXWindowCallType type, CwmXWindowCallProc proc, CwmData data);
+
+ private:
+  CwmWindow          *xwindow_;
+  CwmXWindowCallType  type_;
+  CwmXWindowCallProc  proc_;
+  CwmData             data_;
 };
 
 class CwmWindow {
- private:
-  typedef list<CwmXWindowCallback *> XWindowCallbackList;
-
-  CwmScreen           &screen_;
-  Window               xwin_;
-  int                  x_;
-  int                  y_;
-  int                  width_;
-  int                  height_;
-  bool                 mapped_;
-  bool                 owner_;
-  XWindowCallbackList  callbacks_;
-
  public:
   CwmWindow(CwmScreen &screen, CwmWindow *parent, int x, int y,
              int width, int height, uint event_mask, CwmCursorType cursor);
@@ -132,6 +119,19 @@ class CwmWindow {
  private:
   void create(CwmScreen &screen, Window parent,
               uint event_mask, CwmCursorType cursor);
+
+ private:
+  typedef std::list<CwmXWindowCallback *> XWindowCallbackList;
+
+  CwmScreen           &screen_;
+  Window               xwin_;
+  int                  x_;
+  int                  y_;
+  int                  width_;
+  int                  height_;
+  bool                 mapped_;
+  bool                 owner_;
+  XWindowCallbackList  callbacks_;
 };
 
 #endif

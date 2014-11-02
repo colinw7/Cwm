@@ -1,12 +1,4 @@
 class CwmWindowChild {
- protected:
-  CwmDecoration *decoration_;
-  CwmWMWindow   *window_;
-  CwmWindow     *xwindow_;
-  CwmGraphics   *graphics_;
-  bool           selected_;
-  std::string    info_string_;
-
  public:
   CwmWindowChild(CwmDecoration *decoration, CwmWMWindow *window,
                  uint event_mask, CwmCursorType cursor);
@@ -53,4 +45,12 @@ class CwmWindowChild {
   virtual void detail() = 0;
 
   static void idleProc(CwmWindow *xwindow, CwmData data, CwmData detail);
+
+ protected:
+  CwmDecoration *decoration_;
+  CwmWMWindow   *window_;
+  CwmWindow     *xwindow_;
+  CwmGraphics   *graphics_;
+  bool           selected_;
+  std::string    info_string_;
 };

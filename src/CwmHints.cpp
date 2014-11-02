@@ -1,41 +1,41 @@
-#include "CwmI.h"
+#include <CwmI.h>
 
 class CwmCustomHintValue {
- private:
-  string  name_;
-  string  type_;
-  CwmData value_;
-
  public:
-  CwmCustomHintValue(const string &name, const string &type, CwmData value);
+  CwmCustomHintValue(const std::string &name, const std::string &type, CwmData value);
  ~CwmCustomHintValue();
 
-  bool isType(const string &type);
+  bool isType(const std::string &type);
 
   CwmData getValue() const { return value_; }
 
-  bool isName(const string &name);
+  bool isName(const std::string &name);
+
+ private:
+  std::string name_;
+  std::string type_;
+  CwmData     value_;
 };
 
 class CwmCustomHint {
- private:
-  typedef vector<CwmCustomHintValue *> CustomHintValueList;
-
-  string               pattern_;
-  CGlob               *compile_;
-  CustomHintValueList  values_;
-
  public:
-  CwmCustomHint(const string &pattern);
+  CwmCustomHint(const std::string &pattern);
  ~CwmCustomHint();
 
-  void addValue(const string &name, const char *type, CwmData value);
+  void addValue(const std::string &name, const char *type, CwmData value);
 
-  bool compare(const string &name);
+  bool compare(const std::string &name);
 
-  bool isPattern(const string &pattern);
+  bool isPattern(const std::string &pattern);
 
-  CwmCustomHintValue *lookup(const string &name);
+  CwmCustomHintValue *lookup(const std::string &name);
+
+ private:
+  typedef std::vector<CwmCustomHintValue *> CustomHintValueList;
+
+  std::string          pattern_;
+  CGlob               *compile_;
+  CustomHintValueList  values_;
 };
 
 CwmHints::
@@ -78,7 +78,7 @@ CwmHints(CwmWMWindow *window) :
 
   client_machine_ = "";
 
-  cmap_windows_     = NULL;
+  cmap_windows_     = 0;
   num_cmap_windows_ = 0;
 
   take_focus_    = false;
@@ -292,7 +292,7 @@ readWMHints()
 
   CwmMachineInst->getWMHints(user_xwin_, &wm_hints);
 
-  if (wm_hints == NULL)
+  if (! wm_hints)
     return;
 
   if (wm_hints->flags & InputHint)
@@ -341,13 +341,13 @@ readClassHint()
   res_name_  = "";
   res_class_ = "";
 
-  if (res_name != NULL)
+  if (res_name != 0)
     res_name_ = res_name;
 
   if (res_name_ == "")
     res_name_ = name_;
 
-  if (res_class != NULL)
+  if (res_class != 0)
     res_class_ = res_class;
 
   if (res_class_ == "" && res_name_ != "") {
@@ -371,19 +371,17 @@ readSessionHints()
   CwmMachineInst->getWMCommand(user_xwin_, &argc, &argv);
 
   for (int i = 0; i < argc; i++)
-    command_argv_.push_back(string(argv[i]));
+    command_argv_.push_back(std::string(argv[i]));
 }
 
 void
 CwmHints::
 readWMCMapWindows()
 {
-  if (cmap_windows_ != NULL)
+  if (cmap_windows_ != 0)
     XFree((char *) cmap_windows_);
 
-  CwmMachineInst->getWMColormapWindows(user_xwin_,
-                                        &cmap_windows_,
-                                        &num_cmap_windows_);
+  CwmMachineInst->getWMColormapWindows(user_xwin_, &cmap_windows_, &num_cmap_windows_);
 }
 
 void
@@ -394,7 +392,7 @@ readWMProtocols()
   save_yourself_ = false;
   delete_window_ = false;
 
-  const CXAtom **protocols     = NULL;
+  const CXAtom **protocols     = 0;
   int            num_protocols = 0;
 
   CwmMachineInst->getWMProtocols(user_xwin_, &protocols, &num_protocols);
@@ -410,7 +408,7 @@ readWMProtocols()
       delete_window_ = true;
   }
 
-  if (protocols != NULL)
+  if (protocols != 0)
     delete [] protocols;
 }
 
@@ -481,8 +479,7 @@ print()
   CwmMachineInst->logf("client_machine   = %s\n", client_machine_.c_str());
 
   for (int i = 0; command_argv_.size(); i++)
-    CwmMachineInst->logf("command_argv[%d] = %s\n",
-                         i, command_argv_[i].c_str());
+    CwmMachineInst->logf("command_argv[%d] = %s\n", i, command_argv_[i].c_str());
 
   CwmMachineInst->logf("num_cmap_windows = %d\n", num_cmap_windows_);
   CwmMachineInst->logf("take_focus       = %d\n", take_focus_);
@@ -500,7 +497,7 @@ getInstance()
 {
   static CwmCustomHintMgr *instance;
 
-  if (instance == NULL)
+  if (! instance)
     instance = new CwmCustomHintMgr();
 
   return instance;
@@ -519,7 +516,7 @@ CwmCustomHintMgr::
 
 void
 CwmCustomHintMgr::
-addCustomHintValue(const string &pattern, const string &name,
+addCustomHintValue(const std::string &pattern, const std::string &name,
                    const char *type, CwmData value)
 {
   CwmCustomHint *custom_hint = getCustomHint(pattern);
@@ -529,7 +526,7 @@ addCustomHintValue(const string &pattern, const string &name,
 
 bool
 CwmCustomHintMgr::
-getCustomHintValue(const string &window, const string &name, CwmData value)
+getCustomHintValue(const std::string &window, const std::string &name, CwmData value)
 {
   if (window == "")
     return false;
@@ -548,7 +545,7 @@ getCustomHintValue(const string &window, const string &name, CwmData value)
 
   CwmCustomHintValue *custom_value = custom_hint->lookup(name);
 
-  if (custom_value == NULL)
+  if (! custom_value)
     return false;
 
   if (custom_value->isType(CwmTint)) {
@@ -564,7 +561,7 @@ getCustomHintValue(const string &window, const string &name, CwmData value)
 
 CwmCustomHint *
 CwmCustomHintMgr::
-getCustomHint(const string &pattern)
+getCustomHint(const std::string &pattern)
 {
   CustomHintList::iterator phint1 = custom_hints_.begin();
   CustomHintList::iterator phint2 = custom_hints_.end  ();
@@ -580,7 +577,7 @@ getCustomHint(const string &pattern)
 
 CwmCustomHint *
 CwmCustomHintMgr::
-addCustomHint(const string &pattern)
+addCustomHint(const std::string &pattern)
 {
   CwmCustomHint *custom_hint = new CwmCustomHint(pattern);
 
@@ -590,7 +587,7 @@ addCustomHint(const string &pattern)
 }
 
 CwmCustomHintValue::
-CwmCustomHintValue(const string &name, const string &type, CwmData value) :
+CwmCustomHintValue(const std::string &name, const std::string &type, CwmData value) :
  name_(name), type_(type), value_(value)
 {
 }
@@ -602,20 +599,20 @@ CwmCustomHintValue::
 
 bool
 CwmCustomHintValue::
-isType(const string &type)
+isType(const std::string &type)
 {
   return (strcmp(type_.c_str(), type.c_str()) == 0);
 }
 
 bool
 CwmCustomHintValue::
-isName(const string &name)
+isName(const std::string &name)
 {
   return (name == name_);
 }
 
 CwmCustomHint::
-CwmCustomHint(const string &pattern) :
+CwmCustomHint(const std::string &pattern) :
  pattern_(pattern)
 {
   compile_ = new CGlob(pattern);
@@ -631,7 +628,7 @@ CwmCustomHint::
 
 void
 CwmCustomHint::
-addValue(const string &name, const char *type, CwmData value)
+addValue(const std::string &name, const char *type, CwmData value)
 {
   CwmCustomHintValue *custom_value = new CwmCustomHintValue(name, type, value);
 
@@ -640,14 +637,14 @@ addValue(const string &name, const char *type, CwmData value)
 
 bool
 CwmCustomHint::
-compare(const string &name)
+compare(const std::string &name)
 {
   return compile_->compare(name);
 }
 
 CwmCustomHintValue *
 CwmCustomHint::
-lookup(const string &name)
+lookup(const std::string &name)
 {
   CustomHintValueList::const_iterator pvalue1 = values_.begin();
   CustomHintValueList::const_iterator pvalue2 = values_.end  ();
@@ -656,12 +653,12 @@ lookup(const string &name)
     if ((*pvalue1)->isName(name))
       return *pvalue1;
 
-  return NULL;
+  return 0;
 }
 
 bool
 CwmCustomHint::
-isPattern(const string &pattern)
+isPattern(const std::string &pattern)
 {
   return (pattern == pattern_);
 }

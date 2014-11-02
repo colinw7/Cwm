@@ -1,5 +1,5 @@
-#include "CwmDecorationI.h"
-#include "CGradient.h"
+#include <CwmDecorationI.h>
+#include <CGradient.h>
 
 static const uint event_mask =
   ButtonPressMask | ButtonReleaseMask |
@@ -9,8 +9,8 @@ static const uint event_mask =
 CwmTitleChild::
 CwmTitleChild(CwmDecoration *decoration, CwmWMWindow *window) :
  CwmWindowChild(decoration, window, event_mask, CWM_CURSOR_TITLE),
- gradient1_(NULL), gradient2_(NULL), gradient3_(NULL), gradient4_(NULL),
- gradient_width_(0), gradient_height_(0), focus_graphics_(NULL), nofocus_graphics_(NULL)
+ gradient1_(0), gradient2_(0), gradient3_(0), gradient4_(0),
+ gradient_width_(0), gradient_height_(0), focus_graphics_(0), nofocus_graphics_(0)
 {
   sides_ = CSIDE_TYPE_HORIZONTAL;
 }
@@ -80,7 +80,7 @@ void
 CwmTitleChild::
 detailGradient()
 {
-  string name = window_->getName();
+  std::string name = window_->getName();
 
   int width  = getWidth ();
   int height = getHeight();
@@ -94,13 +94,13 @@ detailGradient()
     delete gradient3_;
     delete gradient4_;
 
-    gradient1_ = NULL;
-    gradient2_ = NULL;
-    gradient3_ = NULL;
-    gradient4_ = NULL;
+    gradient1_ = 0;
+    gradient2_ = 0;
+    gradient3_ = 0;
+    gradient4_ = 0;
   }
 
-  if (gradient1_ == NULL) {
+  if (gradient1_ == 0) {
     CwmColor *color1 = CwmResourceDataInst->getTitleGradientColor(window_->getScreen());
     CwmColor *color2 = CwmResourceDataInst->getTitleGradientFocusColor(window_->getScreen());
 
@@ -131,7 +131,7 @@ detailGradient()
     gradient_height_ = height;
   }
 
-  CGradient *gradient = NULL;
+  CGradient *gradient = 0;
 
   if (decoration_->hasFocus()) {
     if (selected_)
@@ -167,7 +167,7 @@ void
 CwmTitleChild::
 detailSolid()
 {
-  string name = window_->getName();
+  std::string name = window_->getName();
 
   int width  = getWidth ();
   int height = getHeight();
@@ -175,14 +175,14 @@ detailSolid()
   if (width <= 2 || height <= 2)
     return;
 
-  if (focus_graphics_ == NULL) {
+  if (focus_graphics_ == 0) {
     CwmFont  *font  = CwmResourceDataInst->getFocusFont(window_->getScreen());
     CwmColor *color = CwmResourceDataInst->getTitleFocusColor(window_->getScreen());
 
     focus_graphics_ = new CwmGraphics(window_->getScreen(), font, color);
   }
 
-  if (nofocus_graphics_ == NULL) {
+  if (nofocus_graphics_ == 0) {
     CwmFont  *font  = CwmResourceDataInst->getFont(window_->getScreen());
     CwmColor *color = CwmResourceDataInst->getTitleColor(window_->getScreen());
 

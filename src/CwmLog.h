@@ -1,9 +1,4 @@
 class CwmLog {
- private:
-  std::string  dir_;
-  std::string  fileName_;
-  CFile       *file_;
-
  public:
   CwmLog();
  ~CwmLog();
@@ -14,4 +9,9 @@ class CwmLog {
   void setDir();
 
   bool open();
+
+ private:
+  std::string  dir_;
+  std::string  fileName_;
+  CFile       *file_;
 };

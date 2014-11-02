@@ -1,4 +1,4 @@
-#include "CwmI.h"
+#include <CwmI.h>
 
 CwmXPixmapMgr *
 CwmXPixmapMgr::
@@ -6,7 +6,7 @@ getInstance()
 {
   static CwmXPixmapMgr *instance;
 
-  if (instance == NULL)
+  if (! instance)
     instance = new CwmXPixmapMgr();
 
   return instance;
@@ -33,8 +33,7 @@ remove(CwmXPixmap *xpixmap)
 
 CwmXPixmap::
 CwmXPixmap(CwmScreen &screen, int width, int height, int depth) :
- screen_(screen), xpixmap_(None), width_(width),
- height_(height), depth_(depth)
+ screen_(screen), xpixmap_(None), width_(width), height_(height), depth_(depth)
 {
   if (depth_ <= 0)
     depth_ = screen.getDepth();
@@ -53,10 +52,8 @@ CwmXPixmap(CwmScreen &screen, int width, int height, int depth) :
 }
 
 CwmXPixmap::
-CwmXPixmap(CwmScreen &screen, Pixmap xpixmap,
-           int width, int height, int depth) :
- screen_(screen), xpixmap_(xpixmap), width_(width),
- height_(height), depth_(depth)
+CwmXPixmap(CwmScreen &screen, Pixmap xpixmap, int width, int height, int depth) :
+ screen_(screen), xpixmap_(xpixmap), width_(width), height_(height), depth_(depth)
 {
   if (depth_ <= 0)
     depth_ = screen_.getDepth();

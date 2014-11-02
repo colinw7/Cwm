@@ -4,11 +4,6 @@
 #define CwmCustomHintMgrInst CwmCustomHintMgr::getInstance()
 
 class CwmCustomHintMgr {
- private:
-  typedef vector<CwmCustomHint *> CustomHintList;
-
-  CustomHintList custom_hints_;
-
  public:
   static CwmCustomHintMgr *getInstance();
 
@@ -24,81 +19,14 @@ class CwmCustomHintMgr {
 
   CwmCustomHint *getCustomHint(const std::string &pattern);
   CwmCustomHint *addCustomHint(const std::string &pattern);
+
+ private:
+  typedef std::vector<CwmCustomHint *> CustomHintList;
+
+  CustomHintList custom_hints_;
 };
 
 class CwmHints {
- private:
-  CwmWMWindow   *window_;
-  Window         user_xwin_;
-
-  // WM Name
-
-  std::string    name_;
-
-  // WM Icon Name
-
-  std::string    icon_name_;
-
-  // WM Size Hints
-
-  int            x_;
-  int            y_;
-  int            width_inc_;
-  int            height_inc_;
-  int            min_width_;
-  int            min_height_;
-  int            max_width_;
-  int            max_height_;
-  int            base_width_;
-  int            base_height_;
-  double         min_aspect_;
-  double         max_aspect_;
-  int            win_gravity_;
-
-  // WM Hinta
-
-  bool           input_;
-  int            initial_state_;
-  Window         icon_window_;
-  Pixmap         icon_pixmap_;
-  Pixmap         icon_mask_;
-  int            icon_depth_;
-  int            icon_x_;
-  int            icon_y_;
-  Window         window_group_;
-
-  // Transient Hint
-
-  Window         transient_for_;
-
-  // Class Hint
-
-  std::string    res_name_;
-  std::string    res_class_;
-
-  // Session Hint
-
-  std::string    client_machine_;
-  StringVectorT  command_argv_;
-
-  // CMap Windows
-
-  Window        *cmap_windows_;
-  int            num_cmap_windows_;
-
-  // WM Protocols
-
-  bool           take_focus_;
-  bool           save_yourself_;
-  bool           delete_window_;
-
-  // Mwm Hints
-
-  int            mwm_functions_;
-  int            mwm_decorations_;
-  int            mwm_input_mode_;
-  int            mwm_status_;
-
  public:
   CwmHints(CwmWMWindow *window);
  ~CwmHints();
@@ -227,6 +155,78 @@ class CwmHints {
  private:
   void init();
   void print();
+
+ private:
+  CwmWMWindow   *window_;
+  Window         user_xwin_;
+
+  // WM Name
+
+  std::string    name_;
+
+  // WM Icon Name
+
+  std::string    icon_name_;
+
+  // WM Size Hints
+
+  int            x_;
+  int            y_;
+  int            width_inc_;
+  int            height_inc_;
+  int            min_width_;
+  int            min_height_;
+  int            max_width_;
+  int            max_height_;
+  int            base_width_;
+  int            base_height_;
+  double         min_aspect_;
+  double         max_aspect_;
+  int            win_gravity_;
+
+  // WM Hinta
+
+  bool           input_;
+  int            initial_state_;
+  Window         icon_window_;
+  Pixmap         icon_pixmap_;
+  Pixmap         icon_mask_;
+  int            icon_depth_;
+  int            icon_x_;
+  int            icon_y_;
+  Window         window_group_;
+
+  // Transient Hint
+
+  Window         transient_for_;
+
+  // Class Hint
+
+  std::string    res_name_;
+  std::string    res_class_;
+
+  // Session Hint
+
+  std::string    client_machine_;
+  StringVectorT  command_argv_;
+
+  // CMap Windows
+
+  Window        *cmap_windows_;
+  int            num_cmap_windows_;
+
+  // WM Protocols
+
+  bool           take_focus_;
+  bool           save_yourself_;
+  bool           delete_window_;
+
+  // Mwm Hints
+
+  int            mwm_functions_;
+  int            mwm_decorations_;
+  int            mwm_input_mode_;
+  int            mwm_status_;
 };
 
 #endif

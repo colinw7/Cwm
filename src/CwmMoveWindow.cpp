@@ -1,4 +1,4 @@
-#include "CwmI.h"
+#include <CwmI.h>
 
 CwmMoveWindow::
 CwmMoveWindow()
@@ -19,7 +19,7 @@ getInstance()
 {
   static CwmMoveWindow *instance;
 
-  if (instance == NULL)
+  if (! instance)
     instance = new CwmMoveWindow();
 
   return instance;
@@ -69,12 +69,9 @@ move(CwmWMWindow *window)
   int dx;
   int dy;
 
-  moveInteractive(screen,
-                  frame->getXWindow(),
-                  frame->getX(),
-                  frame->getY(),
-                  frame->getWidth(),
-                  frame->getHeight(),
+  moveInteractive(screen, frame->getXWindow(),
+                  frame->getX(), frame->getY(),
+                  frame->getWidth(), frame->getHeight(),
                   &dx, &dy);
 
   if (dx == 0 && dy == 0)

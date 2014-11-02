@@ -1,8 +1,8 @@
-#include "CwmI.h"
+#include <CwmI.h>
 
 void
 CwmPaste::
-pasteText(CwmWMWindow *window, const string &text)
+pasteText(CwmWMWindow *window, const std::string &text)
 {
   for (int i = 0; i < (int) text.size(); i++)
     pasteChar(window, text[i]);
@@ -14,7 +14,7 @@ pasteChar(CwmWMWindow *window, int c)
 {
   CwmUserWindow *user = window->getUser();
 
-  if (user == NULL)
+  if (! user)
     return;
 
   char key_string[2];
@@ -30,10 +30,8 @@ pasteChar(CwmWMWindow *window, int c)
   uint keycode = CwmMachineInst->keysymToKeycode(keysym);
 
   CwmMachineInst->sendKeyPressedEvent(user->getXWindow()->getXWin(),
-                                      user->getX(), user->getY(),
-                                      keycode);
+                                      user->getX(), user->getY(), keycode);
 
   CwmMachineInst->sendKeyReleasedEvent(user->getXWindow()->getXWin(),
-                                       user->getX(), user->getY(),
-                                       keycode);
+                                       user->getX(), user->getY(), keycode);
 }

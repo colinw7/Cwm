@@ -1,4 +1,4 @@
-#include "CwmI.h"
+#include <CwmI.h>
 
 CwmXEvent::
 CwmXEvent()
@@ -16,7 +16,7 @@ getInstance()
 {
   static CwmXEvent *instance;
 
-  if (instance == NULL)
+  if (! instance)
     instance = new CwmXEvent();
 
   return instance;

@@ -1,5 +1,5 @@
-#include "CwmI.h"
-#include "CXtTimer.h"
+#include <CwmI.h>
+#include <CXtTimer.h>
 
 class CwmIdleTimer : public CXtTimer {
  private:
@@ -17,7 +17,7 @@ CwmIdle::
 CwmIdle()
 {
   enabled_   = true;
-  timer_     = NULL;
+  timer_     = 0;
   idle_xwin_ = None;
 }
 
@@ -33,7 +33,7 @@ getInstance()
 {
   static CwmIdle *instance;
 
-  if (instance == NULL)
+  if (! instance)
     instance = new CwmIdle();
 
   return instance;
@@ -60,7 +60,7 @@ start()
   if (enabled_ && idle_xwin_ != None) {
     CwmWindow *xwindow = CwmMachineInst->getWindowCwmXWindow(idle_xwin_);
 
-    if (xwindow != NULL) {
+    if (xwindow != 0) {
       CwmIdleState idle_state(false);
 
       xwindow->callCallbacks(CWM_CALLBACK_IDLE, &idle_state);
@@ -81,7 +81,7 @@ timeOut()
   if (! enabled_)
     return;
 
-  CwmScreen *pointer_screen = NULL;
+  CwmScreen *pointer_screen = 0;
 
   int num_screens = CwmMachineInst->getNumScreens();
 
@@ -95,10 +95,10 @@ timeOut()
     }
   }
 
-  if (pointer_screen != NULL) {
+  if (pointer_screen != 0) {
     CwmWindow *xwindow = pointer_screen->getPointerWindow();
 
-    if (xwindow != NULL) {
+    if (xwindow != 0) {
       if (xwindow->getXWin() != idle_xwin_) {
         idle_xwin_ = xwindow->getXWin();
 

@@ -3,16 +3,6 @@
 class CwmMailMgrTimer;
 
 class CwmMailMgr {
- private:
-  typedef std::list<CwmWMWindow *> WMWindowList;
-
-  bool             initialized_;
-  std::string      dir_;
-  struct stat      last_stat_;
-  int              last_error_;
-  CwmMailMgrTimer *timer_;
-  WMWindowList     mail_windows_;
-
  public:
   static CwmMailMgr *getInstance();
 
@@ -29,4 +19,14 @@ class CwmMailMgr {
   CwmMailMgr();
 
   void init();
+
+ private:
+  typedef std::list<CwmWMWindow *> WMWindowList;
+
+  bool             initialized_;
+  std::string      dir_;
+  struct stat      last_stat_;
+  int              last_error_;
+  CwmMailMgrTimer *timer_;
+  WMWindowList     mail_windows_;
 };

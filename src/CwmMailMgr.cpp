@@ -1,4 +1,5 @@
 #include <CwmI.h>
+#include <CEnv.h>
 #include <CXtTimer.h>
 #include <sys/stat.h>
 
@@ -19,7 +20,7 @@ CwmMailMgr()
 {
   initialized_ = false;
   last_error_  = 0;
-  timer_       = NULL;
+  timer_       = 0;
 }
 
 CwmMailMgr::
@@ -34,7 +35,7 @@ getInstance()
 {
   static CwmMailMgr *instance;
 
-  if (instance == NULL)
+  if (! instance)
     instance = new CwmMailMgr();
 
   return instance;
@@ -46,9 +47,9 @@ isMailWindow(CwmWMWindow *window)
 {
   init();
 
-  string res_name = window->getResName();
+  std::string res_name = window->getResName();
 
-  return (res_name != "" && res_name.find("mail") != string::npos);
+  return (res_name != "" && res_name.find("mail") != std::string::npos);
 }
 
 void
@@ -76,9 +77,9 @@ init()
   if (initialized_)
     return;
 
-  string value = (getenv("MAIL") ? getenv("MAIL") : "");
+  std::string value;
 
-  if (! value.empty()) {
+  if (CEnvInst.get("MAIL", value)) {
     dir_ = value;
 
     last_error_ = stat(dir_.c_str(), &last_stat_);

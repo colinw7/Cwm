@@ -1,4 +1,4 @@
-#include "CwmI.h"
+#include <CwmI.h>
 
 CwmResizeWindow::
 CwmResizeWindow()
@@ -17,7 +17,7 @@ getInstance()
 {
   static CwmResizeWindow *instance;
 
-  if (instance == NULL)
+  if (! instance)
     instance = new CwmResizeWindow();
 
   return instance;
@@ -43,7 +43,7 @@ resize(CwmWMWindow *window, int resize_type)
   CwmFrameWindow *frame = window->getFrame();
   CwmUserWindow  *user  = window->getUser ();
 
-  if (user == NULL)
+  if (! user)
     return;
 
   int last_event_type = CwmEventMgrInst->getLastEventType();
@@ -249,8 +249,7 @@ resize(CwmWMWindow *window, int resize_type)
   if (frame->getY() + frame->getHeight() + dy2 > screen.getHeight())
     dy2 = screen.getHeight() - frame->getY() - frame->getHeight();
 
-  window->moveResize(frame->getX() + dx1,
-                     frame->getY() + dy1,
+  window->moveResize(frame->getX() + dx1, frame->getY() + dy1,
                      frame->getWidth () + (dx2 - dx1),
                      frame->getHeight() + (dy2 - dy1));
 

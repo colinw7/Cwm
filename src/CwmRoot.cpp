@@ -5,26 +5,26 @@
 struct CwmRootImageSpec {
   friend class CwmRootImage;
 
- private:
-  string image_file_;
-  string bg_color_;
-  string fg_color_;
-  int    bgindex_;
-  bool   resize_image_;
-  bool   tile_image_;
-  bool   aspect_;
-  int    halign_;
-  int    valign_;
-
  public:
-  CwmRootImageSpec(string spec) :
+  CwmRootImageSpec(std::string spec) :
    image_file_(""), bg_color_("white"), fg_color_("black"), bgindex_(-1), resize_image_(false),
    tile_image_(false), aspect_(false), halign_(CHALIGN_TYPE_CENTER), valign_(CVALIGN_TYPE_CENTER) {
     decode(spec);
   }
 
  private:
-  bool decode(string spec);
+  bool decode(std::string spec);
+
+ private:
+  std::string image_file_;
+  std::string bg_color_;
+  std::string fg_color_;
+  int         bgindex_;
+  bool        resize_image_;
+  bool        tile_image_;
+  bool        aspect_;
+  int         halign_;
+  int         valign_;
 };
 
 CwmRootEventFunctionMgr *
@@ -33,7 +33,7 @@ getInstance()
 {
   static CwmRootEventFunctionMgr *instance;
 
-  if (instance == NULL) {
+  if (! instance) {
     instance = new CwmRootEventFunctionMgr();
 
     instance->addFunctions();
@@ -54,7 +54,7 @@ addFunctions()
   CXNamedEvent   *event    = new CXNamedEvent("<Button3>");
   CwmFunctionDef *function = new CwmFunctionDef("f.menu");
 
-  string *data = new string("Root Functions");
+  std::string *data = new std::string("Root Functions");
 
   add(event, function, data);
 }
@@ -63,7 +63,7 @@ void
 CwmRootEventFunctionMgr::
 add(CXNamedEvent *event, CwmFunctionDef *function, CwmData data)
 {
-  if (event == NULL)
+  if (! event)
     return;
 
   int num_functions = functions_.size();
@@ -71,15 +71,14 @@ add(CXNamedEvent *event, CwmFunctionDef *function, CwmData data)
   for (int i = 0; i < num_functions; i++) {
     CXNamedEvent *event1 = functions_[i]->getEvent();
 
-    if (event1 != NULL && event1->matchEvent(event)) {
+    if (event1 != 0 && event1->matchEvent(event)) {
       functions_[i]->setFunction(function, data);
 
       return;
     }
   }
 
-  CwmRootEventFunction *root_event_function =
-    new CwmRootEventFunction(event, function, data);
+  CwmRootEventFunction *root_event_function = new CwmRootEventFunction(event, function, data);
 
   functions_.push_back(root_event_function);
 }
@@ -125,8 +124,8 @@ CwmRootEventFunction::
 }
 
 CwmRootImage::
-CwmRootImage(CwmScreen &screen, const string &spec) :
- screen_(screen), image_(NULL), x_(0), y_(0), bg_(0), fg_(0), bgindex_(-1)
+CwmRootImage(CwmScreen &screen, const std::string &spec) :
+ screen_(screen), image_(0), x_(0), y_(0), bg_(0), fg_(0), bgindex_(-1)
 {
   CwmRootImageSpec image_spec(spec);
 
@@ -145,7 +144,7 @@ CwmRootImage(CwmScreen &screen, const string &spec) :
   x_ = 0;
   y_ = 0;
 
-  image_ = NULL;
+  image_ = 0;
 
   if (image_spec.image_file_.size() == 0)
     return;
@@ -162,7 +161,7 @@ CwmRootImage(CwmScreen &screen, const string &spec) :
   else {
     image_ = CwmImageMgrInst->getImage(screen_, image_spec.image_file_);
 
-    if (image_ != NULL) {
+    if (image_ != 0) {
       if (image_spec.halign_ == CHALIGN_TYPE_CENTER)
         x_ = (screen_.getWidth() - image_->getWidth())/2;
       else
@@ -181,7 +180,7 @@ CwmRootImage(CwmScreen &screen, const string &spec) :
     }
   }
 
-  if (image_ == NULL)
+  if (! image_)
     return;
 
   CImagePtr cimage = image_->getImage();
@@ -201,7 +200,7 @@ void
 CwmRootImage::
 draw()
 {
-  if (image_ == NULL)
+  if (! image_)
     return;
 
   if (! screen_.getRoot()->grabPointer(0, CWM_CURSOR_BUSY))
@@ -209,7 +208,7 @@ draw()
 
   CImagePtr image1 = image_->getImage();
 
-  CwmColor *color = NULL;
+  CwmColor *color = 0;
 
   if (bgindex_ != -1 && image1->hasColormap()) {
     double r, g, b, a;
@@ -227,10 +226,9 @@ draw()
     color = screen_.getColor(pixel, pixel);
   }
 
-  CwmGraphics *graphics = new CwmGraphics(screen_, NULL, color);
+  CwmGraphics *graphics = new CwmGraphics(screen_, 0, color);
 
-  CwmXPixmap *xpixmap =
-    new CwmXPixmap(screen_, screen_.getWidth(), screen_.getHeight());
+  CwmXPixmap *xpixmap = new CwmXPixmap(screen_, screen_.getWidth(), screen_.getHeight());
 
   graphics->fillRectangle(xpixmap, 0, 0, screen_.getWidth(), screen_.getHeight());
 
@@ -266,9 +264,9 @@ draw()
 
 bool
 CwmRootImageSpec::
-decode(string spec)
+decode(std::string spec)
 {
-  CStrWords words = CStrUtil::toWords(spec, NULL);
+  CStrWords words = CStrUtil::toWords(spec, 0);
 
   if (words.size() == 0)
     return false;
@@ -276,7 +274,7 @@ decode(string spec)
   image_file_ = words[0].getWord();
 
   for (int i = 1; i < words.size(); i++) {
-    string word = words[i].getWord();
+    std::string word = words[i].getWord();
 
     if      (CStrUtil::casecmp(word, "resize") == 0)
       resize_image_ = true;

@@ -4,18 +4,6 @@
 #define CwmEventMgrInst CwmEventMgr::getInstance()
 
 class CwmEventMgr {
- private:
-  XEvent last_event_;
-  Time   last_event_time_;
-
-  Window multiclick_window_;
-  int    multiclick_button_;
-  Time   multiclick_time_;
-  int    multiclick_count_;
-
-  Window save_event_window_;
-  uint   save_event_mask_;
-
  public:
   static CwmEventMgr *getInstance();
 
@@ -74,6 +62,18 @@ class CwmEventMgr {
   bool processColormapNotify(XColormapEvent *);
   bool processClientMessage(XClientMessageEvent *);
   bool processMappingNotify(XMappingEvent *);
+
+ private:
+  XEvent last_event_;
+  Time   last_event_time_;
+
+  Window multiclick_window_;
+  int    multiclick_button_;
+  Time   multiclick_time_;
+  int    multiclick_count_;
+
+  Window save_event_window_;
+  uint   save_event_mask_;
 };
 
 #endif

@@ -1,13 +1,13 @@
-#include "CwmI.h"
-#include "CArgs.h"
-#include "COSUser.h"
-#include "COSSignal.h"
+#include <CwmI.h>
+#include <CArgs.h>
+#include <COSSignal.h>
+#include <COSUser.h>
 
 Cwm::
 Cwm()
 {
   argc_         = 0;
-  argv_         = NULL;
+  argv_         = 0;
   pedantic_     = false;
   synchronize_  = false;
   root_image_   = "";
@@ -30,7 +30,7 @@ getInstance()
 {
   static Cwm *instance;
 
-  if (instance == NULL)
+  if (! instance)
     instance = new Cwm();
 
   return instance;
@@ -97,14 +97,14 @@ saveArgs(int argc, char **argv)
   for (i = 0; i < argc; i++)
     argv_[i] = strdup(argv[i]);
 
-  argv_[i] = NULL;
+  argv_[i] = 0;
 }
 
 void
 Cwm::
 parseArgs(int *argc, char **argv)
 {
-  string opts = "\
+  std::string opts = "\
  -display:s     (Set Display Name) \
 --root:s        (Set Root Image) \
 --debug:f       (Set Debug Mode) \
@@ -205,7 +205,7 @@ processScreenWindows(CwmScreen &screen)
     }
   }
 
-  if (children != NULL)
+  if (children != 0)
     XFree(children);
 }
 
@@ -290,19 +290,19 @@ printScreenWindows(CwmScreen &screen)
   for (int i = 0; i < num_children; ++i)
     CwmMachineInst->logf("Window %x\n", (int) children[i]);
 
-  if (children != NULL)
+  if (children != 0)
     XFree(children);
 }
 
 void
 Cwm::
-restart(CwmScreen &, const string &program)
+restart(CwmScreen &, const std::string &program)
 {
   if (program == "") {
     if (root_image_ != "") {
       argv_[argc_++] = strdup("--root");
       argv_[argc_++] = strdup(root_image_.c_str());
-      argv_[argc_++] = NULL;
+      argv_[argc_++] = 0;
     }
 
     cleanup();
@@ -310,7 +310,7 @@ restart(CwmScreen &, const string &program)
     execvp(argv_[0], argv_);
   }
   else {
-    CStrWords words = CStrUtil::toWords(program, NULL);
+    CStrWords words = CStrUtil::toWords(program, 0);
 
     char **words1 = new char * [words.size() + 1];
 
@@ -319,7 +319,7 @@ restart(CwmScreen &, const string &program)
     for (i = 0; i < words.size(); ++i)
       words1[i] = (char *) words[i].getWord().c_str();
 
-    words1[i] = NULL;
+    words1[i] = 0;
 
     cleanup();
 
@@ -361,7 +361,7 @@ void
 Cwm::
 signalHandler(int sig)
 {
-  string sigstr = COSSignal::strsignal(sig);
+  std::string sigstr = COSSignal::strsignal(sig);
 
   CwmMachineInst->debugf("Signal %s(%d) received\n", sigstr.c_str(), sig);
 
@@ -373,7 +373,7 @@ signalHandler(int sig)
 
 void
 Cwm::
-setRootImage(const string &filename)
+setRootImage(const std::string &filename)
 {
   root_image_ = filename;
 }

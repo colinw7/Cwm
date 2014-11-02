@@ -1,4 +1,4 @@
-#include "CwmI.h"
+#include <CwmI.h>
 
 CwmMessage *
 CwmMessage::
@@ -6,7 +6,7 @@ getInstance()
 {
   static CwmMessage *instance;
 
-  if (instance == NULL)
+  if (! instance)
     instance = new CwmMessage();
 
   return instance;
@@ -52,12 +52,12 @@ processClientMessage(XClientMessageEvent *event)
   if (event->window != xwin_)
     return false;
 
-  Window client_xwin;
-  string value;
+  Window      client_xwin;
+  std::string value;
 
   CwmMachineInst->readStringClientMessage(xwin_, &client_xwin, value);
 
-  vector<string> words;
+  std::vector<std::string> words;
 
   CStrUtil::toWords(value, words);
 
@@ -73,7 +73,7 @@ processClientMessage(XClientMessageEvent *event)
 
     CwmCirculateWindowStack &window_stack = screen.getCirculateWindowStack();
 
-    string str;
+    std::string str;
 
     for (int i = 0; i < window_stack.size(); i++) {
       CwmWindowGroup &window_group = window_stack[i];
@@ -115,7 +115,7 @@ processClientMessage(XClientMessageEvent *event)
 
     CwmWMWindow *window = stringToWindow(words[1]);
 
-    if (window == NULL)
+    if (! window)
       goto fail;
 
     window->raise();
@@ -128,7 +128,7 @@ processClientMessage(XClientMessageEvent *event)
 
     CwmWMWindow *window = stringToWindow(words[1]);
 
-    if (window == NULL)
+    if (! window)
       goto fail;
 
     window->lower();
@@ -141,7 +141,7 @@ processClientMessage(XClientMessageEvent *event)
 
     CwmWMWindow *window = stringToWindow(words[1]);
 
-    if (window == NULL)
+    if (! window)
       goto fail;
 
     window->close();
@@ -154,7 +154,7 @@ processClientMessage(XClientMessageEvent *event)
 
     CwmWMWindow *window = stringToWindow(words[1]);
 
-    if (window == NULL)
+    if (! window)
       goto fail;
 
     window->restore();
@@ -167,7 +167,7 @@ processClientMessage(XClientMessageEvent *event)
 
     CwmWMWindow *window = stringToWindow(words[1]);
 
-    if (window == NULL)
+    if (! window)
       goto fail;
 
     window->move();
@@ -180,7 +180,7 @@ processClientMessage(XClientMessageEvent *event)
 
     CwmWMWindow *window = stringToWindow(words[1]);
 
-    if (window == NULL)
+    if (! window)
       goto fail;
 
     window->resize();
@@ -193,7 +193,7 @@ processClientMessage(XClientMessageEvent *event)
 
     CwmWMWindow *window = stringToWindow(words[1]);
 
-    if (window == NULL)
+    if (! window)
       goto fail;
 
     window->iconise();
@@ -206,7 +206,7 @@ processClientMessage(XClientMessageEvent *event)
 
     CwmWMWindow *window = stringToWindow(words[1]);
 
-    if (window == NULL)
+    if (! window)
       goto fail;
 
     window->maximize();
@@ -219,7 +219,7 @@ processClientMessage(XClientMessageEvent *event)
 
     CwmWMWindow *window = stringToWindow(words[1]);
 
-    if (window == NULL)
+    if (! window)
       goto fail;
 
     window->minimize();
@@ -232,7 +232,7 @@ processClientMessage(XClientMessageEvent *event)
 
     CwmWMWindow *window = stringToWindow(words[1]);
 
-    if (window == NULL)
+    if (! window)
       goto fail;
 
     window->rollUp();
@@ -245,7 +245,7 @@ processClientMessage(XClientMessageEvent *event)
 
     CwmWMWindow *window = stringToWindow(words[1]);
 
-    if (window == NULL)
+    if (! window)
       goto fail;
 
     window->rollDown();
@@ -258,7 +258,7 @@ processClientMessage(XClientMessageEvent *event)
 
     CwmWMWindow *window = stringToWindow(words[1]);
 
-    if (window == NULL)
+    if (! window)
       goto fail;
 
     window->focus();
@@ -291,7 +291,7 @@ processClientMessage(XClientMessageEvent *event)
 
     CwmWMWindow *window = stringToWindow(words[1]);
 
-    if (window == NULL)
+    if (! window)
       goto fail;
 
     if      (words[2] == "x") {
@@ -333,7 +333,7 @@ processClientMessage(XClientMessageEvent *event)
 
 CwmWMWindow *
 CwmMessage::
-stringToWindow(const string &str)
+stringToWindow(const std::string &str)
 {
   Window xwin = CStrUtil::toInteger(str);
 

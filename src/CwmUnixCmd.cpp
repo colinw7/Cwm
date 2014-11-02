@@ -1,9 +1,9 @@
-#include "CwmI.h"
-#include "COSSignal.h"
-#include "sys/wait.h"
+#include <CwmI.h>
+#include <COSSignal.h>
+#include <sys/wait.h>
 
 UnixCmd::
-UnixCmd(CwmScreen &screen, const string &command) :
+UnixCmd(CwmScreen &screen, const std::string &command) :
  screen_(screen), command_(command), status_(0), add_display_(false)
 {
 }
@@ -20,17 +20,17 @@ run()
     COSSignal::defaultSignal(SIGQUIT);
     COSSignal::defaultSignal(SIGTERM);
 
-    string command_string;
+    std::string command_string;
 
-    string::size_type pos = command_.rfind('&');
+    std::string::size_type pos = command_.rfind('&');
 
-    if (pos != string::npos)
+    if (pos != std::string::npos)
       command_string += command_.substr(0, pos);
     else
       command_string += command_;
 
     if (add_display_) {
-      string name = CwmMachineInst->getDisplayName();
+      std::string name = CwmMachineInst->getDisplayName();
 
       if (name != "")
         command_string += " -display " + name;

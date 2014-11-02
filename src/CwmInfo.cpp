@@ -1,5 +1,5 @@
-#include "CwmI.h"
-#include "CXtTimer.h"
+#include <CwmI.h>
+#include <CXtTimer.h>
 
 class CwmInfoTimer : public CXtTimer {
  private:
@@ -15,7 +15,7 @@ static const int CWM_INFO_TIMEOUT = 2000;
 
 CwmInfo::
 CwmInfo(CwmScreen &screen1) :
- screen(screen1), xwindow(None), graphics(NULL)
+ screen(screen1), xwindow(None), graphics(0)
 {
   init();
 }
@@ -33,7 +33,7 @@ CwmInfo::
 
 void
 CwmInfo::
-show(const string &str)
+show(const std::string &str)
 {
   hide();
 
@@ -54,22 +54,16 @@ show(const string &str)
   if (y + height > screen.getHeight())
     y = screen.getHeight() - height;
 
-  xwindow =
-    new CwmWindow(screen, screen.getRoot(),
-                  x, y - height, width, height,
-                  0, CWM_CURSOR_TITLE);
+  xwindow = new CwmWindow(screen, screen.getRoot(), x, y - height, width, height,
+                          0, CWM_CURSOR_TITLE);
 
   xwindow->setBackground(graphics);
 
   xwindow->mapRaised();
 
-  graphics->drawTextCentered(xwindow,
-                             2, 2, width - 4, height - 4,
-                             str);
+  graphics->drawTextCentered(xwindow, 2, 2, width - 4, height - 4, str);
 
-  graphics->drawButtonOut(xwindow,
-                          0, 0, width, height,
-                          1);
+  graphics->drawButtonOut(xwindow, 0, 0, width, height, 1);
 
   timer = new CwmInfoTimer(this);
 }
@@ -80,11 +74,11 @@ hide()
 {
   delete timer;
 
-  timer = NULL;
+  timer = 0;
 
   delete xwindow;
 
-  xwindow = NULL;
+  xwindow = 0;
 }
 
 void
@@ -96,7 +90,7 @@ init()
 
   graphics = new CwmGraphics(screen, font, color);
 
-  timer = NULL;
+  timer = 0;
 }
 
 void

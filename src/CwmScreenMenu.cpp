@@ -1,4 +1,4 @@
-#include "CwmI.h"
+#include <CwmI.h>
 
 void
 CwmScreenMenu::
@@ -6,7 +6,7 @@ moveProc(CwmScreen &screen, CwmData)
 {
   CwmWMWindow *window = CwmEventMgrInst->selectWindow(screen);
 
-  if (window == NULL)
+  if (! window)
     return;
 
   CwmMoveWindowInst->move(window);
@@ -18,7 +18,7 @@ resizeProc(CwmScreen &screen, CwmData)
 {
   CwmWMWindow *window = CwmEventMgrInst->selectWindow(screen);
 
-  if (window == NULL)
+  if (! window)
     return;
 
   CwmResizeWindowInst->resize(window, CWM_RESIZE_FREE);
@@ -30,7 +30,7 @@ iconiseProc(CwmScreen &screen, CwmData)
 {
   CwmWMWindow *window = CwmEventMgrInst->selectWindow(screen);
 
-  if (window == NULL)
+  if (! window)
     return;
 
   window->iconise();
@@ -42,7 +42,7 @@ maximizeProc(CwmScreen &screen, CwmData)
 {
   CwmWMWindow *window = CwmEventMgrInst->selectWindow(screen);
 
-  if (window == NULL)
+  if (! window)
     return;
 
   window->maximize();
@@ -54,7 +54,7 @@ minimizeProc(CwmScreen &screen, CwmData)
 {
   CwmWMWindow *window = CwmEventMgrInst->selectWindow(screen);
 
-  if (window == NULL)
+  if (! window)
     return;
 
   window->minimize();
@@ -66,7 +66,7 @@ restoreProc(CwmScreen &screen, CwmData)
 {
   CwmWMWindow *window = CwmEventMgrInst->selectWindow(screen);
 
-  if (window == NULL)
+  if (! window)
     return;
 
   window->restoreSize();
@@ -78,7 +78,7 @@ raiseProc(CwmScreen &screen, CwmData)
 {
   CwmWMWindow *window = CwmEventMgrInst->selectWindow(screen);
 
-  if (window == NULL)
+  if (! window)
     return;
 
   window->raise();
@@ -90,7 +90,7 @@ lowerProc(CwmScreen &screen, CwmData)
 {
   CwmWMWindow *window = CwmEventMgrInst->selectWindow(screen);
 
-  if (window == NULL)
+  if (! window)
     return;
 
   window->lower();
@@ -144,7 +144,7 @@ rollUpProc(CwmScreen &screen, CwmData)
 {
   CwmWMWindow *window = CwmEventMgrInst->selectWindow(screen);
 
-  if (window == NULL)
+  if (! window)
     return;
 
   window->rollUp();
@@ -156,7 +156,7 @@ rollDownProc(CwmScreen &screen, CwmData)
 {
   CwmWMWindow *window = CwmEventMgrInst->selectWindow(screen);
 
-  if (window == NULL)
+  if (! window)
     return;
 
   window->rollDown();
@@ -168,7 +168,7 @@ closeProc(CwmScreen &screen, CwmData)
 {
   CwmWMWindow *window = CwmEventMgrInst->selectWindow(screen);
 
-  if (window == NULL)
+  if (! window)
     return;
 
   window->close();
@@ -178,7 +178,7 @@ void
 CwmScreenMenu::
 processNamedMenuProc(CwmScreen &screen, CwmData data)
 {
-  string *name = (string *) data;
+  std::string *name = (std::string *) data;
 
   CwmMenu::processNamedMenu(screen, *name);
 }
@@ -187,7 +187,7 @@ void
 CwmScreenMenu::
 runCommandProc(CwmScreen &screen, CwmData data)
 {
-  string *cmd = (string *) data;
+  std::string *cmd = (std::string *) data;
 
   UnixCmd command(screen, *cmd);
 
@@ -198,7 +198,7 @@ void
 CwmScreenMenu::
 runXCommandProc(CwmScreen &screen, CwmData data)
 {
-  string *cmd = (string *) data;
+  std::string *cmd = (std::string *) data;
 
   UnixCmd command(screen, *cmd);
 
@@ -211,7 +211,7 @@ void
 CwmScreenMenu::
 setRootImageProc(CwmScreen &screen, CwmData data)
 {
-  string *name = (string *) data;
+  std::string *name = (std::string *) data;
 
   CwmDesk *desk = screen.getCurrentDesk();
 
@@ -237,15 +237,15 @@ void
 CwmScreenMenu::
 restartCwmProc(CwmScreen &screen, CwmData data)
 {
-  string *cmd = (string *) data;
+  std::string *cmd = (std::string *) data;
 
-  if (cmd == NULL || *cmd == "") {
+  if (cmd == 0 || *cmd == "") {
     int    argc;
     char **argv;
 
     CwmInst->getArgs(&argc, &argv);
 
-    string cmd1;
+    std::string cmd1;
 
     for (int i = 0; i < argc; ++i) {
       cmd1 += argv[i];
@@ -269,7 +269,7 @@ void
 CwmScreenMenu::
 changeDeskProc(CwmScreen &screen, CwmData data)
 {
-  string *str = (string *) data;
+  std::string *str = (std::string *) data;
 
   int desk_num = CStrUtil::toInteger(*str);
 

@@ -1,4 +1,4 @@
-#include "CwmI.h"
+#include <CwmI.h>
 
 // IconMar: Handles Toolbar Command Icons
 
@@ -8,7 +8,7 @@ getInstance()
 {
   static CwmCmdIconMgr *instance;
 
-  if (instance == NULL)
+  if (! instance)
     instance = new CwmCmdIconMgr();
 
   return instance;
@@ -54,7 +54,7 @@ lookup(Window xwin)
   CmdIconMap::iterator picon1 = command_icon_map_.find(xwin);
 
   if (picon1 == command_icon_map_.end())
-    return NULL;
+    return 0;
 
   return (*picon1).second;
 }
@@ -166,8 +166,7 @@ reposition()
 
   grid->remove(this);
 
-  grid->add(this, &x12, &y12, &x22, &y22,
-            CWM_INSERT_TOP, CWM_INSERT_LEFT);
+  grid->add(this, &x12, &y12, &x22, &y22, CWM_INSERT_TOP, CWM_INSERT_LEFT);
 
   int dx = x12 - x11;
   int dy = y12 - y11;
@@ -186,10 +185,8 @@ move()
 
   xwindow_->raise();
 
-  CwmMoveWindowInst->moveInteractive(screen_, xwindow_,
-                                     icon_x_, icon_y_,
-                                     icon_width_, icon_height_,
-                                     &dx, &dy);
+  CwmMoveWindowInst->moveInteractive(screen_, xwindow_, icon_x_, icon_y_,
+                                     icon_width_, icon_height_, &dx, &dy);
 
   if (icon_x_ + dx < 0)
     dx = -icon_x_;
@@ -225,10 +222,8 @@ redraw()
   image_->draw(xwindow_, graphics_, pixmap_dx_, 0);
 
   if (label_ != "")
-    graphics_->drawTextCentered(xwindow_,
-                                label_dx_, pixmap_height_,
-                                label_width_, label_height_,
-                                label_);
+    graphics_->drawTextCentered(xwindow_, label_dx_, pixmap_height_,
+                                label_width_, label_height_, label_);
 }
 
 void
@@ -237,8 +232,7 @@ createMask()
 {
   pixmap_mask_ = image_->createMask();
 
-  CwmMachineInst->shapeCombineMask(xwindow_->getXWin(),
-                                   pixmap_mask_->getXPixmap(),
+  CwmMachineInst->shapeCombineMask(xwindow_->getXWin(), pixmap_mask_->getXPixmap(),
                                    pixmap_dx_, 0, ShapeSet);
 
   if (label_ != "") {
@@ -249,7 +243,7 @@ createMask()
     label_mask_->combine(xwindow_, label_dx_, pixmap_height_, ShapeUnion);
   }
   else
-    label_mask_ = NULL;
+    label_mask_ = 0;
 }
 
 void

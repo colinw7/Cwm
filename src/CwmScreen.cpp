@@ -18,8 +18,7 @@ void
 CwmScreenMgr::
 term()
 {
-  std::for_each(screen_num_map_.begin(), screen_num_map_.end(),
-                CDeleteMapSecond<ScreenNumMap>());
+  std::for_each(screen_num_map_.begin(), screen_num_map_.end(), CDeleteMapSecond<ScreenNumMap>());
 
   screen_num_map_ .clear();
   screen_root_map_.clear();
@@ -125,9 +124,8 @@ CwmScreen(int screen_num) :
 
   //------
 
-  root_ = new CwmWindow(*this, cxscreen_->getRoot(),
-                        0, 0, cxscreen_->getWidth(), cxscreen_->getHeight(),
-                        true);
+  root_ = new CwmWindow(*this, cxscreen_->getRoot(), 0, 0,
+                        cxscreen_->getWidth(), cxscreen_->getHeight(), true);
 
   //------
 
@@ -264,7 +262,7 @@ getColor(Pixel fg, Pixel bg)
 
 Pixel
 CwmScreen::
-getPixel(const string &name, Pixel default_pixel)
+getPixel(const std::string &name, Pixel default_pixel)
 {
   return color_mgr_->getPixel(name, default_pixel);
 }
@@ -278,7 +276,7 @@ getPixel(const CRGBA &rgba)
 
 CwmFont *
 CwmScreen::
-getFont(const string &name)
+getFont(const std::string &name)
 {
   return font_mgr_->getFont(name);
 }
@@ -350,7 +348,7 @@ changeDesk(int desk_num)
 
 void
 CwmScreen::
-showInfo(const string &str) const
+showInfo(const std::string &str) const
 {
   info_->show(str);
 }
@@ -578,7 +576,7 @@ createGC(CwmColor *color)
 {
   GC gc;
 
-  if (color != NULL)
+  if (color != 0)
     gc = CwmMachineInst->createGC(color->getBg(), color->getFg());
   else
     gc = CwmMachineInst->createGC(0, 1);

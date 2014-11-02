@@ -1,4 +1,4 @@
-#include "CwmI.h"
+#include <CwmI.h>
 
 CwmMask::
 CwmMask(CwmScreen &screen, CwmGraphics *graphics, int width, int height) :
@@ -6,7 +6,7 @@ CwmMask(CwmScreen &screen, CwmGraphics *graphics, int width, int height) :
 {
   xpixmap_ = new CwmXPixmap(screen_, width_, height_, 1);
 
-  graphics_ = new CwmGraphics(*xpixmap_, graphics->getFont(), NULL);
+  graphics_ = new CwmGraphics(*xpixmap_, graphics->getFont(), 0);
 
   graphics_->setForeground(0);
 
@@ -25,7 +25,7 @@ CwmMask::
 
 void
 CwmMask::
-drawString(int x, int y, const string &str)
+drawString(int x, int y, const std::string &str)
 {
   CwmFont *font = graphics_->getFont();
 
@@ -36,7 +36,5 @@ void
 CwmMask::
 combine(CwmWindow *xwindow, int x, int y, int op)
 {
-  CwmMachineInst->shapeCombineMask(xwindow->getXWin(),
-                                   xpixmap_->getXPixmap(),
-                                   x, y, op);
+  CwmMachineInst->shapeCombineMask(xwindow->getXWin(), xpixmap_->getXPixmap(), x, y, op);
 }

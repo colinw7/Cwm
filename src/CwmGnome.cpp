@@ -1,5 +1,5 @@
-#include "CwmI.h"
-#include "CXAtom.h"
+#include <CwmI.h>
+#include <CXAtom.h>
 
 CwmGnome *
 CwmGnome::
@@ -7,7 +7,7 @@ getInstance()
 {
   static CwmGnome *instance;
 
-  if (instance == NULL)
+  if (! instance)
     instance = new CwmGnome();
 
   return instance;
@@ -36,8 +36,7 @@ createGnomeWindow(CwmScreen &screen)
 
   const CXAtom &atom = CwmMachineInst->getAtom("_WIN_SUPPORTING_WM_CHECK");
 
-  Window xwin =
-    CwmMachineInst->createWindow(None, -200, -200, 5, 5, 0, 0, NULL);
+  Window xwin = CwmMachineInst->createWindow(None, -200, -200, 5, 5, 0, 0, 0);
 
   CwmMachineInst->setWindowProperty(root_xwin, atom, xwin);
   CwmMachineInst->setWindowProperty(xwin     , atom, xwin);
@@ -131,7 +130,7 @@ setDesktopNames(CwmScreen &screen)
   char **names = new char * [num_names];
 
   for (int i = 0; i < num_names; i++) {
-    string name = screen.getDesk(i)->getName();
+    std::string name = screen.getDesk(i)->getName();
 
     names[i] = strdup(name.c_str());
   }
@@ -157,8 +156,7 @@ processRootClientMessage(XClientMessageEvent *event)
 
   const CXAtom &atom = CwmMachineInst->getAtom(event->message_type);
 
-  CwmMachineInst->logf("processRootClientMessage %\n",
-                       atom.getName().c_str());
+  CwmMachineInst->logf("processRootClientMessage %\n", atom.getName().c_str());
 }
 
 void

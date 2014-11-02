@@ -9,22 +9,10 @@ enum CwmGradientDir {
 };
 
 class CwmGraphics {
- private:
-  CwmScreen  &screen_;
-  GC          gc_;
-  CwmFont    *font_;
-  CwmColor   *color_;
-  int         text_width_;
-  int         text_height_;
-  CwmXPixmap *stipple_bitmap_;
-
  public:
-  CwmGraphics(CwmScreen &screen, CwmFont *font,
-              CwmColor *color, bool is_xor=false);
-  CwmGraphics(CwmWMWindow &window, CwmFont *font,
-              CwmColor *color, bool is_xor=false);
-  CwmGraphics(CwmXPixmap &pixmap, CwmFont *font,
-              CwmColor *color, bool is_xor=false);
+  CwmGraphics(CwmScreen &screen, CwmFont *font, CwmColor *color, bool is_xor=false);
+  CwmGraphics(CwmWMWindow &window, CwmFont *font, CwmColor *color, bool is_xor=false);
+  CwmGraphics(CwmXPixmap &pixmap, CwmFont *font, CwmColor *color, bool is_xor=false);
  ~CwmGraphics();
 
   void init();
@@ -116,6 +104,15 @@ class CwmGraphics {
   void drawLineI(CwmWindow *xwindow, int x1, int y1, int x2, int y2);
 
   void startClip(int x, int y, int width, int height);
+
+ private:
+  CwmScreen  &screen_;
+  GC          gc_;
+  CwmFont    *font_;
+  CwmColor   *color_;
+  int         text_width_;
+  int         text_height_;
+  CwmXPixmap *stipple_bitmap_;
 };
 
 #endif

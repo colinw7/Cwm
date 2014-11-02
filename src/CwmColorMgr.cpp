@@ -39,9 +39,9 @@ getColor(Pixel fg, Pixel bg)
 
 Pixel
 CwmColorMgr::
-getPixel(const string &name, Pixel default_pixel)
+getPixel(const std::string &name, Pixel default_pixel)
 {
-  string name1 = CStrUtil::toLower(name);
+  std::string name1 = CStrUtil::toLower(name);
 
   NamedColorMap::const_iterator pnamed_color1 = named_colors_.find(name1);
   NamedColorMap::const_iterator pnamed_color2 = named_colors_.end ();

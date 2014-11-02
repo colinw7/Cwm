@@ -7,10 +7,6 @@ class CwmToolBarIcon;
 class CwmToolBarIconDef;
 
 class CwmToolBarMgr {
- private:
-  CwmDesk    &desk_;
-  CwmToolBar *toolbar_;
-
  public:
   CwmToolBarMgr(CwmDesk &desk);
  ~CwmToolBarMgr();
@@ -22,33 +18,17 @@ class CwmToolBarMgr {
   void disable();
 
  private:
-  static void deskChangeStartNotifyProc(CwmDeskMgr *desk_mgr,
-                                        CwmDeskMgrNotifyType type,
+  static void deskChangeStartNotifyProc(CwmDeskMgr *desk_mgr, CwmDeskMgrNotifyType type,
                                         CwmData data);
-  static void deskChangeEndNotifyProc(CwmDeskMgr *desk_mgr,
-                                      CwmDeskMgrNotifyType type,
+  static void deskChangeEndNotifyProc(CwmDeskMgr *desk_mgr, CwmDeskMgrNotifyType type,
                                       CwmData data);
+
+ private:
+  CwmDesk    &desk_;
+  CwmToolBar *toolbar_;
 };
 
 class CwmToolBar {
- private:
-  typedef list<CwmToolBarCmd *> ToolBarCmdList;
-
-  CwmToolBarMgr      &mgr_;
-  int                 border_;
-  CwmWindow          *xwindow_;
-  CwmGraphics        *graphics_;
-  CwmToolBarIconArea *icon_area_;
-  CwmToolBarClock    *clock_;
-  CwmToolBarMenu     *menu_;
-  bool                add_icons_;
-  bool                add_windows_;
-  bool                show_clock_;
-  std::string         time_format_;
-  int                 icon_area_x1_;
-  int                 icon_area_x2_;
-  ToolBarCmdList      cmd_icons_;
-
  public:
   CwmToolBar(CwmToolBarMgr &mgr);
  ~CwmToolBar();
@@ -108,8 +88,24 @@ class CwmToolBar {
   CwmMenuDef *buildMenu(CwmCirculateWindowStack &window_stack);
   CwmMenuDef *buildMenuCascade(CwmWindowGroup &window_group);
 
-  static void createNotifyProc(CwmWMWindow *window, CwmWindowNotifyType type,
-                               CwmData data);
-  static void iconiseNotifyProc(CwmWMWindow *window, CwmWindowNotifyType type,
-                                CwmData data);
+  static void createNotifyProc(CwmWMWindow *window, CwmWindowNotifyType type, CwmData data);
+  static void iconiseNotifyProc(CwmWMWindow *window, CwmWindowNotifyType type, CwmData data);
+
+ private:
+  typedef std::list<CwmToolBarCmd *> ToolBarCmdList;
+
+  CwmToolBarMgr      &mgr_;
+  int                 border_;
+  CwmWindow          *xwindow_;
+  CwmGraphics        *graphics_;
+  CwmToolBarIconArea *icon_area_;
+  CwmToolBarClock    *clock_;
+  CwmToolBarMenu     *menu_;
+  bool                add_icons_;
+  bool                add_windows_;
+  bool                show_clock_;
+  std::string         time_format_;
+  int                 icon_area_x1_;
+  int                 icon_area_x2_;
+  ToolBarCmdList      cmd_icons_;
 };

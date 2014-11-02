@@ -16,27 +16,20 @@ enum CwmMenuState {
 };
 
 class CwmMenuDef {
- private:
-  typedef vector<CwmMenuEntry *> MenuEntryList;
-
-  MenuEntryList entries_;
-
  public:
   CwmMenuDef();
   CwmMenuDef(const CwmMenuDef &menu_def);
  ~CwmMenuDef();
 
   void addTitle(const std::string &text);
-  void addButton(const string &image, const std::string &text,
-                 int mnemonic, const std::string &accelerator,
-                 CwmMenuProc proc, CwmData data1=NULL, CwmData data2=NULL,
-                 CwmData data3=NULL, CwmData data4=NULL, CwmData data5=NULL,
-                 CwmData data6=NULL);
-  void addToggle(const std::string &image, const std::string &text,
-                 int mnemonic, const std::string &accelerator,
-                 CwmMenuProc proc, CwmData data1=NULL, CwmData data2=NULL,
-                 CwmData data3=NULL, CwmData data4=NULL, CwmData data5=NULL,
-                 CwmData data6=NULL);
+  void addButton(const std::string &image, const std::string &text, int mnemonic,
+                 const std::string &accelerator, CwmMenuProc proc, CwmData data1=0,
+                 CwmData data2=0, CwmData data3=0, CwmData data4=0, CwmData data5=0,
+                 CwmData data6=0);
+  void addToggle(const std::string &image, const std::string &text, int mnemonic,
+                 const std::string &accelerator, CwmMenuProc proc, CwmData data1=0,
+                 CwmData data2=0, CwmData data3=0, CwmData data4=0, CwmData data5=0,
+                 CwmData data6=0);
   void addSplitter(const std::string &text);
   void addCascade(const std::string &text, CwmMenuDef *menu_def);
   void addEnd();
@@ -51,29 +44,19 @@ class CwmMenuDef {
 
  private:
   CwmMenuDef &operator=(const CwmMenuDef &menu_def);
+
+ private:
+  typedef std::vector<CwmMenuEntry *> MenuEntryList;
+
+  MenuEntryList entries_;
 };
 
 class CwmMenuEntry {
- private:
-  CwmMenuItemType type_;
-  std::string     image_;
-  std::string     text_;
-  int             mnemonic_;
-  std::string     accelerator_;
-  CwmMenuProc     proc_;
-  CwmData         data1_;
-  CwmData         data2_;
-  CwmData         data3_;
-  CwmData         data4_;
-  CwmData         data5_;
-  CwmData         data6_;
-  bool            selected_;
-
  public:
   CwmMenuEntry(CwmMenuItemType type, const std::string &image, const std::string &text,
-               int mnemonic, const std::string &accelerator,
-               CwmMenuProc proc, CwmData data1, CwmData data2,
-               CwmData data3, CwmData data4, CwmData data5, CwmData data6);
+               int mnemonic, const std::string &accelerator, CwmMenuProc proc,
+               CwmData data1, CwmData data2, CwmData data3, CwmData data4, CwmData data5,
+               CwmData data6);
   CwmMenuEntry(const CwmMenuEntry &entry);
 
   virtual ~CwmMenuEntry();
@@ -98,99 +81,80 @@ class CwmMenuEntry {
 
  private:
   CwmMenuEntry &operator=(const CwmMenuEntry &entry);
+
+ private:
+  CwmMenuItemType type_;
+  std::string     image_;
+  std::string     text_;
+  int             mnemonic_;
+  std::string     accelerator_;
+  CwmMenuProc     proc_;
+  CwmData         data1_;
+  CwmData         data2_;
+  CwmData         data3_;
+  CwmData         data4_;
+  CwmData         data5_;
+  CwmData         data6_;
+  bool            selected_;
 };
 
 class CwmMenuTitleEntry : public CwmMenuEntry {
  public:
   CwmMenuTitleEntry(const std::string &text) :
-   CwmMenuEntry(CWM_MENU_TITLE_TYPE, "", text, '\0', "", NULL,
-                NULL, NULL, NULL, NULL, NULL, NULL) {
+   CwmMenuEntry(CWM_MENU_TITLE_TYPE, "", text, '\0', "", 0, 0, 0, 0, 0, 0, 0) {
   }
 };
 
 class CwmMenuButtonEntry : public CwmMenuEntry {
  public:
-  CwmMenuButtonEntry(const std::string &image, const std::string &text,
-                     int mnemonic, const std::string &accelerator,
-                     CwmMenuProc proc, CwmData data1 = NULL,
-                     CwmData data2 = NULL, CwmData data3 = NULL,
-                     CwmData data4 = NULL, CwmData data5 = NULL,
-                     CwmData data6 = NULL) :
-   CwmMenuEntry(CWM_MENU_BUTTON_TYPE, image, text, mnemonic,
-                accelerator, (CwmMenuProc) proc, (CwmData) data1,
-                data2, data3, data4, data5, data6) {
+  CwmMenuButtonEntry(const std::string &image, const std::string &text, int mnemonic,
+                     const std::string &accelerator, CwmMenuProc proc, CwmData data1 = 0,
+                     CwmData data2 = 0, CwmData data3 = 0, CwmData data4 = 0,
+                     CwmData data5 = 0, CwmData data6 = 0) :
+   CwmMenuEntry(CWM_MENU_BUTTON_TYPE, image, text, mnemonic, accelerator, (CwmMenuProc) proc,
+                (CwmData) data1, data2, data3, data4, data5, data6) {
   }
 };
 
 class CwmMenuToggleEntry : public CwmMenuEntry {
  public:
-  CwmMenuToggleEntry(const std::string & /*image*/, const std::string &text,
-                     int mnemonic, const std::string &accelerator,
-                     CwmMenuProc proc, CwmData data1 = NULL,
-                     CwmData data2 = NULL, CwmData data3 = NULL,
-                     CwmData data4 = NULL, CwmData data5 = NULL,
-                     CwmData data6 = NULL) :
-   CwmMenuEntry(CWM_MENU_TOGGLE_TYPE, "", text, mnemonic,
-                accelerator, (CwmMenuProc) proc, (CwmData) data1,
-                data2, data3, data4, data5, data6) {
+  CwmMenuToggleEntry(const std::string & /*image*/, const std::string &text, int mnemonic,
+                     const std::string &accelerator, CwmMenuProc proc, CwmData data1 = 0,
+                     CwmData data2 = 0, CwmData data3 = 0, CwmData data4 = 0,
+                     CwmData data5 = 0, CwmData data6 = 0) :
+   CwmMenuEntry(CWM_MENU_TOGGLE_TYPE, "", text, mnemonic, accelerator, (CwmMenuProc) proc,
+                (CwmData) data1, data2, data3, data4, data5, data6) {
   }
 };
 
 class CwmMenuSplitterEntry : public CwmMenuEntry {
  public:
   CwmMenuSplitterEntry(const std::string &text) :
-   CwmMenuEntry(CWM_MENU_SPLITTER_TYPE, "", text, '\0', "", NULL,
-                NULL, NULL, NULL, NULL, NULL, NULL) {
+   CwmMenuEntry(CWM_MENU_SPLITTER_TYPE, "", text, '\0', "", 0, 0, 0, 0, 0, 0, 0) {
   }
 };
 
 class CwmMenuCascadeEntry : public CwmMenuEntry {
  public:
   CwmMenuCascadeEntry(const std::string &text, CwmMenuDef *menu_def) :
-   CwmMenuEntry(CWM_MENU_CASCADE_TYPE, "", text, '\0', "", NULL,
-                (CwmData) menu_def, NULL, NULL, NULL, NULL, NULL) {
+   CwmMenuEntry(CWM_MENU_CASCADE_TYPE, "", text, '\0', "", 0, (CwmData) menu_def, 0, 0, 0, 0, 0) {
   }
 };
 
 struct CwmMenuKeyData;
 
 class CwmMenu {
- private:
-  CwmScreen    &screen_;
-  CwmMenu      *parent_;
-  CwmMenuItem **items_;
-  int           num_items_;
-  CwmMenuItem  *current_;
-  int           x_;
-  int           y_;
-  int           width_;
-  int           height_;
-  int           item_width_;
-  CwmWindow   *xwindow_;
-  CwmGraphics  *graphics_;
-  CwmGraphics  *title_graphics_;
-  CwmGraphics  *stipple_graphics_;
-  CwmMenuState  state_;
-  CwmMenu      *cascade_;
-
-  static bool         menu_stay_up_;
-  static bool         button_down_;
-  static CwmMenuItem *selected_item_;
-  static CwmMenu     *last_menu_;
-
  public:
   static void processNamedMenu(CwmScreen &screen, const std::string &name);
   static void processNamedMenu(CwmWMWindow *window, const std::string &name);
 
   static void processMenu(CwmDeskIcon *icon, CwmMenuDef *menu_def);
 
-  static void processWindowMenu(CwmScreen &screen, CwmWindow *xwindow,
-                                CwmMenuDef *menu_def,
+  static void processWindowMenu(CwmScreen &screen, CwmWindow *xwindow, CwmMenuDef *menu_def,
                                 CHAlignType halign=CHALIGN_TYPE_LEFT,
                                 CVAlignType valign=CVALIGN_TYPE_TOP);
-  static void processWindowMenu(CwmScreen &screen, CwmWindow *xwindow,
-                                CwmMenuDef *menu_def, int x, int y,
-                                CHAlignType halign=CHALIGN_TYPE_LEFT,
+  static void processWindowMenu(CwmScreen &screen, CwmWindow *xwindow, CwmMenuDef *menu_def,
+                                int x, int y, CHAlignType halign=CHALIGN_TYPE_LEFT,
                                 CVAlignType valign=CVALIGN_TYPE_TOP);
 
   static void nextItemProc(CwmMenu *menu);
@@ -210,8 +174,8 @@ class CwmMenu {
 
   static CwmMenuKeyData *getKeyData(XKeyPressedEvent *event);
 
-  CwmMenu(CwmScreen &screen, CwmMenu *parent, CwmMenuDef *menu_def,
-          int x, int y, CHAlignType halign, CVAlignType valign);
+  CwmMenu(CwmScreen &screen, CwmMenu *parent, CwmMenuDef *menu_def, int x, int y,
+          CHAlignType halign, CVAlignType valign);
  ~CwmMenu();
 
   void map();
@@ -255,44 +219,42 @@ class CwmMenu {
   void setCascade(CwmMenu *cascade) { cascade_ = cascade; }
 
  private:
-  static void processWindowMenu1(CwmScreen &screen, CwmWindow *xwindow,
-                                 CwmMenuDef *menu_def, int x, int y,
-                                 CHAlignType halign, CVAlignType valign);
+  static void processWindowMenu1(CwmScreen &screen, CwmWindow *xwindow, CwmMenuDef *menu_def,
+                                 int x, int y, CHAlignType halign, CVAlignType valign);
+
+ private:
+  CwmScreen    &screen_;
+  CwmMenu      *parent_;
+  CwmMenuItem **items_;
+  int           num_items_;
+  CwmMenuItem  *current_;
+  int           x_;
+  int           y_;
+  int           width_;
+  int           height_;
+  int           item_width_;
+  CwmWindow   *xwindow_;
+  CwmGraphics  *graphics_;
+  CwmGraphics  *title_graphics_;
+  CwmGraphics  *stipple_graphics_;
+  CwmMenuState  state_;
+  CwmMenu      *cascade_;
+
+  static bool         menu_stay_up_;
+  static bool         button_down_;
+  static CwmMenuItem *selected_item_;
+  static CwmMenu     *last_menu_;
 };
 
 class CwmMenuItem {
- private:
-  CwmMenu         *menu_;
-  CwmGraphics     *graphics_;
-  CwmGraphics     *stipple_graphics_;
-  std::string      image_name_;
-  std::string      text_;
-  int              mnemonic_;
-  CXNamedEvent    *accelerator_event_;
-  CwmMenuItemType  type_;
-  bool             selected_;
-  CwmMenuProc      proc_;
-  CwmData          data1_;
-  CwmData          data2_;
-  CwmData          data3_;
-  CwmData          data4_;
-  CwmData          data5_;
-  CwmData          data6_;
-  int              width_;
-  int              height_;
-  int              item_width_;
-  CwmWindow       *xwindow_;
-  CwmImage        *image_;
-
  public:
-  CwmMenuItem(CwmMenu *menu, CwmGraphics *graphics,
-              CwmGraphics *stipple_graphics, CwmMenuEntry *entry);
+  CwmMenuItem(CwmMenu *menu, CwmGraphics *graphics, CwmGraphics *stipple_graphics,
+              CwmMenuEntry *entry);
  ~CwmMenuItem();
 
   void setSize();
 
-  void createWindow(CwmScreen &screen, CwmWindow *menu_xwindow,
-                    int menu_y, int menu_width);
+  void createWindow(CwmScreen &screen, CwmWindow *menu_xwindow, int menu_y, int menu_width);
 
   bool isCascadeMenu();
   void processCascadeMenu(CwmMenu *menu);
@@ -324,11 +286,11 @@ class CwmMenuItem {
   bool isToggle() const { return type_ == CWM_MENU_TOGGLE_TYPE; }
 
   bool isCascade() const {
-    return type_ == CWM_MENU_CASCADE_TYPE && data1_ != NULL;
+    return type_ == CWM_MENU_CASCADE_TYPE && data1_ != 0;
   }
 
   bool isActiveButton() const {
-    return type_ == CWM_MENU_BUTTON_TYPE && proc_ != NULL;
+    return type_ == CWM_MENU_BUTTON_TYPE && proc_ != 0;
   }
 
   void setSelected(bool flag) { selected_ = flag; }
@@ -337,6 +299,29 @@ class CwmMenuItem {
   bool isActive()  const {
     return isActiveButton() || isToggle() || isCascade();
   }
+
+ private:
+  CwmMenu         *menu_;
+  CwmGraphics     *graphics_;
+  CwmGraphics     *stipple_graphics_;
+  std::string      image_name_;
+  std::string      text_;
+  int              mnemonic_;
+  CXNamedEvent    *accelerator_event_;
+  CwmMenuItemType  type_;
+  bool             selected_;
+  CwmMenuProc      proc_;
+  CwmData          data1_;
+  CwmData          data2_;
+  CwmData          data3_;
+  CwmData          data4_;
+  CwmData          data5_;
+  CwmData          data6_;
+  int              width_;
+  int              height_;
+  int              item_width_;
+  CwmWindow       *xwindow_;
+  CwmImage        *image_;
 };
 
 #define CwmNamedMenuMgrInst CwmNamedMenuMgr::getInstance()
@@ -344,11 +329,6 @@ class CwmMenuItem {
 class CwmNamedMenu;
 
 class CwmNamedMenuMgr {
- private:
-  typedef list<CwmNamedMenu *> NamedMenuList;
-
-  NamedMenuList named_menus_;
-
  public:
   static CwmNamedMenuMgr *getInstance();
 
@@ -360,19 +340,24 @@ class CwmNamedMenuMgr {
   void deleteAll();
 
   CwmMenuDef *createDefaultRootMenu();
+
+ private:
+  typedef std::list<CwmNamedMenu *> NamedMenuList;
+
+  NamedMenuList named_menus_;
 };
 
 class CwmNamedMenu {
- private:
-  std::string  name_;
-  CwmMenuDef  *menu_def_;
-
  public:
-  CwmNamedMenu(const std::string &name, CwmMenuDef *menu_def=NULL);
+  CwmNamedMenu(const std::string &name, CwmMenuDef *menu_def=0);
  ~CwmNamedMenu();
 
   std::string  getName() const { return name_; }
   CwmMenuDef  *getMenuDef() const { return menu_def_; }
+
+ private:
+  std::string  name_;
+  CwmMenuDef  *menu_def_;
 };
 
 #endif

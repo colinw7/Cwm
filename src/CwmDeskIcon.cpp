@@ -1,4 +1,4 @@
-#include "CwmDeskI.h"
+#include <CwmDeskI.h>
 
 CwmDeskIconMgr::
 CwmDeskIconMgr(CwmDesk &desk) :
@@ -20,11 +20,11 @@ CwmDeskIconMgr(CwmDesk &desk) :
   desk_mgr->addNotifyProc(CWM_DESK_MGR_NOTIFY_CHANGE_END,
                           &CwmDeskIconMgr::deskChangeEndNotifyProc, this);
 
-  move_event_    = NULL;
-  lower_event_   = NULL;
-  raise_event_   = NULL;
-  close_event_   = NULL;
-  restore_event_ = NULL;
+  move_event_    = 0;
+  lower_event_   = 0;
+  raise_event_   = 0;
+  close_event_   = 0;
+  restore_event_ = 0;
 }
 
 CwmDeskIconMgr::
@@ -75,7 +75,7 @@ destroyNotifyProc(CwmWMWindow *window, CwmWindowNotifyType, void *data)
   if (mgr->isWindowOnDesk(window)) {
     CwmDeskIcon *icon = mgr->lookup(window);
 
-    if (icon != NULL)
+    if (icon != 0)
       mgr->removeDeskIcon(icon);
 
     delete icon;
@@ -91,7 +91,7 @@ iconiseNotifyProc(CwmWMWindow *window, CwmWindowNotifyType, void *data)
   if (mgr->isWindowOnDesk(window)) {
     CwmDeskIcon *icon = mgr->lookup(window);
 
-    if (icon != NULL)
+    if (icon != 0)
       icon->map();
   }
 }
@@ -105,7 +105,7 @@ restoreNotifyProc(CwmWMWindow *window, CwmWindowNotifyType, void *data)
   if (mgr->isWindowOnDesk(window)) {
     CwmDeskIcon *icon = mgr->lookup(window);
 
-    if (icon != NULL)
+    if (icon != 0)
       icon->unmap();
   }
 }
@@ -210,14 +210,14 @@ lookup(Window xwin)
   if (picon != desk_icon_map_.end())
     return (*picon).second;
   else
-    return NULL;
+    return 0;
 }
 
 CXNamedEvent *
 CwmDeskIconMgr::
 getMoveEvent()
 {
-  if (move_event_ == NULL)
+  if (move_event_ == 0)
     move_event_ = new CXNamedEvent("Alt<Key>F7");
 
   return move_event_;
@@ -227,7 +227,7 @@ CXNamedEvent *
 CwmDeskIconMgr::
 getLowerEvent()
 {
-  if (lower_event_ == NULL)
+  if (lower_event_ == 0)
     lower_event_ = new CXNamedEvent("Alt<Key>F3");
 
   return lower_event_;
@@ -237,7 +237,7 @@ CXNamedEvent *
 CwmDeskIconMgr::
 getRaiseEvent()
 {
-  if (raise_event_ == NULL)
+  if (raise_event_ == 0)
     raise_event_ = new CXNamedEvent("Alt<Key>F2");
 
   return raise_event_;
@@ -247,7 +247,7 @@ CXNamedEvent *
 CwmDeskIconMgr::
 getRestoreEvent()
 {
-  if (restore_event_ == NULL)
+  if (restore_event_ == 0)
     restore_event_ = new CXNamedEvent("Alt<Key>F5");
 
   return restore_event_;
@@ -257,7 +257,7 @@ CXNamedEvent *
 CwmDeskIconMgr::
 getCloseEvent()
 {
-  if (close_event_ == NULL)
+  if (close_event_ == 0)
     close_event_ = new CXNamedEvent("Alt<Key>F4");
 
   return close_event_;
@@ -289,23 +289,23 @@ CwmDeskIcon(CwmDeskIconMgr &mgr, CwmWMWindow *window) :
   if (CwmResourceDataInst->getIconImageDecoration())
     image_ = window->getImage();
   else
-    image_ = NULL;
+    image_ = 0;
 
-  pixmap_mask_  = NULL;
-  label_mask_   = NULL;
+  pixmap_mask_  = 0;
+  label_mask_   = 0;
   mask_created_ = false;
 
   //------
 
   if (CwmResourceDataInst->getIconLabelDecoration()) {
-    string name = window->getIconName();
+    std::string name = window->getIconName();
 
     int icon_label_width = CwmResourceDataInst->getIconLabelWidth();
 
     fmt_string_ = new CFmtString(name, icon_label_width);
   }
   else
-    fmt_string_ = NULL;
+    fmt_string_ = 0;
 
   //------
 
@@ -318,21 +318,17 @@ CwmDeskIcon(CwmDeskIconMgr &mgr, CwmWMWindow *window) :
                     KeyPressMask    | ExposureMask;
 
   xwindow_ =
-    new CwmWindow(screen_, screen_.getRoot(),
-                  icon_x_, icon_y_,
-                  icon_width_, icon_height_,
-                  event_mask,
-                  CWM_CURSOR_TITLE);
+    new CwmWindow(screen_, screen_.getRoot(), icon_x_, icon_y_,
+                  icon_width_, icon_height_, event_mask, CWM_CURSOR_TITLE);
 
   //------
 
-  menu_def_ = NULL;
+  menu_def_ = 0;
 
   //------
 
   xwindow_->addCallback(CWM_CALLBACK_DOUBLE_CLICK_1,
-                        CwmDeskIcon::doubleClickProc,
-                        (CwmData) this);
+                        CwmDeskIcon::doubleClickProc, (CwmData) this);
 }
 
 CwmDeskIcon::
@@ -363,7 +359,7 @@ move()
   bool has_focus = CwmMachineInst->isFocusWindow(window_);
 
   if (has_focus) {
-    CwmMachineInst->setFocusWindow(NULL);
+    CwmMachineInst->setFocusWindow(0);
 
     redraw();
   }
@@ -442,7 +438,7 @@ redraw()
 
   //------
 
-  string name = window_->getIconName();
+  std::string name = window_->getIconName();
 
   fmt_string_->setString(name);
 
@@ -456,7 +452,7 @@ redraw()
 
     //------
 
-    icon_width_ = std::max( label_width_ + 2* label_dx_, pixmap_width_ + 2*pixmap_dx_);
+    icon_width_ = std::max(label_width_ + 2* label_dx_, pixmap_width_ + 2*pixmap_dx_);
 
     icon_height_ = pixmap_dy_ + pixmap_height_ + std::max(pixmap_dy_, label_dy_) +
                    label_dy_  + label_height_;
@@ -488,7 +484,7 @@ redraw()
     for (int i = 0; i < num_lines; ++i) {
       int width1, height1;
 
-      string line = CStrUtil::stripSpaces(fmt_string_->getLine(i));
+      std::string line = CStrUtil::stripSpaces(fmt_string_->getLine(i));
 
       graphics_->getTextSize(line, &width1, &height1);
 
@@ -551,7 +547,7 @@ createMask()
     for (int i = 0; i < num_lines; ++i) {
       int width1, height1;
 
-      string line = CStrUtil::stripSpaces(fmt_string_->getLine(i));
+      std::string line = CStrUtil::stripSpaces(fmt_string_->getLine(i));
 
       graphics_->getTextSize(line, &width1, &height1);
 
@@ -746,7 +742,7 @@ getLabelSize(int *width, int *height)
   int num_lines = fmt_string_->getNumLines();
 
   for (int i = 0; i < num_lines; ++i) {
-    string line = fmt_string_->getLine(i);
+    std::string line = fmt_string_->getLine(i);
 
     int width1, height1;
 
@@ -806,7 +802,7 @@ void
 CwmDeskIcon::
 processMenu()
 {
-  if (menu_def_ == NULL)
+  if (menu_def_ == 0)
     createMenuDef();
 
   CwmMenu::processWindowMenu(screen_, xwindow_, menu_def_);
@@ -914,11 +910,11 @@ void
 CwmDeskIcon::
 namedMenuProc(CwmDeskIcon *icon, CwmData data)
 {
-  string *name = (string *) data;
+  std::string *name = (std::string *) data;
 
   CwmMenuDef *menu_def_ = CwmNamedMenuMgrInst->lookupMenuDef(*name);
 
-  if (menu_def_ == NULL) {
+  if (menu_def_ == 0) {
     CwmMachineInst->logf("Menu %s not found\n", (*name).c_str());
     return;
   }
@@ -950,7 +946,7 @@ getInstance()
 {
   static CwmCustomDeskIconMgr *instance;
 
-  if (instance == NULL)
+  if (! instance)
     instance = new CwmCustomDeskIconMgr();
 
   return instance;
@@ -958,7 +954,7 @@ getInstance()
 
 void
 CwmCustomDeskIconMgr::
-setIcon(const string &pattern, const string &icon)
+setIcon(const std::string &pattern, const std::string &icon)
 {
   CwmCustomDeskIcon *custom_icon = lookup(pattern);
 
@@ -967,19 +963,19 @@ setIcon(const string &pattern, const string &icon)
 
 void
 CwmCustomDeskIconMgr::
-setIconSmall(const string &pattern, const string &icon)
+setIconSmall(const std::string &pattern, const std::string &icon)
 {
   CwmCustomDeskIcon *custom_icon = lookup(pattern);
 
   custom_icon->setIconSmall(icon);
 }
 
-string
+std::string
 CwmCustomDeskIconMgr::
 getIcon(CwmWMWindow *window)
 {
-  string res_name  = window->getResName ();
-  string res_class = window->getResClass();
+  std::string res_name  = window->getResName ();
+  std::string res_class = window->getResClass();
 
   int num_icons = icons_.size();
 
@@ -992,12 +988,12 @@ getIcon(CwmWMWindow *window)
   return "";
 }
 
-string
+std::string
 CwmCustomDeskIconMgr::
 getIconSmall(CwmWMWindow *window)
 {
-  string res_name  = window->getResName ();
-  string res_class = window->getResClass();
+  std::string res_name  = window->getResName ();
+  std::string res_class = window->getResClass();
 
   int num_icons = icons_.size();
 
@@ -1023,7 +1019,7 @@ deleteAll()
 
 CwmCustomDeskIcon *
 CwmCustomDeskIconMgr::
-lookup(const string &pattern)
+lookup(const std::string &pattern)
 {
   int num_icons = icons_.size();
 
@@ -1039,8 +1035,8 @@ lookup(const string &pattern)
 }
 
 CwmCustomDeskIcon::
-CwmCustomDeskIcon(const string &pattern) :
- pattern_(pattern), compile_(NULL), icon_(""), icon_small_("")
+CwmCustomDeskIcon(const std::string &pattern) :
+ pattern_(pattern), compile_(0), icon_(""), icon_small_("")
 {
   compile_ = new CGlob(pattern_.c_str());
 }
@@ -1053,7 +1049,7 @@ CwmCustomDeskIcon::
 
 bool
 CwmCustomDeskIcon::
-compare(const string &name)
+compare(const std::string &name)
 {
   return compile_->compare(name);
 }

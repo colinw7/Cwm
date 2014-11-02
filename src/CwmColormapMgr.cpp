@@ -1,8 +1,8 @@
-#include "CwmI.h"
+#include <CwmI.h>
 
 CwmColormapMgr::
 CwmColormapMgr(CwmScreen &screen) :
- screen_(screen), window_(NULL), cmap_(screen.getColormap())
+ screen_(screen), window_(0), cmap_(screen.getColormap())
 {
 }
 
@@ -33,7 +33,7 @@ uninstall()
 {
   Colormap cmap = screen_.getColormap();
 
-  install(NULL, cmap);
+  install(0, cmap);
 }
 
 void

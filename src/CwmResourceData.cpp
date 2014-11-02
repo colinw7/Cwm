@@ -1,4 +1,4 @@
-#include "CwmI.h"
+#include <CwmI.h>
 
 CwmResourceData *
 CwmResourceData::
@@ -6,7 +6,7 @@ getInstance()
 {
   static CwmResourceData *instance;
 
-  if (instance == NULL)
+  if (! instance)
     instance = new CwmResourceData();
 
   return instance;
@@ -42,14 +42,14 @@ save()
 
 CwmFeedbackType
 CwmResourceData::
-parseShowFeedback(const string &str)
+parseShowFeedback(const std::string &str)
 {
   int feedback = CWM_FEEDBACK_NONE;
 
-  CStrWords words = CStrUtil::toWords(str, NULL);
+  CStrWords words = CStrUtil::toWords(str, 0);
 
   for (int i = 0; i < words.size(); i++) {
-    string word = words[i].getWord();
+    std::string word = words[i].getWord();
 
     if (i == 0 && words[i].getWord()[0] == '-')
       feedback = CWM_FEEDBACK_ALL;
@@ -90,11 +90,11 @@ parseShowFeedback(const string &str)
 
 CwmIconDecoration
 CwmResourceData::
-parseIconDecoration(const string &str)
+parseIconDecoration(const std::string &str)
 {
   int decoration = CWM_ICON_DECORATION_NONE;
 
-  CStrWords words = CStrUtil::toWords(str, NULL);
+  CStrWords words = CStrUtil::toWords(str, 0);
 
   for (int i = 0; i < words.size(); i++) {
     if      (CStrUtil::casecmp(words[i].getWord(), "label") == 0)
@@ -121,7 +121,7 @@ parseIconDecoration(const string &str)
 
 void
 CwmResourceData::
-parseFeedbackGeometry(const string &str, CHAlignType *halign, CVAlignType *valign,
+parseFeedbackGeometry(const std::string &str, CHAlignType *halign, CVAlignType *valign,
                       int *x_offset, int *y_offset)
 {
   *halign   = CHALIGN_TYPE_CENTER;
@@ -134,7 +134,7 @@ parseFeedbackGeometry(const string &str, CHAlignType *halign, CVAlignType *valig
   if (words.size() != 2)
     return;
 
-  string word = words.getWord(0).getWord();
+  std::string word = words.getWord(0).getWord();
 
   if      (CStrUtil::casecmp(word, "left"  ) == 0)
     *halign = CHALIGN_TYPE_LEFT;
@@ -169,7 +169,7 @@ parseFeedbackGeometry(const string &str, CHAlignType *halign, CVAlignType *valig
 
 CwmFocusHighlightType
 CwmResourceData::
-parseFocusHighlightType(const string &str)
+parseFocusHighlightType(const std::string &str)
 {
   CwmFocusHighlightType type = CWM_FOCUS_HIGHLIGHT_ALL;
 
@@ -185,34 +185,34 @@ parseFocusHighlightType(const string &str)
   return type;
 }
 
-string
+std::string
 CwmResourceData::
-getResource(const string &path, const string &fallback)
+getResource(const std::string &path, const std::string &fallback)
 {
-  string value = CwmConfigInst->getValue(path, fallback);
+  std::string value = CwmConfigInst->getValue(path, fallback);
 
   return value;
 }
 
-string
+std::string
 CwmResourceData::
-getSectionResource(const string &path, const string &section, const string &fallback)
+getSectionResource(const std::string &path, const std::string &section, const std::string &fallback)
 {
-  string value = CwmConfigInst->getSectionValue(path, section, fallback);
+  std::string value = CwmConfigInst->getSectionValue(path, section, fallback);
 
   return value;
 }
 
 int
 CwmResourceData::
-getSectionResource(const string &path, const string &section, int fallback)
+getSectionResource(const std::string &path, const std::string &section, int fallback)
 {
   int value = CwmConfigInst->getSectionValue(path, section, fallback);
 
   return value;
 }
 
-string
+std::string
 CwmResourceData::
 getBackground()
 {
@@ -226,7 +226,7 @@ getBackground(CwmScreen &screen)
   return screen.getPixel(getBackground(), screen.getWhitePixel());
 }
 
-string
+std::string
 CwmResourceData::
 getForeground()
 {
@@ -247,11 +247,11 @@ getColor(CwmScreen &screen)
   return screen.getColor(getForeground(screen), getBackground(screen));
 }
 
-string
+std::string
 CwmResourceData::
 getFont()
 {
-  string default_font_name = "8x13";
+  std::string default_font_name = "8x13";
 
   return getResource("window/font", default_font_name);
 }
@@ -263,7 +263,7 @@ getFont(CwmScreen &screen)
   return screen.getFont(getFont());
 }
 
-string
+std::string
 CwmResourceData::
 getCursorBackground()
 {
@@ -277,7 +277,7 @@ getCursorBackground(CwmScreen &screen)
   return screen.getPixel(getCursorBackground(), screen.getBlackPixel());
 }
 
-string
+std::string
 CwmResourceData::
 getCursorForeground()
 {
@@ -298,7 +298,7 @@ getCursorColor(CwmScreen &screen)
   return screen.getColor(getCursorForeground(screen), getCursorBackground(screen));
 }
 
-string
+std::string
 CwmResourceData::
 getIconBackground()
 {
@@ -312,7 +312,7 @@ getIconBackground(CwmScreen &screen)
   return screen.getPixel(getIconBackground(), screen.getWhitePixel());
 }
 
-string
+std::string
 CwmResourceData::
 getIconForeground()
 {
@@ -333,7 +333,7 @@ getIconColor(CwmScreen &screen)
   return screen.getColor(getIconForeground(screen), getIconBackground(screen));
 }
 
-string
+std::string
 CwmResourceData::
 getIconFont()
 {
@@ -347,7 +347,7 @@ getIconFont(CwmScreen &screen)
   return screen.getFont(getIconFont());
 }
 
-string
+std::string
 CwmResourceData::
 getIconImage()
 {
@@ -358,7 +358,7 @@ CwmIconDecoration
 CwmResourceData::
 getIconDecoration()
 {
-  string str = getResource("icon/decoration", "label image");
+  std::string str = getResource("icon/decoration", "label image");
 
   return parseIconDecoration(str);
 }
@@ -367,7 +367,7 @@ int
 CwmResourceData::
 getIconLabelWidth()
 {
-  string str = getResource("icon/labelWidth", "9999");
+  std::string str = getResource("icon/labelWidth", "9999");
 
   if (CStrUtil::isInteger(str))
     return CStrUtil::toInteger(str);
@@ -375,7 +375,7 @@ getIconLabelWidth()
   return 9999;
 }
 
-string
+std::string
 CwmResourceData::
 getInfoBackground()
 {
@@ -389,7 +389,7 @@ getInfoBackground(CwmScreen &screen)
   return screen.getPixel(getInfoBackground(), screen.getWhitePixel());
 }
 
-string
+std::string
 CwmResourceData::
 getInfoForeground()
 {
@@ -410,7 +410,7 @@ getInfoColor(CwmScreen &screen)
   return screen.getColor(getInfoForeground(screen), getInfoBackground(screen));
 }
 
-string
+std::string
 CwmResourceData::
 getInfoFont()
 {
@@ -424,7 +424,7 @@ getInfoFont(CwmScreen &screen)
   return screen.getFont(getInfoFont());
 }
 
-string
+std::string
 CwmResourceData::
 getFocusBackground()
 {
@@ -438,7 +438,7 @@ getFocusBackground(CwmScreen &screen)
   return screen.getPixel(getFocusBackground(), screen.getWhitePixel());
 }
 
-string
+std::string
 CwmResourceData::
 getFocusForeground()
 {
@@ -459,7 +459,7 @@ getFocusColor(CwmScreen &screen)
   return screen.getColor(getFocusForeground(screen), getFocusBackground(screen));
 }
 
-string
+std::string
 CwmResourceData::
 getFocusFont()
 {
@@ -477,7 +477,7 @@ bool
 CwmResourceData::
 getClickToFocus()
 {
-  string str = getResource("window/clickToFocus", "No");
+  std::string str = getResource("window/clickToFocus", "No");
 
   if (CStrUtil::isBool(str))
     return CStrUtil::toBool(str);
@@ -489,7 +489,7 @@ bool
 CwmResourceData::
 getFocusAutoRaise()
 {
-  string str = getResource("window/focusAutoRaise", "No" );
+  std::string str = getResource("window/focusAutoRaise", "No" );
 
   if (CStrUtil::isBool(str))
     return CStrUtil::toBool(str);
@@ -501,7 +501,7 @@ bool
 CwmResourceData::
 getFocusGrabKeys()
 {
-  string str = getResource("window/focusGrabKeys", "Yes");
+  std::string str = getResource("window/focusGrabKeys", "Yes");
 
   if (CStrUtil::isBool(str))
     return CStrUtil::toBool(str);
@@ -513,7 +513,7 @@ CwmFocusHighlightType
 CwmResourceData::
 getFocusHighlightType()
 {
-  string str = getResource("window/focusHighlightType", "all");
+  std::string str = getResource("window/focusHighlightType", "all");
 
   return parseFocusHighlightType(str);
 }
@@ -522,7 +522,7 @@ bool
 CwmResourceData::
 getNoIconFocus()
 {
-  string str = getResource("window/focusNoIcon", "No" );
+  std::string str = getResource("window/focusNoIcon", "No" );
 
   if (CStrUtil::isBool(str))
     return CStrUtil::toBool(str);
@@ -530,7 +530,7 @@ getNoIconFocus()
   return false;
 }
 
-string
+std::string
 CwmResourceData::
 getMenuBackground()
 {
@@ -544,7 +544,7 @@ getMenuBackground(CwmScreen &screen)
   return screen.getPixel(getMenuBackground(), screen.getWhitePixel());
 }
 
-string
+std::string
 CwmResourceData::
 getMenuForeground()
 {
@@ -558,7 +558,7 @@ getMenuForeground(CwmScreen &screen)
   return screen.getPixel(getMenuForeground(), screen.getBlackPixel());
 }
 
-string
+std::string
 CwmResourceData::
 getMenuTitleBackground()
 {
@@ -572,7 +572,7 @@ getMenuTitleBackground(CwmScreen &screen)
   return screen.getPixel(getMenuTitleBackground(), screen.getWhitePixel());
 }
 
-string
+std::string
 CwmResourceData::
 getMenuTitleForeground()
 {
@@ -586,7 +586,7 @@ getMenuTitleForeground(CwmScreen &screen)
   return screen.getPixel(getMenuTitleForeground(), screen.getBlackPixel());
 }
 
-string
+std::string
 CwmResourceData::
 getMenuFont()
 {
@@ -600,7 +600,7 @@ getMenuFont(CwmScreen &screen)
   return screen.getFont(getMenuFont());
 }
 
-string
+std::string
 CwmResourceData::
 getMenuTitleFont()
 {
@@ -618,7 +618,7 @@ CHAlignType
 CwmResourceData::
 getTitleAlign()
 {
-  string str = getSectionResource("window/align", "title", "center");
+  std::string str = getSectionResource("window/align", "title", "center");
 
   if      (CStrUtil::casecmp(str, "left" ) == 0)
     return CHALIGN_TYPE_LEFT;
@@ -632,7 +632,7 @@ CwmTitlePatternType
 CwmResourceData::
 getTitlePatternType()
 {
-  string str = getSectionResource("window/titlePatternType", "title", "solid");
+  std::string str = getSectionResource("window/titlePatternType", "title", "solid");
 
   if      (CStrUtil::casecmp(str, "solid"   ) == 0)
     return CWM_TITLE_PATTERN_SOLID;
@@ -642,14 +642,14 @@ getTitlePatternType()
     return CWM_TITLE_PATTERN_SOLID;
 }
 
-string
+std::string
 CwmResourceData::
 getTitleForeground()
 {
   return getSectionResource("window/titleForeground", "title", "#666666");
 }
 
-string
+std::string
 CwmResourceData::
 getTitleBackground()
 {
@@ -666,14 +666,14 @@ getTitleColor(CwmScreen &screen)
   return screen.getColor(fg, bg);
 }
 
-string
+std::string
 CwmResourceData::
 getTitleFocusForeground()
 {
   return getSectionResource("window/titleFocusForeground", "title", "#4c7fb2");
 }
 
-string
+std::string
 CwmResourceData::
 getTitleFocusBackground()
 {
@@ -690,14 +690,14 @@ getTitleFocusColor(CwmScreen &screen)
   return screen.getColor(fg, bg);
 }
 
-string
+std::string
 CwmResourceData::
 getTitleGradientForeground()
 {
   return getSectionResource("window/gradientForeground", "title", "#999999");
 }
 
-string
+std::string
 CwmResourceData::
 getTitleGradientBackground()
 {
@@ -714,14 +714,14 @@ getTitleGradientColor(CwmScreen &screen)
   return screen.getColor(fg, bg);
 }
 
-string
+std::string
 CwmResourceData::
 getTitleGradientFocusForeground()
 {
   return getSectionResource("window/gradientFocusForeground", "title", "#4c7fb2");
 }
 
-string
+std::string
 CwmResourceData::
 getTitleGradientFocusBackground()
 {
@@ -742,7 +742,7 @@ int
 CwmResourceData::
 getAutoRaiseDelay()
 {
-  string str = getResource("window/autoRaiseDelay", "500");
+  std::string str = getResource("window/autoRaiseDelay", "500");
 
   if (CStrUtil::isInteger(str))
     return CStrUtil::toInteger(str);
@@ -754,7 +754,7 @@ bool
 CwmResourceData::
 getCirculateSkipIcons()
 {
-  string str = getResource("circulateSkipIcons", "Yes");
+  std::string str = getResource("circulateSkipIcons", "Yes");
 
   if (CStrUtil::isBool(str))
     return CStrUtil::toBool(str);
@@ -766,7 +766,7 @@ bool
 CwmResourceData::
 getClientAutoPlace()
 {
-  string str = getResource("clientAutoPlace", "Yes");
+  std::string str = getResource("clientAutoPlace", "Yes");
 
   if (CStrUtil::isBool(str))
     return CStrUtil::toBool(str);
@@ -778,7 +778,7 @@ int
 CwmResourceData::
 getDoubleClickTime()
 {
-  string str = getResource("doubleClickTime", "500");
+  std::string str = getResource("doubleClickTime", "500");
 
   int doubleClickTime = 0;
 
@@ -797,7 +797,7 @@ bool
 CwmResourceData::
 getEnableWarp()
 {
-  string str = getResource("enableWarp", "Yes");
+  std::string str = getResource("enableWarp", "Yes");
 
   if (CStrUtil::isBool(str))
     return CStrUtil::toBool(str);
@@ -809,7 +809,7 @@ bool
 CwmResourceData::
 getMoveOpaque()
 {
-  string str = getResource("window/moveOpaque", "No");
+  std::string str = getResource("window/moveOpaque", "No");
 
   if (CStrUtil::isBool(str))
     return CStrUtil::toBool(str);
@@ -821,7 +821,7 @@ int
 CwmResourceData::
 getMoveThreshold()
 {
-  string str = getResource("window/moveThreshold", "4");
+  std::string str = getResource("window/moveThreshold", "4");
 
   if (CStrUtil::isInteger(str))
     return CStrUtil::toInteger(str);
@@ -833,7 +833,7 @@ bool
 CwmResourceData::
 getInteractivePlacement()
 {
-  string str = getResource("window/interactivePlacement", "No");
+  std::string str = getResource("window/interactivePlacement", "No");
 
   if (CStrUtil::isBool(str))
     return CStrUtil::toBool(str);
@@ -845,7 +845,7 @@ bool
 CwmResourceData::
 getPositionIsFrame()
 {
-  string str = getResource("window/positionIsFrame", "Yes");
+  std::string str = getResource("window/positionIsFrame", "Yes");
 
   if (CStrUtil::isBool(str))
     return CStrUtil::toBool(str);
@@ -857,7 +857,7 @@ bool
 CwmResourceData::
 getPositionOnScreen()
 {
-  string str = getResource("window/positionOnScreen", "Yes");
+  std::string str = getResource("window/positionOnScreen", "Yes");
 
   if (CStrUtil::isBool(str))
     return CStrUtil::toBool(str);
@@ -869,7 +869,7 @@ bool
 CwmResourceData::
 getWindowPressRaise()
 {
-  string str = getResource("window/pressRaise", "false");
+  std::string str = getResource("window/pressRaise", "false");
 
   if (CStrUtil::isBool(str))
     return CStrUtil::toBool(str);
@@ -881,12 +881,12 @@ CwmFeedbackType
 CwmResourceData::
 getFeedbackType()
 {
-  string str = getSectionResource("window/type", "feedback", "all");
+  std::string str = getSectionResource("window/type", "feedback", "all");
 
   return parseShowFeedback(str);
 }
 
-string
+std::string
 CwmResourceData::
 getFeedbackBackground()
 {
@@ -900,7 +900,7 @@ getFeedbackBackground(CwmScreen &screen)
   return screen.getPixel(getFeedbackBackground(), screen.getWhitePixel());
 }
 
-string
+std::string
 CwmResourceData::
 getFeedbackForeground()
 {
@@ -914,7 +914,7 @@ getFeedbackForeground(CwmScreen &screen)
   return screen.getPixel(getFeedbackForeground(), screen.getBlackPixel());
 }
 
-string
+std::string
 CwmResourceData::
 getFeedbackFont()
 {
@@ -932,12 +932,12 @@ void
 CwmResourceData::
 getFeedbackGeometry(CHAlignType *halign, CVAlignType *valign, int *x_offset, int *y_offset)
 {
-  string str = getSectionResource("window/geometry", "feedback", "center,center");
+  std::string str = getSectionResource("window/geometry", "feedback", "center,center");
 
   parseFeedbackGeometry(str, halign, valign, x_offset, y_offset);
 }
 
-string
+std::string
 CwmResourceData::
 getToolBarBackground()
 {
@@ -951,7 +951,7 @@ getToolBarBackground(CwmScreen &screen)
   return screen.getPixel(getToolBarBackground(), screen.getWhitePixel());
 }
 
-string
+std::string
 CwmResourceData::
 getToolBarForeground()
 {
@@ -965,7 +965,7 @@ getToolBarForeground(CwmScreen &screen)
   return screen.getPixel(getToolBarForeground(), screen.getBlackPixel());
 }
 
-string
+std::string
 CwmResourceData::
 getToolBarFont()
 {
@@ -983,7 +983,7 @@ bool
 CwmResourceData::
 getToolBarShowClock()
 {
-  string str = getResource("toolbar/showClock", "Yes");
+  std::string str = getResource("toolbar/showClock", "Yes");
 
   if (CStrUtil::isBool(str))
     return CStrUtil::toBool(str);
@@ -995,7 +995,7 @@ bool
 CwmResourceData::
 getToolBarAddIcons()
 {
-  string str = getResource("toolbar/addIcons", "Yes");
+  std::string str = getResource("toolbar/addIcons", "Yes");
 
   if (CStrUtil::isBool(str))
     return CStrUtil::toBool(str);
@@ -1007,7 +1007,7 @@ bool
 CwmResourceData::
 getToolBarAddWindows()
 {
-  string str = getResource("toolbar/addWindows", "Yes");
+  std::string str = getResource("toolbar/addWindows", "Yes");
 
   if (CStrUtil::isBool(str))
     return CStrUtil::toBool(str);
@@ -1019,7 +1019,7 @@ int
 CwmResourceData::
 getToolBarHeight()
 {
-  string str = getResource("toolbar/height", "28");
+  std::string str = getResource("toolbar/height", "28");
 
   if (CStrUtil::isInteger(str))
     return CStrUtil::toInteger(str);
@@ -1031,7 +1031,7 @@ int
 CwmResourceData::
 getToolBarIconWidth()
 {
-  string str = getResource("toolbar/iconWidth", "108");
+  std::string str = getResource("toolbar/iconWidth", "108");
 
   if (CStrUtil::isInteger(str))
     return CStrUtil::toInteger(str);
@@ -1039,7 +1039,7 @@ getToolBarIconWidth()
   return 108;
 }
 
-string
+std::string
 CwmResourceData::
 getToolBarClockBackground()
 {
@@ -1053,7 +1053,7 @@ getToolBarClockBackground(CwmScreen &screen)
   return screen.getPixel(getToolBarClockBackground(), screen.getWhitePixel());
 }
 
-string
+std::string
 CwmResourceData::
 getToolBarClockForeground()
 {
@@ -1074,7 +1074,7 @@ getToolBarClockColor(CwmScreen &screen)
   return screen.getColor(getToolBarClockForeground(screen), getToolBarClockBackground(screen));
 }
 
-string
+std::string
 CwmResourceData::
 getToolBarClockFont()
 {
@@ -1088,14 +1088,14 @@ getToolBarClockFont(CwmScreen &screen)
   return screen.getFont(getToolBarClockFont());
 }
 
-string
+std::string
 CwmResourceData::
 getToolBarClockTimeFormat()
 {
   return getSectionResource("toolbar/timeFormat", "clock", "%H:%M:%S");
 }
 
-string
+std::string
 CwmResourceData::
 getToolBarIconBackground()
 {
@@ -1109,7 +1109,7 @@ getToolBarIconBackground(CwmScreen &screen)
   return screen.getPixel(getToolBarIconBackground(), screen.getWhitePixel());
 }
 
-string
+std::string
 CwmResourceData::
 getToolBarIconForeground()
 {
@@ -1123,7 +1123,7 @@ getToolBarIconForeground(CwmScreen &screen)
   return screen.getPixel(getToolBarIconForeground(), screen.getBlackPixel());
 }
 
-string
+std::string
 CwmResourceData::
 getToolBarIconFont()
 {
@@ -1137,7 +1137,7 @@ getToolBarIconFont(CwmScreen &screen)
   return screen.getFont(getToolBarIconFont());
 }
 
-string
+std::string
 CwmResourceData::
 getToolBarIconFocusBackground()
 {
@@ -1151,7 +1151,7 @@ getToolBarIconFocusBackground(CwmScreen &screen)
   return screen.getPixel(getToolBarIconFocusBackground(), screen.getWhitePixel());
 }
 
-string
+std::string
 CwmResourceData::
 getToolBarIconFocusForeground()
 {
@@ -1165,7 +1165,7 @@ getToolBarIconFocusForeground(CwmScreen &screen)
   return screen.getPixel(getToolBarIconFocusForeground(), screen.getBlackPixel());
 }
 
-string
+std::string
 CwmResourceData::
 getToolBarIconFocusFont()
 {
@@ -1195,7 +1195,7 @@ loadMenus()
   for ( ; pname1 != pname2; ++pname1, ++ppath1) {
     CwmMenuDef *menu_def = loadMenu(*ppath1, *pname1);
 
-    string name = CwmConfigInst->getValue(*ppath1 + "/name", *pname1);
+    std::string name = CwmConfigInst->getValue(*ppath1 + "/name", *pname1);
 
     CwmNamedMenuMgrInst->define(name, menu_def);
   }
@@ -1203,7 +1203,7 @@ loadMenus()
 
 CwmMenuDef *
 CwmResourceData::
-loadMenu(const string &path, const string &)
+loadMenu(const std::string &path, const std::string &)
 {
   CwmMenuDef *menu_def = new CwmMenuDef();
 
@@ -1218,12 +1218,10 @@ loadMenu(const string &path, const string &)
     if (CStrUtil::casecmp(*psection1, "") == 0)
       continue;
 
-    string type =
-      getSectionResource(path + "/type", *psection1, "button");
+    std::string type = getSectionResource(path + "/type", *psection1, "button");
 
     if     (CStrUtil::casecmp(type, "title") == 0) {
-      string name =
-        getSectionResource(path + "/name", *psection1, "title");
+      std::string name = getSectionResource(path + "/name", *psection1, "title");
 
       menu_def->addTitle(name);
 
@@ -1233,54 +1231,38 @@ loadMenu(const string &path, const string &)
       menu_def->addSplitter("----");
     }
     else if (CStrUtil::casecmp(type, "button") == 0) {
-      string name =
-        getSectionResource(path + "/name", *psection1, "button");
-      string image =
-        getSectionResource(path + "/image", *psection1, "");
-      string mnemonic =
-        getSectionResource(path + "/mnemonic", *psection1, "");
-      string accelerator =
-        getSectionResource(path + "/accelerator", *psection1, "");
-      string function =
-        getSectionResource(path + "/function", *psection1, "f.null");
-      string data =
-        getSectionResource(path + "/data", *psection1, "");
+      std::string name        = getSectionResource(path + "/name", *psection1, "button");
+      std::string image       = getSectionResource(path + "/image", *psection1, "");
+      std::string mnemonic    = getSectionResource(path + "/mnemonic", *psection1, "");
+      std::string accelerator = getSectionResource(path + "/accelerator", *psection1, "");
+      std::string function    = getSectionResource(path + "/function", *psection1, "f.null");
+      std::string data        = getSectionResource(path + "/data", *psection1, "");
 
       CwmFunctionDef *function_def = new CwmFunctionDef(function);
 
-      function_def->setData(new string(data));
+      function_def->setData(new std::string(data));
 
-      menu_def->addButton(image, name,
-                          (mnemonic.size() > 0 ? mnemonic[0] : '\0'), accelerator,
+      menu_def->addButton(image, name, (mnemonic.size() > 0 ? mnemonic[0] : '\0'), accelerator,
                           (CwmMenuProc) CwmFunctionDef::processProc, function_def);
     }
     else if (CStrUtil::casecmp(type, "toggle") == 0) {
-      string name =
-        getSectionResource(path + "/name", *psection1, "toggle");
-      string image =
-        getSectionResource(path + "/image", *psection1, "");
-      string mnemonic =
-        getSectionResource(path + "/mnemonic", *psection1, "");
-      string accelerator =
-        getSectionResource(path + "/accelerator", *psection1, "");
-      string function =
-        getSectionResource(path + "/function", *psection1, "f.null");
-      string data =
-        getSectionResource(path + "/data", *psection1, "");
+      std::string name        = getSectionResource(path + "/name", *psection1, "toggle");
+      std::string image       = getSectionResource(path + "/image", *psection1, "");
+      std::string mnemonic    = getSectionResource(path + "/mnemonic", *psection1, "");
+      std::string accelerator = getSectionResource(path + "/accelerator", *psection1, "");
+      std::string function    = getSectionResource(path + "/function", *psection1, "f.null");
+      std::string data        = getSectionResource(path + "/data", *psection1, "");
 
       CwmFunctionDef *function_def = new CwmFunctionDef(function);
 
-      function_def->setData(new string(data));
+      function_def->setData(new std::string(data));
 
-      menu_def->addToggle(image, name,
-                          (mnemonic.size() > 0 ? mnemonic[0] : '\0'), accelerator,
+      menu_def->addToggle(image, name, (mnemonic.size() > 0 ? mnemonic[0] : '\0'), accelerator,
                           (CwmMenuProc) CwmFunctionDef::processProc, function_def);
     }
     else if (CStrUtil::casecmp(type, "cascade") == 0) {
-      string name =
-        getSectionResource(path + "/name", *psection1, "cascade");
-      string path1 =
-        getSectionResource(path + "/path", *psection1, "cascade");
+      std::string name  = getSectionResource(path + "/name", *psection1, "cascade");
+      std::string path1 = getSectionResource(path + "/path", *psection1, "cascade");
 
       CwmMenuDef *menu_def1 = loadMenu(path + "/" + path1, path1);
 
@@ -1308,22 +1290,15 @@ loadDeskIcons()
 
 void
 CwmResourceData::
-loadDeskIcon(const string &path, const string &section)
+loadDeskIcon(const std::string &path, const std::string &section)
 {
-  string icon =
-    getSectionResource(path + "/icon", section, "");
-  string label =
-    getSectionResource(path + "/label", section, "");
-  string command =
-    getSectionResource(path + "/command", section, "");
-  string background =
-    getSectionResource(path + "/background", section, "");
-  string foreground =
-    getSectionResource(path + "/foreground", section, "");
-  int x =
-    getSectionResource(path + "/x", section, 0);
-  int y =
-    getSectionResource(path + "/y", section, 0);
+  std::string icon       = getSectionResource(path + "/icon", section, "");
+  std::string label      = getSectionResource(path + "/label", section, "");
+  std::string command    = getSectionResource(path + "/command", section, "");
+  std::string background = getSectionResource(path + "/background", section, "");
+  std::string foreground = getSectionResource(path + "/foreground", section, "");
+  int         x          = getSectionResource(path + "/x", section, 0);
+  int         y          = getSectionResource(path + "/y", section, 0);
 
   CwmCustomIconMgrInst->addCustomIcon(icon, label, command, background, foreground, x, y);
 }
@@ -1345,14 +1320,14 @@ loadToolBarIcons()
 
 void
 CwmResourceData::
-loadToolBarIcon(const string &path, const string &section)
+loadToolBarIcon(const std::string &path, const std::string &section)
 {
-  string icon  = getSectionResource(path + "/icon" , section, "");
-  string label = getSectionResource(path + "/label", section, "");
+  std::string icon  = getSectionResource(path + "/icon" , section, "");
+  std::string label = getSectionResource(path + "/label", section, "");
 
   bool add_display = false;
 
-  string command = getSectionResource(path + "/command", section, "");
+  std::string command = getSectionResource(path + "/command", section, "");
 
   if (command == "") {
     add_display = true;
@@ -1360,8 +1335,8 @@ loadToolBarIcon(const string &path, const string &section)
     command = getSectionResource(path + "/xcommand", section, "");
   }
 
-  string background = getSectionResource(path + "/background", section, "");
-  string foreground = getSectionResource(path + "/foreground", section, "");
+  std::string background = getSectionResource(path + "/background", section, "");
+  std::string foreground = getSectionResource(path + "/foreground", section, "");
 
   CwmToolBarIconDefMgrInst->addToolBarIcon(icon, label, command, add_display,
                                            background, foreground);
@@ -1379,16 +1354,11 @@ loadDesks()
   StringVectorT::iterator psection2 = sections.end  ();
 
   for ( ; psection1 != psection2; ++psection1) {
-    int num =
-      getSectionResource("desks/num", *psection1, 1);
-    string name =
-      getSectionResource("desks/name", *psection1, "");
-    string icons =
-      getSectionResource("desks/icons", *psection1, "no");
-    string toolbar =
-      getSectionResource("desks/toolbar", *psection1, "yes");
-    string image =
-      getSectionResource("desks/image", *psection1, "");
+    int         num     = getSectionResource("desks/num", *psection1, 1);
+    std::string name    = getSectionResource("desks/name", *psection1, "");
+    std::string icons   = getSectionResource("desks/icons", *psection1, "no");
+    std::string toolbar = getSectionResource("desks/toolbar", *psection1, "yes");
+    std::string image   = getSectionResource("desks/image", *psection1, "");
 
     CwmDeskResourceMgrInst->setDeskName(num - 1, name);
 
@@ -1416,22 +1386,14 @@ loadGroups()
   StringVectorT::iterator pname2 = names.end  ();
 
   for ( ; pname1 != pname2; ++pname1, ++ppath1) {
-    string pattern =
-      CwmConfigInst->getValue(*ppath1 + "/pattern", "");
-    string icon =
-      CwmConfigInst->getValue(*ppath1 + "/icon", "");
-    string iconSmall =
-      CwmConfigInst->getValue(*ppath1 + "/iconSmall", "");
-    string decorations =
-      CwmConfigInst->getValue(*ppath1 + "/decorations", "");
-    string functions =
-      CwmConfigInst->getValue(*ppath1 + "/functions", "");
-    string focusAutoRaise =
-      CwmConfigInst->getValue(*ppath1 + "/focusAutoRaise", "");
-    string circulateSkip =
-      CwmConfigInst->getValue(*ppath1 + "/circulateSkip", "");
-    string toolbarSkip =
-      CwmConfigInst->getValue(*ppath1 + "/toolbarSkip", "");
+    std::string pattern        = CwmConfigInst->getValue(*ppath1 + "/pattern", "");
+    std::string icon           = CwmConfigInst->getValue(*ppath1 + "/icon", "");
+    std::string iconSmall      = CwmConfigInst->getValue(*ppath1 + "/iconSmall", "");
+    std::string decorations    = CwmConfigInst->getValue(*ppath1 + "/decorations", "");
+    std::string functions      = CwmConfigInst->getValue(*ppath1 + "/functions", "");
+    std::string focusAutoRaise = CwmConfigInst->getValue(*ppath1 + "/focusAutoRaise", "");
+    std::string circulateSkip  = CwmConfigInst->getValue(*ppath1 + "/circulateSkip", "");
+    std::string toolbarSkip    = CwmConfigInst->getValue(*ppath1 + "/toolbarSkip", "");
 
     if (icon != "")
       CwmCustomDeskIconMgrInst->setIcon(pattern, icon);
@@ -1474,7 +1436,7 @@ loadGroups()
 
 void
 CwmResourceData::
-loadGroupEvents(const string &pattern, const string &path)
+loadGroupEvents(const std::string &pattern, const std::string &path)
 {
   StringVectorT sections;
 
@@ -1484,20 +1446,16 @@ loadGroupEvents(const string &pattern, const string &path)
   StringVectorT::iterator psection2 = sections.end  ();
 
   for ( ; psection1 != psection2; ++psection1) {
-    string area =
-      getSectionResource(path + "/area", *psection1, "");
-    string event =
-      getSectionResource(path + "/event", *psection1, "");
-    string function =
-      getSectionResource(path + "/function", *psection1, "");
-    string data =
-      getSectionResource(path + "/data", *psection1, "");
+    std::string area     = getSectionResource(path + "/area", *psection1, "");
+    std::string event    = getSectionResource(path + "/event", *psection1, "");
+    std::string function = getSectionResource(path + "/function", *psection1, "");
+    std::string data     = getSectionResource(path + "/data", *psection1, "");
 
     int area1 = stringToArea(area);
 
     CXNamedEvent *event1 = new CXNamedEvent(event);
 
-    if (event1->getEvent() == NULL) {
+    if (! event1->getEvent()) {
       CwmMachineInst->logf("Bad Event %s\n", event.c_str());
       delete event1;
       continue;
@@ -1505,14 +1463,14 @@ loadGroupEvents(const string &pattern, const string &path)
 
     CwmFunctionDef *function1 = new CwmFunctionDef(function);
 
-    if (function1 == NULL) {
+    if (! function1) {
       CwmMachineInst->logf("Bad Function %s\n", event.c_str());
       delete event1;
       continue;
     }
 
     CwmWindowEventFunctionMgrInst->
-      addPatternEventFunction(pattern, area1, event1, function1, (CwmData) new string(data));
+      addPatternEventFunction(pattern, area1, event1, function1, (CwmData) new std::string(data));
   }
 }
 
@@ -1520,7 +1478,7 @@ void
 CwmResourceData::
 loadRoot()
 {
-  string image = getResource("root/image", "");
+  std::string image = getResource("root/image", "");
 
   if (image != "")
     CwmInst->setRootImage(image);
@@ -1540,16 +1498,13 @@ loadRootEvents()
   StringVectorT::iterator psection2 = sections.end  ();
 
   for ( ; psection1 != psection2; ++psection1) {
-    string event    =
-      getSectionResource("root/events/event"   , *psection1, "");
-    string function =
-      getSectionResource("root/events/function", *psection1, "");
-    string data     =
-      getSectionResource("root/events/data"    , *psection1, "");
+    std::string event    = getSectionResource("root/events/event"   , *psection1, "");
+    std::string function = getSectionResource("root/events/function", *psection1, "");
+    std::string data     = getSectionResource("root/events/data"    , *psection1, "");
 
     CXNamedEvent *event1 = new CXNamedEvent(event);
 
-    if (event1->getEvent() == NULL) {
+    if (! event1->getEvent()) {
       CwmMachineInst->logf("Bad Event %s\n", event.c_str());
       delete event1;
       continue;
@@ -1557,13 +1512,13 @@ loadRootEvents()
 
     CwmFunctionDef *function1 = new CwmFunctionDef(function);
 
-    if (function1 == NULL) {
+    if (! function1) {
       CwmMachineInst->logf("Bad Function %s\n", event.c_str());
       delete event1;
       continue;
     }
 
-    CwmRootEventFunctionMgrInst->add(event1, function1, new string(data));
+    CwmRootEventFunctionMgrInst->add(event1, function1, new std::string(data));
   }
 }
 
@@ -1584,11 +1539,11 @@ loadStartupCommands(CwmScreen &screen)
 
 void
 CwmResourceData::
-loadStartupCommand(CwmScreen &screen, const string &path, const string &section)
+loadStartupCommand(CwmScreen &screen, const std::string &path, const std::string &section)
 {
   bool add_display = false;
 
-  string command = getSectionResource(path + "/command", section, "");
+  std::string command = getSectionResource(path + "/command", section, "");
 
   if (command == "") {
     add_display = true;
@@ -1605,7 +1560,7 @@ loadStartupCommand(CwmScreen &screen, const string &path, const string &section)
 
 int
 CwmResourceData::
-stringToDecorations(const string &str)
+stringToDecorations(const std::string &str)
 {
   int decorations = 0;
 
@@ -1614,7 +1569,7 @@ stringToDecorations(const string &str)
   CStrUtil::addWords(str, words);
 
   for (int i = 0; i < (int) words.size(); i++) {
-    string word = words[i];
+    std::string word = words[i];
 
     if (i == 0) {
       if (word[0] == '-')
@@ -1665,7 +1620,7 @@ stringToDecorations(const string &str)
 
 int
 CwmResourceData::
-stringToFunctions(const string &str)
+stringToFunctions(const std::string &str)
 {
   int functions = 0;
 
@@ -1674,7 +1629,7 @@ stringToFunctions(const string &str)
   CStrUtil::addWords(str, words);
 
   for (int i = 0; i < (int) words.size(); i++) {
-    string word = words[i];
+    std::string word = words[i];
 
     if (i == 0) {
       if (word[0] == '-')
@@ -1725,7 +1680,7 @@ stringToFunctions(const string &str)
 
 int
 CwmResourceData::
-stringToArea(const string &str)
+stringToArea(const std::string &str)
 {
   if      (CStrUtil::casecmp(str, "Menu") == 0)
     return CWM_WINDOW_MENU_AREA;

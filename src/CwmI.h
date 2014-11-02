@@ -19,12 +19,7 @@
 #include <list>
 #include <algorithm>
 
-typedef std::vector<std::string>  StringVectorT;
-
-using std::string;
-using std::map;
-using std::vector;
-using std::list;
+typedef std::vector<std::string> StringVectorT;
 
 #include <CwmLib.h>
 

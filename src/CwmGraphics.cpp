@@ -1,4 +1,4 @@
-#include "CwmI.h"
+#include <CwmI.h>
 
 CwmGraphics::
 CwmGraphics(CwmScreen &screen, CwmFont *font, CwmColor *color, bool is_xor) :
@@ -45,12 +45,12 @@ void
 CwmGraphics::
 init()
 {
-  stipple_bitmap_ = NULL;
+  stipple_bitmap_ = 0;
 }
 
 void
 CwmGraphics::
-drawText(CwmWindow *xwindow, int x, int y, const string &text)
+drawText(CwmWindow *xwindow, int x, int y, const std::string &text)
 {
   setForeground();
 
@@ -60,7 +60,7 @@ drawText(CwmWindow *xwindow, int x, int y, const string &text)
 void
 CwmGraphics::
 drawTextAligned(CwmWindow *xwindow, int x, int y, int width, int height,
-                CHAlignType h_align, CVAlignType /*v_align*/, const string &text)
+                CHAlignType h_align, CVAlignType /*v_align*/, const std::string &text)
 {
   if      (h_align == CHALIGN_TYPE_LEFT)
     drawTextLeft(xwindow, x, y, width, height, text);
@@ -72,7 +72,7 @@ drawTextAligned(CwmWindow *xwindow, int x, int y, int width, int height,
 
 void
 CwmGraphics::
-drawTextLeft(CwmWindow *xwindow, int x, int y, int width, int height, const string &text)
+drawTextLeft(CwmWindow *xwindow, int x, int y, int width, int height, const std::string &text)
 {
   setTextSize(text);
 
@@ -81,7 +81,7 @@ drawTextLeft(CwmWindow *xwindow, int x, int y, int width, int height, const stri
 
 void
 CwmGraphics::
-drawTextRight(CwmWindow *xwindow, int x, int y, int width, int height, const string &text)
+drawTextRight(CwmWindow *xwindow, int x, int y, int width, int height, const std::string &text)
 {
   setTextSize(text);
 
@@ -94,7 +94,7 @@ drawTextRight(CwmWindow *xwindow, int x, int y, int width, int height, const str
 
 void
 CwmGraphics::
-drawTextCentered(CwmWindow *xwindow, int x, int y, int width, int height, const string &text)
+drawTextCentered(CwmWindow *xwindow, int x, int y, int width, int height, const std::string &text)
 {
   setTextSize(text);
 
@@ -107,7 +107,7 @@ drawTextCentered(CwmWindow *xwindow, int x, int y, int width, int height, const 
 
 void
 CwmGraphics::
-setTextSize(const string &text)
+setTextSize(const std::string &text)
 {
   getTextSize(text, &text_width_, &text_height_);
 }
@@ -135,7 +135,7 @@ getFontDescent()
 
 void
 CwmGraphics::
-getTextSize(const string &text, int *width, int *height)
+getTextSize(const std::string &text, int *width, int *height)
 {
   font_->getTextSize(text, width, height);
 }
@@ -143,7 +143,7 @@ getTextSize(const string &text, int *width, int *height)
 void
 CwmGraphics::
 drawTextI(CwmWindow *xwindow, int x, int y, int width, int height,
-          CVAlignType v_align, const string &text)
+          CVAlignType v_align, const std::string &text)
 {
   int dy = 0;
 
@@ -588,7 +588,7 @@ void
 CwmGraphics::
 setStippled()
 {
-  if (stipple_bitmap_ == NULL)
+  if (! stipple_bitmap_)
     stipple_bitmap_ = CwmMachineInst->createStippleCwmXPixmap(screen_);
 
   CwmMachineInst->setFillStipple(gc_, stipple_bitmap_->getXPixmap());

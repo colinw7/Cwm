@@ -1,11 +1,6 @@
 #define CwmXPixmapMgrInst CwmXPixmapMgr::getInstance()
 
 class CwmXPixmapMgr {
- private:
-  typedef list<CwmXPixmap *> XPixmapList;
-
-  XPixmapList xpixmaps_;
-
  public:
   static CwmXPixmapMgr *getInstance();
 
@@ -13,22 +8,17 @@ class CwmXPixmapMgr {
 
   void add(CwmXPixmap *xpixmap);
   void remove(CwmXPixmap *xpixmap);
+
+ private:
+  typedef std::list<CwmXPixmap *> XPixmapList;
+
+  XPixmapList xpixmaps_;
 };
 
 class CwmXPixmap {
- private:
-  CwmScreen &screen_;
-  Pixmap     xpixmap_;
-  int        width_;
-  int        height_;
-  int        depth_;
-  bool       owner_;
-
  public:
-  CwmXPixmap(CwmScreen &screen, int width, int height,
-             int depth=-1);
-  CwmXPixmap(CwmScreen &screen, Pixmap xpixmap, int width, int height,
-             int depth=-1);
+  CwmXPixmap(CwmScreen &screen, int width, int height, int depth=-1);
+  CwmXPixmap(CwmScreen &screen, Pixmap xpixmap, int width, int height, int depth=-1);
  ~CwmXPixmap();
 
   CwmScreen &getScreen () const { return screen_ ; }
@@ -38,4 +28,12 @@ class CwmXPixmap {
   int        getDepth  () const { return depth_  ; }
 
   GC createGC();
+
+ private:
+  CwmScreen &screen_;
+  Pixmap     xpixmap_;
+  int        width_;
+  int        height_;
+  int        depth_;
+  bool       owner_;
 };

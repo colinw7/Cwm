@@ -1,4 +1,4 @@
-#include "CwmI.h"
+#include <CwmI.h>
 
 static const uint event_mask =
   ButtonPressMask | ButtonReleaseMask |
@@ -14,8 +14,7 @@ CwmFrameWindow(CwmWMWindow *window1) :
 {
   CwmScreen &screen = window->getScreen();
 
-  xwindow = new CwmWindow(screen, screen.getRoot(), 0, 0, 1, 1,
-                          event_mask, CWM_CURSOR_TITLE);
+  xwindow = new CwmWindow(screen, screen.getRoot(), 0, 0, 1, 1, event_mask, CWM_CURSOR_TITLE);
 
   graphics = window->getGraphics();
 
@@ -48,7 +47,7 @@ position()
 {
   CwmUserWindow *user = window->getUser();
 
-  if (user == NULL)
+  if (! user)
     return;
 
   CwmDecoration *decoration = window->getDecoration();
@@ -144,16 +143,10 @@ draw()
 
   xwindow->clear();
 
-  graphics->drawButtonOut(xwindow,
-                          0, 0,
-                          getWidth(), getHeight(),
-                          2);
+  graphics->drawButtonOut(xwindow, 0, 0, getWidth(), getHeight(), 2);
 
-  graphics->drawButtonIn(xwindow,
-                         border - 1, border - 1,
-                         getWidth () - 2*border + 2,
-                         getHeight() - 2*border + 2,
-                         1);
+  graphics->drawButtonIn(xwindow, border - 1, border - 1,
+                         getWidth () - 2*border + 2, getHeight() - 2*border + 2, 1);
 }
 
 void
@@ -164,7 +157,7 @@ move(int x, int y)
 
   CwmUserWindow *user = window->getUser();
 
-  if (user == NULL)
+  if (! user)
     return;
 
   CwmDecoration *decoration = window->getDecoration();
@@ -186,7 +179,7 @@ moveResize(int x, int y, int width, int height)
 
   CwmUserWindow *user = window->getUser();
 
-  if (user == NULL)
+  if (! user)
     return;
 
   CwmDecoration *decoration = window->getDecoration();
@@ -215,7 +208,7 @@ minimize()
 {
   CwmUserWindow *user = window->getUser();
 
-  if (user == NULL)
+  if (! user)
     return;
 
   CwmDecoration *decoration = window->getDecoration();
@@ -258,7 +251,7 @@ maximize()
 {
   CwmUserWindow *user = window->getUser();
 
-  if (user == NULL)
+  if (! user)
     return;
 
   CwmDecoration *decoration = window->getDecoration();

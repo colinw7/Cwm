@@ -1,4 +1,4 @@
-#include "CwmToolBarI.h"
+#include <CwmToolBarI.h>
 
 CwmToolBarMgr::
 CwmToolBarMgr(CwmDesk &desk1) :
@@ -131,7 +131,7 @@ CwmToolBar(CwmToolBarMgr &mgr1) :
     icon_area_x2_ -= clock_->getWidth();
   }
   else
-    clock_ = NULL;
+    clock_ = 0;
 
   //------
 
@@ -227,7 +227,7 @@ redraw()
                           xwindow_->getHeight(),
                           border_);
 
-  if (clock_ != NULL)
+  if (clock_ != 0)
     clock_->redraw();
 
   menu_->redraw();
@@ -273,21 +273,21 @@ bool
 CwmToolBar::
 isToolIcon(CwmWindow *xwindow)
 {
-  return (getToolIcon(xwindow) != NULL);
+  return (getToolIcon(xwindow) != 0);
 }
 
 bool
 CwmToolBar::
 isToolIcon(Window xwin)
 {
-  return (getToolIcon(xwin) != NULL);
+  return (getToolIcon(xwin) != 0);
 }
 
 bool
 CwmToolBar::
 isToolIcon(CwmWMWindow *window)
 {
-  return (getToolIcon(window) != NULL);
+  return (getToolIcon(window) != 0);
 }
 
 CwmToolBarIcon *
@@ -397,7 +397,7 @@ raiseWindowProc(CwmWMWindow *window, CwmData)
 
   CwmToolBar *toolbar = window->getDesk()->getToolBar();
 
-  if (toolbar != NULL && toolbar->getAddWindows())
+  if (toolbar != 0 && toolbar->getAddWindows())
     toolbar->redraw();
 }
 
@@ -419,7 +419,7 @@ void
 CwmToolBar::
 enable()
 {
-  if (clock_ != NULL)
+  if (clock_ != 0)
     clock_->enable();
 }
 
@@ -427,7 +427,7 @@ void
 CwmToolBar::
 disable()
 {
-  if (clock_ != NULL)
+  if (clock_ != 0)
     clock_->disable();
 }
 
@@ -483,7 +483,7 @@ processExpose(CwmWindow *xwindow)
 
   CwmToolBarIcon *icon = getToolIcon(xwindow);
 
-  if (icon != NULL) {
+  if (icon != 0) {
     icon->redraw();
 
     return true;
@@ -516,7 +516,7 @@ processButtonPress(Window xwin, int button)
 
   CwmToolBarIcon *tool_icon = getToolIcon(xwin);
 
-  if (tool_icon != NULL) {
+  if (tool_icon != 0) {
     if      (button == 1) {
       CwmWMWindow *window = tool_icon->getWindow();
 

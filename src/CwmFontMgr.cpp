@@ -1,7 +1,7 @@
 #include <CwmI.h>
+#include <CFontMgr.h>
 #include <CXFont.h>
 #include <CXrtFont.h>
-#include <CFontMgr.h>
 
 CwmFontMgr::
 CwmFontMgr(CwmScreen &screen) :
@@ -17,7 +17,7 @@ CwmFontMgr::
 
 CwmFont *
 CwmFontMgr::
-getFont(const string &name)
+getFont(const std::string &name)
 {
   FontList::const_iterator pfont1 = fonts_.begin();
   FontList::const_iterator pfont2 = fonts_.end  ();
@@ -38,12 +38,12 @@ getFont(const string &name)
 }
 
 CwmFont::
-CwmFont(CwmScreen &, const string &name)
+CwmFont(CwmScreen &, const std::string &name)
 {
-  int        size;
-  string     name1;
-  CFontStyle style;
-  int        angle;
+  int         size;
+  std::string name1;
+  CFontStyle  style;
+  int         angle;
 
   parseName(name, &name1, &style, &size, &angle);
 
@@ -55,7 +55,7 @@ CwmFont::
 {
 }
 
-string
+std::string
 CwmFont::
 getName() const
 {
@@ -85,7 +85,7 @@ getDescent() const
 
 void
 CwmFont::
-getTextSize(const string &text, int *width, int *height)
+getTextSize(const std::string &text, int *width, int *height)
 {
   *width  = cxfont_->getIStringWidth(text);
   *height = cxfont_->getICharHeight();
@@ -93,7 +93,7 @@ getTextSize(const string &text, int *width, int *height)
 
 void
 CwmFont::
-drawString(CwmWindow *xwindow, CwmGraphics *graphics, int x, int y, const string &text)
+drawString(CwmWindow *xwindow, CwmGraphics *graphics, int x, int y, const std::string &text)
 {
   CXFont *xfont = cxfont_.cast<CXFont>();
 
@@ -104,7 +104,7 @@ drawString(CwmWindow *xwindow, CwmGraphics *graphics, int x, int y, const string
 
 void
 CwmFont::
-drawString(CwmXPixmap *xpixmap, CwmGraphics *graphics, int x, int y, const string &text)
+drawString(CwmXPixmap *xpixmap, CwmGraphics *graphics, int x, int y, const std::string &text)
 {
   CXFont *xfont = cxfont_.cast<CXFont>();
 
@@ -115,9 +115,9 @@ drawString(CwmXPixmap *xpixmap, CwmGraphics *graphics, int x, int y, const strin
 
 void
 CwmFont::
-parseName(const string &name, string *name1, CFontStyle *style, int *size, int *angle)
+parseName(const std::string &name, std::string *name1, CFontStyle *style, int *size, int *angle)
 {
-  vector<string> words;
+  std::vector<std::string> words;
 
   CStrUtil::addFields(name, words, "-");
 
@@ -128,7 +128,7 @@ parseName(const string &name, string *name1, CFontStyle *style, int *size, int *
   if (words.size() > 0)
     *name1 = words[0];
 
-  string style1 = "normal";
+  std::string style1 = "normal";
 
   if (words.size() > 1)
     style1 = words[1];
@@ -147,7 +147,7 @@ parseName(const string &name, string *name1, CFontStyle *style, int *size, int *
 
 CFontStyle
 CwmFont::
-parseStyle(const string &style)
+parseStyle(const std::string &style)
 {
   return CFont::stringToFontStyle(style);
 }

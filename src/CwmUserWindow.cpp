@@ -1,12 +1,11 @@
-#include "CwmI.h"
+#include <CwmI.h>
 
 CwmUserWindow::
 CwmUserWindow(CwmWMWindow *window, Window xwin, int x, int y,
               int width, int height, int border) :
  window_(window), border_(border)
 {
-  xwindow_ = new CwmWindow(window_->getScreen(), xwin,
-                           x, y, width, height, true);
+  xwindow_ = new CwmWindow(window_->getScreen(), xwin, x, y, width, height, true);
 }
 
 CwmUserWindow::
@@ -105,9 +104,8 @@ sendConfigureNotify()
 
   CwmFrameWindow *frame = window_->getFrame();
 
-  CwmMachineInst->sendConfigureNotifyEvent(xwindow_->getXWin(),
-                                           x_, y_, getWidth(), getHeight(), 0,
-                                           frame->getXWindow()->getXWin());
+  CwmMachineInst->sendConfigureNotifyEvent(xwindow_->getXWin(), x_, y_, getWidth(), getHeight(),
+                                           0, frame->getXWindow()->getXWin());
 }
 
 int

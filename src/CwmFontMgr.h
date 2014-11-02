@@ -1,23 +1,20 @@
-#include "CFont.h"
+#include <CFont.h>
 
 class CwmFontMgr {
- private:
-  typedef vector<CwmFont *> FontList;
-
-  CwmScreen &screen_;
-  FontList   fonts_;
-
  public:
   CwmFontMgr(CwmScreen &screen);
  ~CwmFontMgr();
 
   CwmFont *getFont(const std::string &name);
+
+ private:
+  typedef std::vector<CwmFont *> FontList;
+
+  CwmScreen &screen_;
+  FontList   fonts_;
 };
 
 struct CwmFont {
- private:
-  CFontPtr cxfont_;
-
  public:
   CwmFont(CwmScreen &screen, const std::string &name);
  ~CwmFont();
@@ -39,4 +36,7 @@ struct CwmFont {
                  int *size, int *angle);
 
   CFontStyle parseStyle(const std::string &style);
+
+ private:
+  CFontPtr cxfont_;
 };
