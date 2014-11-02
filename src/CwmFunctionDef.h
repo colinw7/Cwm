@@ -4,15 +4,6 @@
 class CwmScreen;
 
 class CwmFunctionDef {
- private:
-  CwmScreen     *screen_;
-  CwmRootProc    root_proc_;
-  CwmWMWindow   *window_;
-  CwmWindowProc  window_proc_;
-  CwmDeskIcon   *icon_;
-  CwmIconProc    icon_proc_;
-  CwmData        data_;
-
  public:
   CwmFunctionDef(const std::string &name);
  ~CwmFunctionDef();
@@ -27,6 +18,15 @@ class CwmFunctionDef {
   void setObjects(CwmScreen *screen, CwmWMWindow *window, CwmDeskIcon *icon);
 
   static void processProc(CwmData data);
+
+ private:
+  CwmScreen     *screen_;
+  CwmRootProc    root_proc_;
+  CwmWMWindow   *window_;
+  CwmWindowProc  window_proc_;
+  CwmDeskIcon   *icon_;
+  CwmIconProc    icon_proc_;
+  CwmData        data_;
 };
 
 #endif

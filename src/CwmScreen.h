@@ -4,13 +4,6 @@
 class CXScreen;
 
 class CwmScreenMgr {
- private:
-  typedef std::map<int   ,CwmScreen *> ScreenNumMap;
-  typedef std::map<Window,CwmScreen *> ScreenRootMap;
-
-  ScreenNumMap  screen_num_map_;
-  ScreenRootMap screen_root_map_;
-
  public:
   CwmScreenMgr();
  ~CwmScreenMgr();
@@ -25,45 +18,16 @@ class CwmScreenMgr {
 
  private:
   CwmScreen *addScreen(int screen_num);
+
+ private:
+  typedef std::map<int   ,CwmScreen *> ScreenNumMap;
+  typedef std::map<Window,CwmScreen *> ScreenRootMap;
+
+  ScreenNumMap  screen_num_map_;
+  ScreenRootMap screen_root_map_;
 };
 
 class CwmScreen {
- private:
-  typedef list<CwmWMWindow *> WMWindowList;
-
-  int                      num_;
-
-  CXScreen                *cxscreen_;
-
-  CwmGraphics             *graphics_;
-  CwmGraphics             *xor_graphics_;
-
-  CwmWindow               *root_;
-
-  CwmColor                *color_;
-
-  CwmDeskMgr              *desk_mgr_;
-  CwmColorMgr             *color_mgr_;
-  CwmFontMgr              *font_mgr_;
-  CwmCursorMgr            *cursor_mgr_;
-  CwmColormapMgr          *colormap_mgr_;
-
-  CwmGrid                 *icon_grid_;
-
-  CwmMoveFeedback         *move_feedback_;
-  CwmResizeFeedback       *resize_feedback_;
-
-  CwmInfo                 *info_;
-
-  int                      default_x_;
-  int                      default_y_;
-
-  CwmCirculateWindowStack *window_stack_;
-
-  CwmTabWindow            *tab_window_;
-
-  WMWindowList             windows_;
-
  public:
   CwmScreen(int screen_num);
  ~CwmScreen();
@@ -168,6 +132,42 @@ class CwmScreen {
   void initStippleBitmap();
 
   void getCirculateWindows();
+
+ private:
+  typedef std::list<CwmWMWindow *> WMWindowList;
+
+  int                      num_;
+
+  CXScreen                *cxscreen_;
+
+  CwmGraphics             *graphics_;
+  CwmGraphics             *xor_graphics_;
+
+  CwmWindow               *root_;
+
+  CwmColor                *color_;
+
+  CwmDeskMgr              *desk_mgr_;
+  CwmColorMgr             *color_mgr_;
+  CwmFontMgr              *font_mgr_;
+  CwmCursorMgr            *cursor_mgr_;
+  CwmColormapMgr          *colormap_mgr_;
+
+  CwmGrid                 *icon_grid_;
+
+  CwmMoveFeedback         *move_feedback_;
+  CwmResizeFeedback       *resize_feedback_;
+
+  CwmInfo                 *info_;
+
+  int                      default_x_;
+  int                      default_y_;
+
+  CwmCirculateWindowStack *window_stack_;
+
+  CwmTabWindow            *tab_window_;
+
+  WMWindowList             windows_;
 };
 
 #endif

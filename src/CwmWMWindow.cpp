@@ -1,9 +1,9 @@
-#include "CwmI.h"
-#include "CXAtom.h"
+#include <CwmI.h>
+#include <CXAtom.h>
 
 struct CwmWindowEventDef {
-  string event;
-  string function;
+  std::string event;
+  std::string function;
 };
 
 struct CwmWindowEventFunction {
@@ -14,17 +14,15 @@ struct CwmWindowEventFunction {
   CwmFunctionDef *function;
   CwmData         data;
 
-  CwmWindowEventFunction(CwmWMWindow *window1, int area1,
-                         CXNamedEvent *event1,
+  CwmWindowEventFunction(CwmWMWindow *window1, int area1, CXNamedEvent *event1,
                          CwmFunctionDef *function1, CwmData data1) :
-   window(window1), compile(NULL), area(area1), event(event1),
+   window(window1), compile(0), area(area1), event(event1),
    function(function1), data(data1) {
   }
 
-  CwmWindowEventFunction(const string &pattern1, int area1,
-                         CXNamedEvent *event1,
+  CwmWindowEventFunction(const std::string &pattern1, int area1, CXNamedEvent *event1,
                          CwmFunctionDef *function1, CwmData data1) :
-   window(NULL), compile(NULL), area(area1), event(event1),
+   window(0), compile(0), area(area1), event(event1),
    function(function1), data(data1) {
     compile = new CGlob(pattern1);
   }
@@ -58,7 +56,7 @@ getInstance()
 {
   static CwmWindowEventFunctionMgr *instance;
 
-  if (instance == NULL)
+  if (! instance)
     instance = new CwmWindowEventFunctionMgr();
 
   return instance;
@@ -96,7 +94,7 @@ addEventFunction(CwmWMWindow *window, int area, CXNamedEvent *event,
 
 void
 CwmWindowEventFunctionMgr::
-addPatternEventFunction(const string &pattern, int area, CXNamedEvent *event,
+addPatternEventFunction(const std::string &pattern, int area, CXNamedEvent *event,
                         CwmFunctionDef *function, CwmData data)
 {
   CwmWindowEventFunction *event_function =
@@ -109,8 +107,8 @@ void
 CwmWindowEventFunctionMgr::
 processEventFunction(CwmWMWindow *window, int area, XEvent *event)
 {
-  string res_name  = window->getResName ();
-  string res_class = window->getResClass();
+  std::string res_name  = window->getResName ();
+  std::string res_class = window->getResClass();
 
   WindowEventFunctionList::const_iterator pef1 = event_functions_.begin();
   WindowEventFunctionList::const_iterator pef2 = event_functions_.end  ();
@@ -119,11 +117,11 @@ processEventFunction(CwmWMWindow *window, int area, XEvent *event)
     if (! ((*pef1)->area & area))
       continue;
 
-    if      ((*pef1)->window != NULL) {
+    if      ((*pef1)->window != 0) {
       if ((*pef1)->window != window)
         continue;
     }
-    else if ((*pef1)->compile != NULL) {
+    else if ((*pef1)->compile != 0) {
       if (! (*pef1)->compile->compare(res_name) &&
           ! (*pef1)->compile->compare(res_class))
         continue;
@@ -184,7 +182,7 @@ grabEventKeys(CwmWMWindow *window)
 
     XKeyPressedEvent *event = (*pef1)->event->getKeyPressedEvent();
 
-    if (event != NULL)
+    if (event != 0)
       CwmMachineInst->grabKey(window->getFrame()->getXWindow()->getXWin(),
                               event->keycode, event->state);
   }
@@ -206,7 +204,7 @@ ungrabEventKeys(CwmWMWindow *window)
 
     XKeyPressedEvent *event = (*pef1)->event->getKeyPressedEvent();
 
-    if (event != NULL)
+    if (event != 0)
       CwmMachineInst->ungrabKey(window->getFrame()->getXWindow()->getXWin(),
                                 event->keycode, event->state);
   }
@@ -220,7 +218,7 @@ getInstance()
 {
   static CwmWindowGlobalNotifyMgr *instance;
 
-  if (instance == NULL)
+  if (! instance)
     instance = new CwmWindowGlobalNotifyMgr();
 
   return instance;
@@ -261,8 +259,7 @@ void
 CwmWindowGlobalNotifyMgr::
 addProc(CwmWindowNotifyType type, CwmWindowNotifyProc proc, void *data)
 {
-  CwmWindowNotifyData *notify_proc =
-    new CwmWindowNotifyData(type, proc, data);
+  CwmWindowNotifyData *notify_proc = new CwmWindowNotifyData(type, proc, data);
 
   add(notify_proc);
 }
@@ -361,24 +358,24 @@ lookupFromWindow(Window xwin)
   if (! CwmMachineInst->isValidWindow(xwin)) {
     CwmWMWindow *window = lookupFromUserWindow(xwin);
 
-    if (window != NULL) {
+    if (window != 0) {
       CwmUserWindow *user = window->getUser();
 
-      if (user != NULL)
+      if (user != 0)
         user->setXWindow(None);
 
       window->remove();
     }
 
-    return NULL;
+    return 0;
   }
 
   Window parent = CwmMachineInst->getWindowTop(xwin);
 
   CwmWindow *parent_xwindow = CwmMachineInst->getWindowCwmXWindow(parent);
 
-  if (parent_xwindow == NULL)
-    return NULL;
+  if (! parent_xwindow)
+    return 0;
 
   WindowList::iterator p1 = window_list_.begin();
   WindowList::iterator p2 = window_list_.end  ();
@@ -387,7 +384,7 @@ lookupFromWindow(Window xwin)
     if ((*p1)->isFrame(parent_xwindow))
       return *p1;
 
-  return NULL;
+  return 0;
 }
 
 CwmWMWindow *
@@ -400,11 +397,11 @@ lookupFromUserWindow(Window xwin)
   for ( ; p1 != p2; ++p1) {
     CwmUserWindow *user = (*p1)->getUser();
 
-    if (user != NULL && user->getXWin() == xwin)
+    if (user != 0 && user->getXWin() == xwin)
       return *p1;
   }
 
-  return NULL;
+  return 0;
 }
 
 //-------------------------------
@@ -444,16 +441,16 @@ processEvent(XEvent *event)
 
         CwmWMWindow *cwm_window = CwmMachineInst->getWindowWMWindow(window);
 
-        if (cwm_window != NULL) {
+        if (cwm_window != 0) {
           CwmScreen &screen = cwm_window->getScreen();
 
           if (! screen.isTop(cwm_window)) {
             CwmWindow *xwindow = cwm_window->getScreen().getPointerWindow();
 
-            if (xwindow == NULL || cwm_window->isUser(xwindow)) {
+            if (! xwindow || cwm_window->isUser(xwindow)) {
               CwmWindow *xwindow = cwm_window->getUserWindow();
 
-              if (xwindow != NULL) {
+              if (xwindow != 0) {
                 CwmMachineInst->focusLeave(cwm_window);
 
                 cwm_window->raise();
@@ -507,7 +504,7 @@ sendToUser(XEvent *event)
 
   CwmWMWindow *cwm_window = CwmMachineInst->getWindowWMWindow(window);
 
-  if (cwm_window == NULL)
+  if (! cwm_window)
     return;
 
   CwmWindow *xwindow = CwmMachineInst->getWindowCwmXWindow(window);
@@ -537,14 +534,14 @@ processButtonPress(XButtonPressedEvent *event)
 
   CwmToolBar *toolbar = screen.getCurrentDesk()->getToolBar();
 
-  if (toolbar != NULL)
+  if (toolbar != 0)
     toolbar->processButtonPress(event->window, event->button);
 
   //------
 
   CwmCmdIcon *cmdicon = CwmCmdIconMgrInst->lookup(event->window);
 
-  if (cmdicon != NULL) {
+  if (cmdicon != 0) {
     if (event->button == 2)
       cmdicon->move();
 
@@ -559,10 +556,10 @@ processButtonPress(XButtonPressedEvent *event)
 
   CwmDeskIconMgr *desk_icon_mgr = desk->getDeskIconMgr();
 
-  if (desk_icon_mgr != NULL) {
+  if (desk_icon_mgr != 0) {
     CwmDeskIcon *desk_icon = desk_icon_mgr->lookup(event->window);
 
-    if (desk_icon != NULL) {
+    if (desk_icon != 0) {
       if      (event->button == 1)
         desk_icon->raise();
       else if (event->button == 2)
@@ -576,7 +573,7 @@ processButtonPress(XButtonPressedEvent *event)
 
   CwmWMWindow *window = CwmMachineInst->getWindowWMWindow(event->window);
 
-  if (window == NULL)
+  if (! window)
     return;
 
   //------
@@ -625,10 +622,10 @@ processKeyPress(XKeyPressedEvent *event)
 
   CwmToolBar *toolbar = screen.getCurrentDesk()->getToolBar();
 
-  if (toolbar != NULL) {
+  if (toolbar != 0) {
     CwmToolBarIcon *tool_icon = toolbar->getToolIcon(event->window);
 
-    if (tool_icon != NULL) {
+    if (tool_icon != 0) {
       tool_icon->processKeyPress(event);
 
       return;
@@ -641,10 +638,10 @@ processKeyPress(XKeyPressedEvent *event)
 
   CwmDeskIconMgr *desk_icon_mgr = desk->getDeskIconMgr();
 
-  if (desk_icon_mgr != NULL) {
+  if (desk_icon_mgr != 0) {
     CwmDeskIcon *desk_icon = desk_icon_mgr->lookup(event->window);
 
-    if (desk_icon != NULL) {
+    if (desk_icon != 0) {
       desk_icon->processKeyPress(event);
 
       return;
@@ -653,7 +650,7 @@ processKeyPress(XKeyPressedEvent *event)
 
   CwmWMWindow *window = CwmMachineInst->getWindowWMWindow(event->window);
 
-  if (window != NULL)
+  if (window != 0)
     CwmWindowEventFunctionMgrInst->
       processEventFunction(window, CWM_WINDOW_ANY_AREA, (XEvent *) event);
 }
@@ -672,7 +669,7 @@ processKeyRelease(XKeyReleasedEvent *event)
 
   CwmWMWindow *window = CwmMachineInst->getWindowWMWindow(event->window);
 
-  if (window != NULL)
+  if (window != 0)
     CwmWindowEventFunctionMgrInst->
       processEventFunction(window, CWM_WINDOW_ANY_AREA, (XEvent *) event);
 }
@@ -683,7 +680,7 @@ processEnterNotify(XEnterWindowEvent *event)
 {
   CwmWindow *xwindow = CwmMachineInst->getWindowCwmXWindow(event->window);
 
-  if (xwindow == NULL || ! xwindow->isValid())
+  if (! xwindow || ! xwindow->isValid())
     return;
 
   if (! CwmResourceDataInst->getClickToFocus()) {
@@ -691,7 +688,7 @@ processEnterNotify(XEnterWindowEvent *event)
 
     CwmWMWindow *window = CwmMachineInst->getWindowWMWindow(xwindow);
 
-    if (window != NULL) {
+    if (window != 0) {
       CwmMachineInst->setFocusWindow(window);
 
       goto done;
@@ -699,24 +696,24 @@ processEnterNotify(XEnterWindowEvent *event)
 
     CwmToolBar *toolbar = screen.getCurrentDesk()->getToolBar();
 
-    if (toolbar != NULL) {
+    if (toolbar != 0) {
       CwmToolBarIcon *tool_icon = toolbar->getToolIcon(xwindow);
 
-      if (tool_icon != NULL && ! tool_icon->getWindow()->isIconised()) {
+      if (tool_icon != 0 && ! tool_icon->getWindow()->isIconised()) {
         CwmMachineInst->setFocusWindow(tool_icon->getWindow());
 
         goto done;
       }
     }
 
-    CwmMachineInst->setFocusWindow(NULL);
+    CwmMachineInst->setFocusWindow(0);
   }
 
  done:
   xwindow = CwmMachineInst->getWindowCwmXWindow(event->window);
 
-  if (xwindow != NULL && xwindow->isValid())
-    xwindow->callCallbacks(CWM_CALLBACK_ENTER, NULL);
+  if (xwindow != 0 && xwindow->isValid())
+    xwindow->callCallbacks(CWM_CALLBACK_ENTER, 0);
 }
 
 void
@@ -725,10 +722,10 @@ processLeaveNotify(XLeaveWindowEvent *event)
 {
   CwmWindow *xwindow = CwmMachineInst->getWindowCwmXWindow(event->window);
 
-  if (xwindow == NULL || ! xwindow->isValid())
+  if (! xwindow || ! xwindow->isValid())
     return;
 
-  xwindow->callCallbacks(CWM_CALLBACK_LEAVE, NULL);
+  xwindow->callCallbacks(CWM_CALLBACK_LEAVE, 0);
 }
 
 void
@@ -769,17 +766,13 @@ CwmWMWindow(CwmScreen &screen, Window xwin) :
 
   int user_x, user_y, user_width, user_height, user_border;
 
-  CwmMachineInst->getWindowGeometry(xwin, &user_x, &user_y,
-                                    &user_width, &user_height,
+  CwmMachineInst->getWindowGeometry(xwin, &user_x, &user_y, &user_width, &user_height,
                                     &user_border);
 
   if (CwmMachineInst->isValidWindow(xwin))
-    user_ = new CwmUserWindow(this, xwin,
-                              user_x, user_y,
-                              user_width, user_height,
-                              user_border);
+    user_ = new CwmUserWindow(this, xwin, user_x, user_y, user_width, user_height, user_border);
   else
-    user_ = NULL;
+    user_ = 0;
 
   frame_ = new CwmFrameWindow(this);
 
@@ -797,7 +790,7 @@ CwmWMWindow(CwmScreen &screen, Window xwin) :
 
   //------
 
-  if (user_ != NULL) {
+  if (user_ != 0) {
     normal_x_      = user_->getX();
     normal_y_      = user_->getY();
     normal_width_  = user_->getWidth();
@@ -812,14 +805,14 @@ CwmWMWindow(CwmScreen &screen, Window xwin) :
 
   //------
 
-  parent_ = NULL;
+  parent_ = 0;
 
   Window transient_for = getTransientForHint();
 
   if (transient_for != None)
     parent_ = CwmMachineInst->getWindowWMWindow(transient_for);
 
-  if (parent_ != NULL)
+  if (parent_ != 0)
     parent_->children_.push_back(this);
 
   //------
@@ -920,12 +913,12 @@ CwmWMWindow::
 
   CwmWindow *user_xwindow = getUserWindow();
 
-  if (user_xwindow != NULL && user_xwindow->getXWin() != None) {
+  if (user_xwindow != 0 && user_xwindow->getXWin() != None) {
     int x      = 0;
     int y      = 0;
     int border = 0;
 
-    if (user_ != NULL) {
+    if (user_ != 0) {
       x      = user_->getX();
       y      = user_->getY();
       border = user_->getBorder();
@@ -972,7 +965,7 @@ CwmWMWindow::
   WMWindowList::const_iterator pwindow2 = children_.end  ();
 
   for ( ; pwindow1 != pwindow2; ++pwindow1)
-    (*pwindow1)->parent_ = NULL;
+    (*pwindow1)->parent_ = 0;
 }
 
 CwmFont *
@@ -1015,7 +1008,7 @@ place()
 
   CwmWindow *user_xwindow = getUserWindow();
 
-  if (user_xwindow == NULL)
+  if (! user_xwindow)
     return;
 
   if (user_xwindow->isViewable())
@@ -1044,7 +1037,7 @@ CwmWMWindow::
 remove()
 {
   if (CwmMachineInst->isFocusWindow(this))
-    CwmMachineInst->setFocusWindow(NULL);
+    CwmMachineInst->setFocusWindow(0);
 
   //------
 
@@ -1054,7 +1047,7 @@ remove()
 
   //------
 
-  if (parent_ != NULL)
+  if (parent_ != 0)
     parent_->children_.remove(this);
 
   screen_.removeWMWindow(this);
@@ -1085,11 +1078,10 @@ initUserWindow()
 
   CwmWindow *user_xwindow = getUserWindow();
 
-  if (user_xwindow == NULL)
+  if (! user_xwindow)
     return;
 
-  CwmMachineInst->changeWindowAtributes(user_xwindow->getXWin(),
-                                        attr_mask, &attr);
+  CwmMachineInst->changeWindowAtributes(user_xwindow->getXWin(), attr_mask, &attr);
 
   user_xwindow->setBorderWidth(0);
 
@@ -1124,7 +1116,7 @@ bool
 CwmWMWindow::
 isFrame(CwmWindow *xwindow)
 {
-  return (frame_ != NULL && xwindow == frame_->getXWindow());
+  return (frame_ != 0 && xwindow == frame_->getXWindow());
 }
 
 bool
@@ -1136,11 +1128,11 @@ isUser(CwmWindow *xwindow)
   return (xwindow == user_xwindow);
 }
 
-string
+std::string
 CwmWMWindow::
 getName()
 {
-  string name = hints_->getName();
+  std::string name = hints_->getName();
 
   if (name == "")
     name = hints_->getResName();
@@ -1151,11 +1143,11 @@ getName()
   return name;
 }
 
-string
+std::string
 CwmWMWindow::
 getResName()
 {
-  string name = hints_->getResName();
+  std::string name = hints_->getResName();
 
   if (name == "")
     name = "window";
@@ -1163,11 +1155,11 @@ getResName()
   return name;
 }
 
-string
+std::string
 CwmWMWindow::
 getResClass()
 {
-  string name = hints_->getResClass();
+  std::string name = hints_->getResClass();
 
   if (name == "")
     name = hints_->getResName();
@@ -1178,11 +1170,11 @@ getResClass()
   return name;
 }
 
-string
+std::string
 CwmWMWindow::
 getIconName()
 {
-  string name = hints_->getIconName();
+  std::string name = hints_->getIconName();
 
   if (name == "")
     name = hints_->getName();
@@ -1203,11 +1195,10 @@ addEvents()
   for (int i = 0; window_event_defs[i].event != ""; ++i) {
     CXNamedEvent *event = new CXNamedEvent(window_event_defs[i].event);
 
-    CwmFunctionDef *function =
-      new CwmFunctionDef(window_event_defs[i].function);
+    CwmFunctionDef *function = new CwmFunctionDef(window_event_defs[i].function);
 
     CwmWindowEventFunctionMgrInst->
-      addEventFunction(this, CWM_WINDOW_ANY_AREA, event, function, NULL);
+      addEventFunction(this, CWM_WINDOW_ANY_AREA, event, function, 0);
   }
 }
 
@@ -1402,7 +1393,7 @@ close()
   else {
     CwmWindow *user_xwindow = getUserWindow();
 
-    if (user_xwindow != NULL)
+    if (user_xwindow != 0)
       CwmMachineInst->killClient(user_xwindow->getXWin());
   }
 
@@ -1417,10 +1408,10 @@ closeInvalid()
 {
   CwmWindow *user_xwindow = getUserWindow();
 
-  if (user_xwindow != NULL && ! user_xwindow->isValid()) {
+  if (user_xwindow != 0 && ! user_xwindow->isValid()) {
     unmap();
 
-    if (user_ != NULL)
+    if (user_ != 0)
       user_->setXWindow(None);
 
     remove();
@@ -1433,7 +1424,7 @@ notifyDeleteWindow()
 {
   CwmWindow *user_xwindow = getUserWindow();
 
-  if (user_xwindow == NULL)
+  if (! user_xwindow)
     return;
 
   XClientMessageEvent event;
@@ -1498,7 +1489,7 @@ rollUp()
 
   decoration_->rollUp();
 
-  if (user_ != NULL)
+  if (user_ != 0)
     user_->unmap();
 
   CwmMachineInst->flushEvents();
@@ -1512,7 +1503,7 @@ rollDown()
 {
   rolled_up_ = false;
 
-  if (user_ != NULL)
+  if (user_ != 0)
     user_->map();
 
   redecorate();
@@ -1548,7 +1539,7 @@ decorate()
 {
   CwmWindow *user_xwindow = getUserWindow();
 
-  if (user_xwindow == NULL)
+  if (! user_xwindow)
     return;
 
   int x = getXHint();
@@ -1571,7 +1562,7 @@ decorate()
   else
     user_xwindow->getPosition(&user_x, &user_y);
 
-  if (user_ != NULL) {
+  if (user_ != 0) {
     int user_width  = user_->getWidth ();
     int user_height = user_->getHeight();
 
@@ -1611,7 +1602,7 @@ redecorate()
 
     CwmWindow *user_xwindow = getUserWindow();
 
-    if (user_xwindow != NULL)
+    if (user_xwindow != 0)
       user_xwindow->move(0, 0);
   }
   else
@@ -1639,10 +1630,10 @@ CwmWindow *
 CwmWMWindow::
 getUserWindow() const
 {
-  if (user_ != NULL)
+  if (user_ != 0)
     return user_->getXWindow();
   else
-    return NULL;
+    return 0;
 }
 
 Window
@@ -1651,7 +1642,7 @@ getXWin() const
 {
   CwmWindow *user_window = getUserWindow();
 
-  if (user_window != NULL)
+  if (user_window != 0)
     return user_window->getXWin();
   else
     return None;
@@ -1748,7 +1739,7 @@ resizeUser(int width, int height)
   int user_width  = 1;
   int user_height = 1;
 
-  if (user_ != NULL) {
+  if (user_ != 0) {
     user_width  = user_->getWidth ();
     user_height = user_->getHeight();
   }
@@ -1781,7 +1772,7 @@ setStateProperty()
 {
   CwmWindow *user_xwindow = getUserWindow();
 
-  if (user_xwindow == NULL)
+  if (! user_xwindow)
     return;
 
   if (isIconised())
@@ -1793,10 +1784,10 @@ setStateProperty()
 
     CwmDeskIconMgr *desk_icon_mgr = desk->getDeskIconMgr();
 
-    if (desk_icon_mgr != NULL) {
+    if (desk_icon_mgr != 0) {
       CwmDeskIcon *desk_icon = desk_icon_mgr->lookup(this);
 
-      if (desk_icon != NULL)
+      if (desk_icon != 0)
         CwmMachineInst->setWMStateIconic(user_xwindow->getXWin(),
                                          desk_icon->getXWindow()->getXWin());
       else
@@ -1811,7 +1802,7 @@ isWMStateIconic()
 {
   CwmWindow *user_xwindow = getUserWindow();
 
-  if (user_xwindow == NULL)
+  if (! user_xwindow)
     return false;
 
   return CwmMachineInst->isWMStateIconic(user_xwindow->getXWin());
@@ -1825,13 +1816,12 @@ setDeskProperty()
 
   CwmWindow *user_xwindow = getUserWindow();
 
-  if (user_xwindow == NULL)
+  if (! user_xwindow)
     return;
 
   const CXAtom &atom = CwmMachineInst->getCwmDesktopAtom();
 
-  CwmMachineInst->setIntegerProperty(user_xwindow->getXWin(), atom,
-                                     desk_num + 1);
+  CwmMachineInst->setIntegerProperty(user_xwindow->getXWin(), atom, desk_num + 1);
 }
 
 int
@@ -1842,13 +1832,12 @@ getDeskProperty()
 
   CwmWindow *user_xwindow = getUserWindow();
 
-  if (user_xwindow == NULL)
+  if (! user_xwindow)
     return 0;
 
   const CXAtom &atom = CwmMachineInst->getCwmDesktopAtom();
 
-  if (! CwmMachineInst->getIntegerProperty(user_xwindow->getXWin(), atom,
-                                           &desk_num))
+  if (! CwmMachineInst->getIntegerProperty(user_xwindow->getXWin(), atom, &desk_num))
     return screen_.getCurrentDeskNum();
 
   return (desk_num - 1);
@@ -1872,16 +1861,14 @@ void
 CwmWMWindow::
 addNotifyProc(CwmWindowNotifyType type, CwmWindowNotifyProc proc, void *data)
 {
-  CwmWindowNotifyData *notify_proc =
-    new CwmWindowNotifyData(type, proc, data);
+  CwmWindowNotifyData *notify_proc = new CwmWindowNotifyData(type, proc, data);
 
   notify_procs_.push_back(notify_proc);
 }
 
 void
 CwmWMWindow::
-removeNotifyProc(CwmWindowNotifyType type, CwmWindowNotifyProc proc,
-                 void *data)
+removeNotifyProc(CwmWindowNotifyType type, CwmWindowNotifyProc proc, void *data)
 {
   WindowNotifyDataList::const_iterator pnp1 = notify_procs_.begin();
   WindowNotifyDataList::const_iterator pnp2 = notify_procs_.end  ();
@@ -1932,7 +1919,7 @@ getWMIconWindowHint()
 {
   CwmUserWindow *user = getUser();
 
-  if (user != NULL) {
+  if (user != 0) {
     Window xwin = user->getXWin();
 
     return CwmMachineInst->getWMIconWindowHint(xwin);

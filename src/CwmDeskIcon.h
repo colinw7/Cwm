@@ -1,19 +1,6 @@
 class CwmCustomDeskIcon;
 
 class CwmDeskIconMgr {
-  typedef std::map<Window,CwmDeskIcon *> CwmDeskIconMap;
-
- private:
-  CwmDesk &desk_;
-
-  CwmDeskIconMap desk_icon_map_;
-
-  CXNamedEvent *move_event_;
-  CXNamedEvent *lower_event_;
-  CXNamedEvent *raise_event_;
-  CXNamedEvent *close_event_;
-  CXNamedEvent *restore_event_;
-
  public:
   CwmDeskIconMgr(CwmDesk &desk);
  ~CwmDeskIconMgr();
@@ -40,51 +27,30 @@ class CwmDeskIconMgr {
   CXNamedEvent *getCloseEvent();
 
  private:
-  static void createNotifyProc(CwmWMWindow *window, CwmWindowNotifyType type,
-                               CwmData data);
-  static void destroyNotifyProc(CwmWMWindow *window, CwmWindowNotifyType type,
-                                CwmData data);
-  static void iconiseNotifyProc(CwmWMWindow *window, CwmWindowNotifyType type,
-                                CwmData data);
-  static void restoreNotifyProc(CwmWMWindow *window, CwmWindowNotifyType type,
-                                CwmData data);
-  static void deskChangeStartNotifyProc(CwmDeskMgr *desk_mgr,
-                                        CwmDeskMgrNotifyType type,
+  static void createNotifyProc(CwmWMWindow *window, CwmWindowNotifyType type, CwmData data);
+  static void destroyNotifyProc(CwmWMWindow *window, CwmWindowNotifyType type, CwmData data);
+  static void iconiseNotifyProc(CwmWMWindow *window, CwmWindowNotifyType type, CwmData data);
+  static void restoreNotifyProc(CwmWMWindow *window, CwmWindowNotifyType type, CwmData data);
+  static void deskChangeStartNotifyProc(CwmDeskMgr *desk_mgr, CwmDeskMgrNotifyType type,
                                         CwmData data);
-  static void deskChangeEndNotifyProc(CwmDeskMgr *desk_mgr,
-                                      CwmDeskMgrNotifyType type,
+  static void deskChangeEndNotifyProc(CwmDeskMgr *desk_mgr, CwmDeskMgrNotifyType type,
                                       CwmData data);
+
+ private:
+  typedef std::map<Window,CwmDeskIcon *> CwmDeskIconMap;
+
+  CwmDesk &desk_;
+
+  CwmDeskIconMap desk_icon_map_;
+
+  CXNamedEvent *move_event_;
+  CXNamedEvent *lower_event_;
+  CXNamedEvent *raise_event_;
+  CXNamedEvent *close_event_;
+  CXNamedEvent *restore_event_;
 };
 
 class CwmDeskIcon {
- private:
-  CwmDeskIconMgr &mgr_;
-  CwmDesk        &desk_;
-  CwmScreen      &screen_;
-  CwmWMWindow    *window_;
-  CwmWindow      *xwindow_;
-  CwmImage       *image_;
-  CFmtString     *fmt_string_;
-  CwmGraphics    *graphics_;
-  CwmXPixmap     *pixmap_mask_;
-  CwmMask        *label_mask_;
-  bool            mask_created_;
-  int             icon_x_;
-  int             icon_y_;
-  int             icon_width_;
-  int             icon_height_;
-  int             pixmap_dx_;
-  int             pixmap_dy_;
-  int             pixmap_offset_;
-  int             pixmap_width_;
-  int             pixmap_height_;
-  int             label_dx_;
-  int             label_dy_;
-  int             label_offset_;
-  int             label_width_;
-  int             label_height_;
-  CwmMenuDef     *menu_def_;
-
  public:
   CwmDeskIcon(CwmDeskIconMgr &mgr, CwmWMWindow *window);
  ~CwmDeskIcon();
@@ -146,18 +112,40 @@ class CwmDeskIcon {
 
   void createMenuDef();
 
-  static void doubleClickProc(CwmWindow *xwindow,
-                              CwmData data, CwmData detail);
+  static void doubleClickProc(CwmWindow *xwindow, CwmData data, CwmData detail);
+
+ private:
+  CwmDeskIconMgr &mgr_;
+  CwmDesk        &desk_;
+  CwmScreen      &screen_;
+  CwmWMWindow    *window_;
+  CwmWindow      *xwindow_;
+  CwmImage       *image_;
+  CFmtString     *fmt_string_;
+  CwmGraphics    *graphics_;
+  CwmXPixmap     *pixmap_mask_;
+  CwmMask        *label_mask_;
+  bool            mask_created_;
+  int             icon_x_;
+  int             icon_y_;
+  int             icon_width_;
+  int             icon_height_;
+  int             pixmap_dx_;
+  int             pixmap_dy_;
+  int             pixmap_offset_;
+  int             pixmap_width_;
+  int             pixmap_height_;
+  int             label_dx_;
+  int             label_dy_;
+  int             label_offset_;
+  int             label_width_;
+  int             label_height_;
+  CwmMenuDef     *menu_def_;
 };
 
 #define CwmCustomDeskIconMgrInst CwmCustomDeskIconMgr::getInstance()
 
 class CwmCustomDeskIconMgr {
-  typedef vector<CwmCustomDeskIcon *> CustomDeskIconList;
-
- private:
-  CustomDeskIconList icons_;
-
  public:
   static CwmCustomDeskIconMgr *getInstance();
 
@@ -169,15 +157,14 @@ class CwmCustomDeskIconMgr {
 
  private:
   CwmCustomDeskIcon *lookup(const std::string &pattern);
+
+ private:
+  typedef std::vector<CwmCustomDeskIcon *> CustomDeskIconList;
+
+  CustomDeskIconList icons_;
 };
 
 class CwmCustomDeskIcon {
- private:
-  std::string  pattern_;
-  CGlob       *compile_;
-  std::string  icon_;
-  std::string  icon_small_;
-
  public:
   CwmCustomDeskIcon(const std::string &pattern);
  ~CwmCustomDeskIcon();
@@ -191,4 +178,10 @@ class CwmCustomDeskIcon {
   bool isPattern(const std::string &pattern) { return (pattern_ == pattern); }
 
   bool compare(const std::string &name);
+
+ private:
+  std::string  pattern_;
+  CGlob       *compile_;
+  std::string  icon_;
+  std::string  icon_small_;
 };

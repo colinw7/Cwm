@@ -1,5 +1,5 @@
-#include "CwmI.h"
-#include "CXtTimer.h"
+#include <CwmI.h>
+#include <CXtTimer.h>
 
 class CwmFocusMgrTimer : CXtTimer {
  private:
@@ -15,11 +15,11 @@ class CwmFocusMgrTimer : CXtTimer {
 CwmFocusMgr::
 CwmFocusMgr()
 {
-  focus_window_        = NULL;
-  auto_raise_timer_    = NULL;
-  user_window_         = NULL;
-  top_window_          = NULL;
-  grab_buttons_window_ = NULL;
+  focus_window_        = 0;
+  auto_raise_timer_    = 0;
+  user_window_         = 0;
+  top_window_          = 0;
+  grab_buttons_window_ = 0;
 }
 
 CwmFocusMgr::
@@ -43,12 +43,12 @@ focusNext(CwmScreen &screen)
 
   int i;
 
-  CwmWMWindow *window = NULL;
+  CwmWMWindow *window = 0;
 
   for (i = 0; i < num_windows; ++i) {
     window = CwmMachineInst->getWindowWMWindow(windows[i]);
 
-    if (window == NULL)
+    if (! window)
       continue;
 
     if (isFocusWindow(window))
@@ -76,7 +76,7 @@ focusNext(CwmScreen &screen)
       return;
   }
 
-  if (windows != NULL)
+  if (windows != 0)
     XFree((char *) windows);
 
   setFocusWindow(window);
@@ -97,12 +97,12 @@ focusPrev(CwmScreen &screen)
 
   int i;
 
-  CwmWMWindow *window = NULL;
+  CwmWMWindow *window = 0;
 
   for (i = num_windows - 1; i >= 0; i--) {
     window = CwmMachineInst->getWindowWMWindow(windows[i]);
 
-    if (window == NULL)
+    if (! window)
       continue;
 
     if (! isFocusWindow(window))
@@ -130,7 +130,7 @@ focusPrev(CwmScreen &screen)
       return;
   }
 
-  if (windows != NULL)
+  if (windows != 0)
     XFree((char *) windows);
 
   setFocusWindow(window);
@@ -145,7 +145,7 @@ setFocusWindow(CwmWMWindow *window)
 
   resetFocusWindow();
 
-  if (window == NULL)
+  if (! window)
     return;
 
   focus_window_ = window;
@@ -159,7 +159,7 @@ setFocusWindow(CwmWMWindow *window)
 
     CwmWindow *xwindow = window->getUserWindow();
 
-    if (xwindow != NULL) {
+    if (xwindow != 0) {
       setInputFocus(xwindow);
 
       CwmScreen &screen = window->getScreen();
@@ -187,13 +187,13 @@ resetFocusWindow()
 {
   delete auto_raise_timer_;
 
-  auto_raise_timer_ = NULL;
+  auto_raise_timer_ = 0;
 
   CwmWMWindow *window = focus_window_;
 
-  focus_window_ = NULL;
+  focus_window_ = 0;
 
-  if (window == NULL) {
+  if (! window) {
     resetInputFocus();
     return;
   }
@@ -226,12 +226,12 @@ grabButtons(CwmWMWindow *window)
     return;
   }
 
-  if (grab_buttons_window_ != NULL)
+  if (grab_buttons_window_ != 0)
     grab_buttons_window_->getFrameWindow()->ungrabButtonPress();
 
   grab_buttons_window_ = window;
 
-  if (grab_buttons_window_ != NULL)
+  if (grab_buttons_window_ != 0)
     grab_buttons_window_->getFrameWindow()->grabButtonPress();
 }
 
@@ -244,10 +244,10 @@ ungrabButtons(CwmWMWindow *window)
     return;
   }
 
-  if (grab_buttons_window_ != NULL)
+  if (grab_buttons_window_ != 0)
     grab_buttons_window_->getFrameWindow()->ungrabButtonPress();
 
-  grab_buttons_window_ = NULL;
+  grab_buttons_window_ = 0;
 }
 
 void
@@ -276,7 +276,7 @@ bool
 CwmFocusMgr::
 isValidWindow(CwmWMWindow *window, Window xwin)
 {
-  if (window == NULL)
+  if (! window)
     return false;
 
   if (! window->isIconised()) {
@@ -295,12 +295,12 @@ isValidWindow(CwmWMWindow *window, Window xwin)
 
     CwmDeskIconMgr *desk_icon_mgr = desk->getDeskIconMgr();
 
-    if (desk_icon_mgr == NULL)
+    if (! desk_icon_mgr)
       return false;
 
     CwmDeskIcon *desk_icon = desk_icon_mgr->lookup(xwin);
 
-    if (desk_icon == NULL)
+    if (! desk_icon)
       return false;
   }
 
@@ -337,7 +337,7 @@ enterUserWindow(CwmWMWindow *window)
   leaveUserWindow(window);
 
   if (window->getScreen().isTop(window)) {
-    top_window_ = NULL;
+    top_window_ = 0;
     return;
   }
 
@@ -345,19 +345,19 @@ enterUserWindow(CwmWMWindow *window)
 
   grabButtons(user_window_);
 
-  top_window_ = NULL;
+  top_window_ = 0;
 }
 
 void
 CwmFocusMgr::
 leaveUserWindow(CwmWMWindow *)
 {
-  if (user_window_ == NULL)
+  if (! user_window_)
     return;
 
   ungrabButtons(user_window_);
 
-  user_window_ = NULL;
+  user_window_ = 0;
 }
 
 bool

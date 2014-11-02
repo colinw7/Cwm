@@ -61,7 +61,7 @@ class CGradientData {
 
 CGradient::
 CGradient(const CRGBA &start, const CRGBA &end, int width, int height, CGradientDir direction) :
- gradient_data_(NULL)
+ gradient_data_(0)
 {
   gradient_data_ = CGradientDataMgrInst->get(start, end, width, height, direction);
 
@@ -129,7 +129,7 @@ get(const CRGBA &start, const CRGBA &end, int width, int height, CGradientDir di
 {
   CGradientData *gradient_data = lookup(start, end, width, height, direction);
 
-  if (gradient_data == NULL)
+  if (gradient_data == 0)
     gradient_data = add(start, end, width, height, direction);
 
   return gradient_data;
@@ -147,7 +147,7 @@ lookup(const CRGBA &start, const CRGBA &end, int width, int height, CGradientDir
       return *p1;
   }
 
-  return NULL;
+  return 0;
 }
 
 CGradientData *

@@ -1,4 +1,4 @@
-#include "CwmToolBarI.h"
+#include <CwmToolBarI.h>
 
 static const int MIN_ICON_WIDTH = 16;
 static const int DEF_ICON_WIDTH = 96;
@@ -41,8 +41,8 @@ CwmToolBarIconArea(CwmToolBar &toolbar1, int x, int width) :
 
   //------
 
-  restore_event_ = NULL;
-  close_event_   = NULL;
+  restore_event_ = 0;
+  close_event_   = 0;
 }
 
 CwmToolBarIconArea::
@@ -95,7 +95,7 @@ getIcon(CwmWindow *xwindow)
     if ((*picon1)->getXWindow() == xwindow)
       return *picon1;
 
-  return NULL;
+  return 0;
 }
 
 CwmToolBarIcon *
@@ -109,7 +109,7 @@ getIcon(Window xwin)
     if ((*picon1)->getXWindow()->getXWin() == xwin)
       return *picon1;
 
-  return NULL;
+  return 0;
 }
 
 CwmToolBarIcon *
@@ -123,7 +123,7 @@ getIcon(CwmWMWindow *window)
     if ((*picon1)->getWindow() == window)
       return *picon1;
 
-  return NULL;
+  return 0;
 }
 
 void
@@ -256,7 +256,7 @@ CXNamedEvent *
 CwmToolBarIconArea::
 getRestoreEvent()
 {
-  if (restore_event_ == NULL)
+  if (restore_event_ == 0)
     restore_event_ = new CXNamedEvent("Alt<Key>F5");
 
   return restore_event_;
@@ -266,7 +266,7 @@ CXNamedEvent *
 CwmToolBarIconArea::
 getCloseEvent()
 {
-  if (close_event_ == NULL)
+  if (close_event_ == 0)
     close_event_ = new CXNamedEvent("Alt<Key>F4");
 
   return close_event_;
@@ -308,7 +308,7 @@ CwmToolBarIcon(CwmToolBarIconArea &icon_area1, CwmWMWindow *window1) :
 
   border_     = toolbar_.getBorder();
   positioned_ = false;
-  image_      = NULL;
+  image_      = 0;
 
   uint event_mask = ButtonPressMask | ButtonReleaseMask |
                     EnterWindowMask | LeaveWindowMask   |
@@ -336,7 +336,7 @@ CwmToolBarIcon(CwmToolBarIconArea &icon_area1, CwmWMWindow *window1) :
 
   //------
 
-  menu_def_ = NULL;
+  menu_def_ = 0;
 
   //------
 
@@ -411,7 +411,7 @@ redraw()
                            xwindow_->getHeight(),
                            border_);
 
-  if (image_ != NULL) {
+  if (image_ != 0) {
     int x1 = border_ + 2;
     int y1 = xwindow_->getHeight()/2;
 
@@ -428,11 +428,11 @@ redraw()
                              border_);
   }
 
-  string name = window_->getIconName();
+  std::string name = window_->getIconName();
 
   int x1 = border_ + 2;
 
-  if (image_ != NULL)
+  if (image_ != 0)
     x1 += image_->getWidth() + 2;
 
   int y1 = border_ + 1;
@@ -507,7 +507,7 @@ void
 CwmToolBarIcon::
 processMenu()
 {
-  if (menu_def_ == NULL)
+  if (menu_def_ == 0)
     createMenuDef();
 
   CwmScreen &screen = window_->getScreen();
@@ -567,7 +567,7 @@ idleProc(CwmWindow *, CwmData data, CwmData detail)
   CwmToolBarIcon *icon       = (CwmToolBarIcon *) data;
   CwmIdleState   *idle_state = (CwmIdleState *) detail;
 
-  string name = icon->window_->getName();
+  std::string name = icon->window_->getName();
 
   CwmScreen &screen = icon->window_->getScreen();
 
@@ -653,7 +653,7 @@ operator()(CwmToolBarIcon *icon1, CwmToolBarIcon *icon2)
   CwmUserWindow *user1 = icon1->getWindow()->getUser();
   CwmUserWindow *user2 = icon2->getWindow()->getUser();
 
-  if (user1 == NULL || user2 == NULL)
+  if (user1 == 0 || user2 == 0)
     return false;
 
   int cmp = user1->getX() - user2->getX();

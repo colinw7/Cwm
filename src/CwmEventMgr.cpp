@@ -29,7 +29,7 @@ getInstance()
 {
   static CwmEventMgr *instance;
 
-  if (instance == NULL)
+  if (! instance)
     instance = new CwmEventMgr();
 
   return instance;
@@ -162,9 +162,9 @@ printEvent(XEvent *event)
 
   CwmWMWindow *window = CwmMachineInst->getWindowWMWindow(xwin);
 
-  string name;
+  std::string name;
 
-  if (window != NULL)
+  if (window != 0)
     name = window->getName();
   else {
     std::ostringstream ost;
@@ -174,7 +174,7 @@ printEvent(XEvent *event)
     name = ost.str();
   }
 
-  string event_name = CwmMachineInst->getEventName(event);
+  std::string event_name = CwmMachineInst->getEventName(event);
 
   event_name += " " + name;
 
@@ -202,7 +202,7 @@ processMapRequest(XMapRequestEvent *event)
 {
   CwmWMWindow *window = CwmMachineInst->getWindowWMWindow(event->window);
 
-  if (window != NULL) {
+  if (window != 0) {
     if (window->isIconised())
       window->restore();
 
@@ -217,7 +217,7 @@ processMapRequest(XMapRequestEvent *event)
 
   CwmUserWindow *user = window->getUser();
 
-  if (user != NULL)
+  if (user != 0)
     user->sendConfigureNotify();
 
   return false;
@@ -229,7 +229,7 @@ processMapNotify(XMapEvent *event)
 {
   CwmWMWindow *window = CwmMachineInst->getWindowWMWindow(event->window);
 
-  if (window == NULL)
+  if (! window)
     return false;
 
   window->restore();
@@ -243,7 +243,7 @@ processUnmapNotify(XUnmapEvent *event)
 {
   CwmWMWindow *window = CwmMachineInst->getUserWindowWMWindow(event->window);
 
-  if (window == NULL)
+  if (! window)
     return false;
 
   if (CwmMachineInst->getDebug())
@@ -252,7 +252,7 @@ processUnmapNotify(XUnmapEvent *event)
   if (isDestroyPending(event->window)) {
     CwmUserWindow *user = window->getUser();
 
-    if (user != NULL) {
+    if (user != 0) {
       CwmWindow *xwindow = user->getXWindow();
 
       if (event->window == xwindow->getXWin())
@@ -283,7 +283,7 @@ processConfigureRequest(XConfigureRequestEvent *event)
   XWindowChanges xwc;
   uint           mask;
 
-  if (window != NULL) {
+  if (window != 0) {
     CwmMachineInst->debugf("ConfigureRequest %s\n", window->getName().c_str());
 
     if (event->value_mask & CWX)
@@ -301,7 +301,7 @@ processConfigureRequest(XConfigureRequestEvent *event)
 
     CwmUserWindow *user = window->getUser();
 
-    if (user != NULL) {
+    if (user != 0) {
       CwmWindow *xwindow = user->getXWindow();
 
       if (event->window != xwindow->getXWin()) {
@@ -347,7 +347,7 @@ processConfigureRequest(XConfigureRequestEvent *event)
       if (window->isIconised())
         window->restore();
 
-      CwmWMWindow *sibling = NULL;
+      CwmWMWindow *sibling = 0;
 
       if ((event->value_mask & CWSibling) && (event->above != None))
         sibling = CwmMachineInst->getWindowWMWindow(event->above);
@@ -429,7 +429,7 @@ processEnterNotify(XEnterWindowEvent *event)
   if (CwmResourceDataInst->getWindowPressRaise()) {
     CwmWMWindow *window = CwmMachineInst->getWindowWMWindow(event->window);
 
-    if (window != NULL) {
+    if (window != 0) {
       CwmWindow *xwindow = CwmMachineInst->getWindowCwmXWindow(event->window);
 
       if (window->isUser(xwindow))
@@ -463,7 +463,7 @@ processLeaveNotify(XLeaveWindowEvent *event)
   if (CwmResourceDataInst->getWindowPressRaise()) {
     CwmWMWindow *window = CwmMachineInst->getWindowWMWindow(event->window);
 
-    if (window != NULL) {
+    if (window != 0) {
       CwmWindow *xwindow = CwmMachineInst->getWindowCwmXWindow(event->window);
 
       if (window->isUser(xwindow))
@@ -482,15 +482,13 @@ processButtonPress(XButtonPressedEvent *event)
 
   CwmWindow *xwindow = CwmMachineInst->getWindowCwmXWindow(event->window);
 
-  if (xwindow == NULL)
+  if (! xwindow)
     return false;
 
   xwindow->callCallbacks(CWM_CALLBACK_BUTTON_PRESS, event);
 
-  if (event->window == multiclick_window_ &&
-      event->button == (uint) multiclick_button_ &&
-      (event->time - multiclick_time_) <=
-      (uint) CwmResourceDataInst->getDoubleClickTime()) {
+  if (event->window == multiclick_window_ && event->button == (uint) multiclick_button_ &&
+      (event->time - multiclick_time_) <= (uint) CwmResourceDataInst->getDoubleClickTime()) {
     multiclick_time_ = event->time;
 
     multiclick_count_++;
@@ -513,26 +511,26 @@ processButtonRelease(XButtonReleasedEvent *event)
 
   CwmWindow *xwindow = CwmMachineInst->getWindowCwmXWindow(multiclick_window_);
 
-  if (xwindow == NULL)
+  if (! xwindow)
     return false;
 
   if      (multiclick_count_ == 1) {
     if      (multiclick_button_ == 1)
-      xwindow->callCallbacks(CWM_CALLBACK_SINGLE_CLICK_1, NULL);
+      xwindow->callCallbacks(CWM_CALLBACK_SINGLE_CLICK_1, 0);
     else if (multiclick_button_ == 2)
-      xwindow->callCallbacks(CWM_CALLBACK_SINGLE_CLICK_2, NULL);
+      xwindow->callCallbacks(CWM_CALLBACK_SINGLE_CLICK_2, 0);
     else if (multiclick_button_ == 3)
-      xwindow->callCallbacks(CWM_CALLBACK_SINGLE_CLICK_3, NULL);
+      xwindow->callCallbacks(CWM_CALLBACK_SINGLE_CLICK_3, 0);
     else
       CwmMachineInst->logf("Single Click of Button %d not supported\n", multiclick_button_);
   }
   else if (multiclick_count_ == 2) {
     if      (multiclick_button_ == 1)
-      xwindow->callCallbacks(CWM_CALLBACK_DOUBLE_CLICK_1, NULL);
+      xwindow->callCallbacks(CWM_CALLBACK_DOUBLE_CLICK_1, 0);
     else if (multiclick_button_ == 2)
-      xwindow->callCallbacks(CWM_CALLBACK_DOUBLE_CLICK_2, NULL);
+      xwindow->callCallbacks(CWM_CALLBACK_DOUBLE_CLICK_2, 0);
     else if (multiclick_button_ == 3)
-      xwindow->callCallbacks(CWM_CALLBACK_DOUBLE_CLICK_3, NULL);
+      xwindow->callCallbacks(CWM_CALLBACK_DOUBLE_CLICK_3, 0);
     else
       CwmMachineInst->logf("Double Click of Button %d not supported\n", multiclick_button_);
   }
@@ -569,7 +567,7 @@ processMotionNotify(XMotionEvent *event)
   if (CwmResourceDataInst->getWindowPressRaise()) {
     CwmWMWindow *window = CwmMachineInst->getWindowWMWindow(event->window);
 
-    if (window != NULL) {
+    if (window != 0) {
       CwmWindow *xwindow = CwmMachineInst->getWindowCwmXWindow(event->window);
 
       if (window->isUser(xwindow))
@@ -591,21 +589,21 @@ processExpose(XExposeEvent *event)
 
   CwmWindow *xwindow = CwmMachineInst->getWindowCwmXWindow(event->window);
 
-  if (xwindow == NULL)
+  if (! xwindow)
     return false;
 
   flushExposeEvents(xwindow);
 
   CwmToolBar *toolbar = screen.getCurrentDesk()->getToolBar();
 
-  if (toolbar != NULL) {
+  if (toolbar != 0) {
     if (toolbar->processExpose(xwindow))
       return false;
   }
 
   CwmCmdIcon *cmdicon = CwmCmdIconMgrInst->lookup(*xwindow);
 
-  if (cmdicon != NULL) {
+  if (cmdicon != 0) {
     cmdicon->redraw();
 
     return false;
@@ -617,10 +615,10 @@ processExpose(XExposeEvent *event)
 
   CwmDeskIconMgr *desk_icon_mgr = desk->getDeskIconMgr();
 
-  if (desk_icon_mgr != NULL) {
+  if (desk_icon_mgr != 0) {
     CwmDeskIcon *desk_icon = desk_icon_mgr->lookup(xwindow);
 
-    if (desk_icon != NULL) {
+    if (desk_icon != 0) {
       desk_icon->redraw();
 
       return false;
@@ -629,7 +627,7 @@ processExpose(XExposeEvent *event)
 
   CwmWMWindow *window = CwmMachineInst->getWindowWMWindow(xwindow);
 
-  if (window == NULL)
+  if (! window)
     return false;
 
   CwmDecoration *decoration = window->getDecoration();
@@ -677,7 +675,7 @@ processPropertyNotify(XPropertyEvent *event)
 
   CwmWMWindow *window = CwmMachineInst->getWindowWMWindow(event->window);
 
-  if (window == NULL)
+  if (! window)
     return false;
 
   const CXAtom &atom = CwmMachineInst->getAtom(event->atom);
@@ -746,7 +744,7 @@ processDestroyNotify(XDestroyWindowEvent *event)
 {
   CwmWMWindow *window = CwmMachineInst->getUserWindowWMWindow(event->window);
 
-  if (window == NULL)
+  if (! window)
     return false;
 
   if (CwmMachineInst->getDebug())
@@ -765,7 +763,7 @@ processColormapNotify(XColormapEvent *event)
 {
   CwmWMWindow *window = CwmMachineInst->getUserWindowWMWindow(event->window);
 
-  if (window == NULL)
+  if (! window)
     return false;
 
   window->setColormap(event->colormap);
@@ -785,7 +783,7 @@ processClientMessage(XClientMessageEvent *event)
 
   CwmWMWindow *window = CwmMachineInst->getWindowWMWindow(event->window);
 
-  if (window == NULL)
+  if (! window)
     return false;
 
   const CXAtom &atom = CwmMachineInst->getAtom(event->message_type);
@@ -823,7 +821,7 @@ waitForButtonClick(CwmWindow *xwindow, int buttons)
 {
   XEvent event;
 
-  if (buttons == 0)
+  if (! buttons)
     buttons = CWM_LEFT_BUTTON | CWM_MIDDLE_BUTTON | CWM_RIGHT_BUTTON;
 
   while (true) {
@@ -851,8 +849,7 @@ waitForButtonClick(CwmWindow *xwindow, int buttons)
 
   CwmScreen &screen = xwindow->getScreen();
 
-  Window press_window =
-    screen.getCoordWindow(event.xbutton.x_root, event.xbutton.y_root);
+  Window press_window = screen.getCoordWindow(event.xbutton.x_root, event.xbutton.y_root);
 
   while (true) {
     while (CwmMachineInst->checkTypedEvent(ButtonPress, &event))
@@ -886,7 +883,7 @@ waitForButtonPress(CwmWindow *xwindow, int buttons)
 {
   XEvent event;
 
-  if (buttons == 0)
+  if (! buttons)
     buttons = CWM_LEFT_BUTTON | CWM_MIDDLE_BUTTON | CWM_RIGHT_BUTTON;
 
   while (true) {
@@ -914,8 +911,7 @@ waitForButtonPress(CwmWindow *xwindow, int buttons)
 
   CwmScreen &screen = xwindow->getScreen();
 
-  Window press_window =
-    screen.getCoordWindow(event.xbutton.x_root, event.xbutton.y_root);
+  Window press_window = screen.getCoordWindow(event.xbutton.x_root, event.xbutton.y_root);
 
   return press_window;
 }
@@ -926,7 +922,7 @@ waitForButtonRelease(CwmWindow *xwindow, int buttons)
 {
   XEvent event;
 
-  if (buttons == 0)
+  if (! buttons)
     buttons = CWM_LEFT_BUTTON | CWM_MIDDLE_BUTTON | CWM_RIGHT_BUTTON;
 
   while (true) {
@@ -948,8 +944,7 @@ waitForButtonRelease(CwmWindow *xwindow, int buttons)
 
   CwmScreen &screen = xwindow->getScreen();
 
-  Window release_window =
-    screen.getCoordWindow(event.xbutton.x_root, event.xbutton.y_root);
+  Window release_window = screen.getCoordWindow(event.xbutton.x_root, event.xbutton.y_root);
 
   return release_window;
 }
@@ -981,8 +976,7 @@ waitForKeyRelease(CwmScreen &screen)
     break;
   }
 
-  Window release_window =
-    screen.getCoordWindow(event.xkey.x_root, event.xkey.y_root);
+  Window release_window = screen.getCoordWindow(event.xkey.x_root, event.xkey.y_root);
 
   return release_window;
 }
@@ -1028,10 +1022,9 @@ selectWindow(CwmScreen &screen)
   uint event_mask = ButtonPressMask | ButtonReleaseMask;
 
   if (! screen.getRoot()->grab(event_mask, CWM_CURSOR_QUERY))
-    return NULL;
+    return 0;
 
-  Window selected_window =
-    waitForButtonClick(screen.getRoot(), CWM_LEFT_BUTTON);
+  Window selected_window = waitForButtonClick(screen.getRoot(), CWM_LEFT_BUTTON);
 
   screen.getRoot()->ungrab();
 

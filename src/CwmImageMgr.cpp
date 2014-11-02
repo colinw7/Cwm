@@ -1,4 +1,5 @@
 #include <CwmI.h>
+#include <CEnv.h>
 #include <CXScreen.h>
 
 unsigned char
@@ -54,7 +55,7 @@ getInstance()
 {
   static CwmImageMgr *instance;
 
-  if (instance == NULL)
+  if (! instance)
     instance = new CwmImageMgr();
 
   return instance;
@@ -73,20 +74,20 @@ CwmImageMgr::
 
 CwmImage *
 CwmImageMgr::
-getImage(CwmScreen &screen, const string &name, int width, int height)
+getImage(CwmScreen &screen, const std::string &name, int width, int height)
 {
   CwmNamedImage *named_image = lookup(name);
 
-  if (named_image == NULL) {
+  if (! named_image) {
     if (name != "") {
       if (name[0] == ' ')
-        return NULL;
+        return 0;
 
-      string pathname = getPathName(name);
+      std::string pathname = getPathName(name);
 
       if (pathname == "") {
         CwmMachineInst->logf("File %s not found on Path\n", name.c_str());
-        return NULL;
+        return 0;
       }
 
       named_image = new CwmNamedImage(name, pathname);
@@ -102,20 +103,21 @@ getImage(CwmScreen &screen, const string &name, int width, int height)
 
 CwmImage *
 CwmImageMgr::
-getTiledImage(CwmScreen &screen, const string &name, int width, int height, int halign, int valign)
+getTiledImage(CwmScreen &screen, const std::string &name, int width, int height,
+              int halign, int valign)
 {
   CwmNamedImage *named_image = lookup(name);
 
-  if (named_image == NULL) {
+  if (! named_image) {
     if (name != "") {
       if (name[0] == ' ')
-        return NULL;
+        return 0;
 
-      string pathname = getPathName(name);
+      std::string pathname = getPathName(name);
 
       if (pathname == "") {
         CwmMachineInst->logf("File %s not found on Path\n", name.c_str());
-        return NULL;
+        return 0;
       }
 
       named_image = new CwmNamedImage(name, pathname);
@@ -131,7 +133,7 @@ getTiledImage(CwmScreen &screen, const string &name, int width, int height, int 
 
 CwmNamedImage *
 CwmImageMgr::
-addImage(const string &name, const CImagePtr &image)
+addImage(const std::string &name, const CImagePtr &image)
 {
   CwmNamedImage *named_image = new CwmNamedImage(name, image);
 
@@ -142,7 +144,7 @@ addImage(const string &name, const CImagePtr &image)
 
 CwmNamedImage *
 CwmImageMgr::
-lookup(const string &name)
+lookup(const std::string &name)
 {
   NamedImageList::const_iterator pimage1 = images_.begin();
   NamedImageList::const_iterator pimage2 = images_.end  ();
@@ -151,19 +153,19 @@ lookup(const string &name)
     if ((*pimage1)->getName() == name)
       return *pimage1;
 
-  return NULL;
+  return 0;
 }
 
-string
+std::string
 CwmImageMgr::
-getPathName(const string &name)
+getPathName(const std::string &name)
 {
   if (name == "")
     return "";
 
-  string image_path_list = getenv("CWM_IMAGE_PATH");
+  std::string image_path_list = CEnvInst.get("CWM_IMAGE_PATH");
 
-  string image_path = "";
+  std::string image_path = "";
 
   if (image_path_list != "") {
     image_path = searchPathList(image_path_list, name);
@@ -186,16 +188,16 @@ getPathName(const string &name)
   return image_path;
 }
 
-string
+std::string
 CwmImageMgr::
-searchPathList(const string &path_list, const string &name)
+searchPathList(const std::string &path_list, const std::string &name)
 {
   CStrWords paths = CStrUtil::toFields(path_list, ":");
 
   int num_paths = paths.size();
 
   for (int i = 0; i < num_paths; i++) {
-    string filename = paths[i].getWord() + "/" + name;
+    std::string filename = paths[i].getWord() + "/" + name;
 
     CFile file(filename);
 
@@ -207,7 +209,7 @@ searchPathList(const string &path_list, const string &name)
 }
 
 CwmNamedImage::
-CwmNamedImage(const string &name, const string &pathname) :
+CwmNamedImage(const std::string &name, const std::string &pathname) :
  name_(name)
 {
   if (name_ != "") {
@@ -235,7 +237,7 @@ CwmNamedImage(const string &name, const string &pathname) :
 }
 
 CwmNamedImage::
-CwmNamedImage(const string &name, const CImagePtr &image) :
+CwmNamedImage(const std::string &name, const CImagePtr &image) :
  name_(name), image_(image)
 {
 }
@@ -252,7 +254,7 @@ getImage(CwmScreen &screen, int width, int height)
 {
   CwmScreenImage *screen_image = lookup(screen);
 
-  if (screen_image == NULL) {
+  if (! screen_image) {
     screen_image = new CwmScreenImage(screen, image_);
 
     images_.push_back(screen_image);
@@ -267,7 +269,7 @@ getTiledImage(CwmScreen &screen, int width, int height, int halign, int valign)
 {
   CwmScreenImage *screen_image = lookup(screen);
 
-  if (screen_image == NULL) {
+  if (! screen_image) {
     screen_image = new CwmScreenImage(screen, image_);
 
     images_.push_back(screen_image);
@@ -287,7 +289,7 @@ lookup(CwmScreen &screen)
     if (&(*pimage1)->getScreen() == &screen)
       return *pimage1;
 
-  return NULL;
+  return 0;
 }
 
 CwmScreenImage::
@@ -314,7 +316,7 @@ getImage(int width, int height)
 
   CwmImage *image1 = lookup(width, height);
 
-  if (image1 == NULL) {
+  if (! image1) {
     image1 = lookupBest(width, height);
 
     image1 = new CwmImage(screen_, image1->getImage(), width, height);
@@ -331,7 +333,7 @@ getTiledImage(int width, int height, int halign, int valign)
 {
   CwmTiledImage *timage = lookupTiled(width, height, halign, valign);
 
-  if (timage == NULL) {
+  if (! timage) {
     timage = new CwmTiledImage(screen_, images_[0], width, height, halign, valign);
 
     tiled_images_.push_back(timage);
@@ -352,7 +354,7 @@ lookup(int width, int height)
         (*pimage1)->getHeight() == height)
       return *pimage1;
 
-  return NULL;
+  return 0;
 }
 
 CwmImage *
@@ -363,7 +365,7 @@ lookupBest(int width, int height)
   ImageList::const_iterator pimage2 = images_.end  ();
 
   if (pimage1 == pimage2)
-    return NULL;
+    return 0;
 
   int dx = abs((*pimage1)->getWidth () - width );
   int dy = abs((*pimage1)->getHeight() - height);
@@ -402,7 +404,7 @@ lookupTiled(int width, int height, int halign, int valign)
         (*ptimage1)->getVAlign() == valign)
       return *ptimage1;
 
-  return NULL;
+  return 0;
 }
 
 CwmTiledImage::
@@ -476,8 +478,8 @@ void
 CwmImage::
 init()
 {
-  pixmap_      = NULL;
-  pixmap_mask_ = NULL;
+  pixmap_      = 0;
+  pixmap_mask_ = 0;
 }
 
 CwmImage::
@@ -491,15 +493,15 @@ void
 CwmImage::
 draw(CwmWindow *xwindow, CwmGraphics *graphics, int x, int y)
 {
-  if (pixmap_ == NULL)
+  if (! pixmap_)
     createPixmap(graphics);
 
-  if (pixmap_mask_ != NULL)
+  if (pixmap_mask_ != 0)
     graphics->startClip(pixmap_mask_, x, y);
 
   graphics->copyArea(pixmap_, xwindow, 0, 0, width_, height_, x, y);
 
-  if (pixmap_mask_ != NULL)
+  if (pixmap_mask_ != 0)
     graphics->endClip();
 }
 
@@ -507,15 +509,15 @@ void
 CwmImage::
 draw(CwmXPixmap *xpixmap, CwmGraphics *graphics, int x, int y)
 {
-  if (pixmap_ == NULL)
+  if (! pixmap_)
     createPixmap(graphics);
 
-  if (pixmap_mask_ != NULL)
+  if (pixmap_mask_ != 0)
     graphics->startClip(pixmap_mask_, x, y);
 
   graphics->copyArea(pixmap_, xpixmap, 0, 0, width_, height_, x, y);
 
-  if (pixmap_mask_ != NULL)
+  if (pixmap_mask_ != 0)
     graphics->endClip();
 }
 
@@ -552,8 +554,7 @@ createMask()
 
   Pixmap mask_pixmap = cxscreen->createMask(image_);
 
-  CwmXPixmap *xpixmap =
-    new CwmXPixmap(screen_, mask_pixmap, width_, height_, 1);
+  CwmXPixmap *xpixmap = new CwmXPixmap(screen_, mask_pixmap, width_, height_, 1);
 
   return xpixmap;
 }

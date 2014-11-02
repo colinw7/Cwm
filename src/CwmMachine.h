@@ -1,37 +1,10 @@
-#include "CTriplet.h"
+#include <CTriplet.h>
 
 #define CwmMachineInst CwmMachine::getInstance()
 
 class CXAtom;
 
 class CwmMachine {
- private:
-  typedef list<CwmWindow *> XWindowList;
-
-  typedef CTriplet<Window,int,int> WindowKeyCodeStateTriplet;
-  typedef CTriplet<Window,int,int> WindowButtonModifiersTriplet;
-
-  typedef std::map<WindowKeyCodeStateTriplet,int>    GrabKeyMap;
-  typedef std::map<WindowButtonModifiersTriplet,int> GrabButtonMap;
-
-  CwmScreenMgr   *screen_mgr_;
-  CwmWMWindowMgr *window_mgr_;
-  XWindowList     cwm_xwindows_;
-  CwmFocusMgr    *focus_mgr_;
-
-  int    grab_server_count_;
-  Window grab_pointer_xwin_;
-  Window grab_keyboard_xwin_;
-  Window grab_button_xwin_;
-  int    grab_button_button_;
-  int    grab_button_modifiers_;
-
-  GrabKeyMap    grab_key_map_;
-  GrabButtonMap grab_button_map_;
-
-  CwmLog   *log_;
-  CwmDebug *debug_;
-
  public:
   static CwmMachine *getInstance();
 
@@ -64,7 +37,7 @@ class CwmMachine {
   void nextEvent(XEvent *event);
 
   std::string getDisplayName() const;
-  int    getNumScreens() const;
+  int         getNumScreens() const;
 
   CwmScreen &getScreen(int screen_num);
   CwmScreen &getWindowScreen(Window xwin);
@@ -90,8 +63,7 @@ class CwmMachine {
   int  getWindowEventMask(Window xwin);
   bool getWindowViewable(Window xwin);
 
-  void getWindowGeometry(Window xwin, int *x, int *y,
-                         int *width, int *height, int *border);
+  void getWindowGeometry(Window xwin, int *x, int *y, int *width, int *height, int *border);
 
   int getMulticlickTime();
 
@@ -158,8 +130,7 @@ class CwmMachine {
   void grabKey(Window xwin, int keycode, int state);
   void ungrabKey(Window xwin, int keycode, int state);
 
-  void grabButton(Window xwin, int button, int modifiers,
-                  int event_mask, Cursor cursor);
+  void grabButton(Window xwin, int button, int modifiers, int event_mask, Cursor cursor);
   void ungrabButton(Window xwin, int button, int modifiers);
 
   Window createWindow(int x, int y, int width, int height, int border,
@@ -176,8 +147,7 @@ class CwmMachine {
 
   void installColormap(Colormap cmap);
 
-  void changeWindowAtributes(Window xwin, uint attr_mask,
-                             XSetWindowAttributes *attr);
+  void changeWindowAtributes(Window xwin, uint attr_mask, XSetWindowAttributes *attr);
 
   void killClient(Window xwin);
 
@@ -185,8 +155,7 @@ class CwmMachine {
   void setStringProperty(Window xwin, const CXAtom &name, const std::string &value);
   void setWindowProperty(const CXAtom &name, Window value);
   void setWindowProperty(Window xwin, const CXAtom &name, Window value);
-  void setWindowArrayProperty(Window xwin, const CXAtom &name,
-                              Window *xwins, int num_xwins);
+  void setWindowArrayProperty(Window xwin, const CXAtom &name, Window *xwins, int num_xwins);
   void setAtomArrayProperty(Window xwin, const CXAtom &name, const CXAtom **atoms, int num_atoms);
   void setStringListProperty(Window xwin, const CXAtom &name, char **strs, int num_strs);
   bool getIntegerProperty(Window xwin, const CXAtom &name, int *value);
@@ -328,4 +297,31 @@ class CwmMachine {
 
   void resetPointerGrabs();
   void resetKeyboardGrabs();
+
+ private:
+  typedef std::list<CwmWindow *> XWindowList;
+
+  typedef CTriplet<Window,int,int> WindowKeyCodeStateTriplet;
+  typedef CTriplet<Window,int,int> WindowButtonModifiersTriplet;
+
+  typedef std::map<WindowKeyCodeStateTriplet,int>    GrabKeyMap;
+  typedef std::map<WindowButtonModifiersTriplet,int> GrabButtonMap;
+
+  CwmScreenMgr   *screen_mgr_;
+  CwmWMWindowMgr *window_mgr_;
+  XWindowList     cwm_xwindows_;
+  CwmFocusMgr    *focus_mgr_;
+
+  int    grab_server_count_;
+  Window grab_pointer_xwin_;
+  Window grab_keyboard_xwin_;
+  Window grab_button_xwin_;
+  int    grab_button_button_;
+  int    grab_button_modifiers_;
+
+  GrabKeyMap    grab_key_map_;
+  GrabButtonMap grab_button_map_;
+
+  CwmLog   *log_;
+  CwmDebug *debug_;
 };

@@ -1,4 +1,4 @@
-#include "CwmDecorationI.h"
+#include <CwmDecorationI.h>
 
 CwmDecoration::
 CwmDecoration(CwmWMWindow *window) :
@@ -89,7 +89,7 @@ processExpose(XExposeEvent *event)
 {
   CwmWindow *xwindow = CwmMachineInst->getWindowCwmXWindow(event->window);
 
-  if (xwindow == NULL)
+  if (xwindow == 0)
     return false;
 
   if      (isMenu(xwindow))
@@ -128,7 +128,7 @@ processButtonPress(XButtonPressedEvent *event)
 {
   CwmWMWindow *window = CwmMachineInst->getWindowWMWindow(event->window);
 
-  if (window == NULL)
+  if (window == 0)
     return false;
 
   CwmWindow *xwindow = CwmMachineInst->getWindowCwmXWindow(event->window);
@@ -290,95 +290,91 @@ bool
 CwmDecoration::
 isMenu(CwmWindow *xwindow)
 {
-  return (menu_child_ != NULL && xwindow == menu_child_->getXWindow());
+  return (menu_child_ != 0 && xwindow == menu_child_->getXWindow());
 }
 
 bool
 CwmDecoration::
 isTitle(CwmWindow *xwindow)
 {
-  return (title_child_ != NULL && xwindow == title_child_->getXWindow());
+  return (title_child_ != 0 && xwindow == title_child_->getXWindow());
 }
 
 bool
 CwmDecoration::
 isMinimize(CwmWindow *xwindow)
 {
-  return (minimize_child_ != NULL && xwindow == minimize_child_->getXWindow());
+  return (minimize_child_ != 0 && xwindow == minimize_child_->getXWindow());
 }
 
 bool
 CwmDecoration::
 isMaximize(CwmWindow *xwindow)
 {
-  return (maximize_child_ != NULL && xwindow == maximize_child_->getXWindow());
+  return (maximize_child_ != 0 && xwindow == maximize_child_->getXWindow());
 }
 
 bool
 CwmDecoration::
 isClose(CwmWindow *xwindow)
 {
-  return (close_child_ != NULL && xwindow == close_child_->getXWindow());
+  return (close_child_ != 0 && xwindow == close_child_->getXWindow());
 }
 
 bool
 CwmDecoration::
 isNSide(CwmWindow *xwindow)
 {
-  return (n_side_child_ != NULL && xwindow == n_side_child_->getXWindow());
+  return (n_side_child_ != 0 && xwindow == n_side_child_->getXWindow());
 }
 
 bool
 CwmDecoration::
 isSSide(CwmWindow *xwindow)
 {
-  return (s_side_child_ != NULL && xwindow == s_side_child_->getXWindow());
+  return (s_side_child_ != 0 && xwindow == s_side_child_->getXWindow());
 }
 
 bool
 CwmDecoration::
 isWSide(CwmWindow *xwindow)
 {
-  return (w_side_child_ != NULL && xwindow == w_side_child_->getXWindow());
+  return (w_side_child_ != 0 && xwindow == w_side_child_->getXWindow());
 }
 
 bool
 CwmDecoration::
 isESide(CwmWindow *xwindow)
 {
-  return (e_side_child_ != NULL && xwindow == e_side_child_->getXWindow());
+  return (e_side_child_ != 0 && xwindow == e_side_child_->getXWindow());
 }
 
 bool
 CwmDecoration::
 isNWCorner(CwmWindow *xwindow)
 {
-  return (nw_corner_child_ != NULL &&
-          xwindow == nw_corner_child_->getXWindow());
+  return (nw_corner_child_ != 0 && xwindow == nw_corner_child_->getXWindow());
 }
 
 bool
 CwmDecoration::
 isNECorner(CwmWindow *xwindow)
 {
-  return (ne_corner_child_ != NULL &&
-          xwindow == ne_corner_child_->getXWindow());
+  return (ne_corner_child_ != 0 && xwindow == ne_corner_child_->getXWindow());
 }
 
 bool
 CwmDecoration::
 isSWCorner(CwmWindow *xwindow)
 {
-  return (sw_corner_child_ != NULL &&
-          xwindow == sw_corner_child_->getXWindow());
+  return (sw_corner_child_ != 0 && xwindow == sw_corner_child_->getXWindow());
 }
 
 bool
 CwmDecoration::
 isSECorner(CwmWindow *xwindow)
 {
-  return (se_corner_child_ != NULL &&
-          xwindow == se_corner_child_->getXWindow());
+  return (se_corner_child_ != 0 && xwindow == se_corner_child_->getXWindow());
 }
 
 void

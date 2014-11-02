@@ -1,4 +1,4 @@
-#include "CImageGC.h"
+#include <CImageGC.h>
 
 CImageGC::
 CImageGC()

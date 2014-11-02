@@ -9,16 +9,10 @@ class CwmTiledImage;
 class CwmImage;
 
 class CwmImageMgr {
- private:
-  typedef vector<CwmNamedImage *> NamedImageList;
-
-  NamedImageList images_;
-
  public:
   static CwmImageMgr *getInstance();
 
-  CwmImage *getImage(CwmScreen &screen, const std::string &name="",
-                     int width=-1, int height=-1);
+  CwmImage *getImage(CwmScreen &screen, const std::string &name="", int width=-1, int height=-1);
 
   CwmImage *getTiledImage(CwmScreen &screen, const std::string &name,
                           int width, int height, int halign, int valign);
@@ -34,18 +28,14 @@ class CwmImageMgr {
 
   std::string getPathName(const std::string &name);
   std::string searchPathList(const std::string &path_list, const std::string &name);
+
+ private:
+  typedef std::vector<CwmNamedImage *> NamedImageList;
+
+  NamedImageList images_;
 };
 
 class CwmNamedImage {
- private:
-  typedef vector<CwmScreenImage *> ScreenImageList;
-
-  std::string     name_;
-  CImagePtr       image_;
-  ScreenImageList images_;
-
-  static unsigned char image_data_[];
-
  public:
   CwmNamedImage(const std::string &name, const std::string &pathname);
   CwmNamedImage(const std::string &name, const CImagePtr &image);
@@ -53,25 +43,24 @@ class CwmNamedImage {
 
   CwmImage *getImage(CwmScreen &screen, int width=-1, int height=-1);
 
-  CwmImage *getTiledImage(CwmScreen &screen, int width, int height,
-                          int halign, int valign);
+  CwmImage *getTiledImage(CwmScreen &screen, int width, int height, int halign, int valign);
 
   std::string getName() const { return name_; }
 
  private:
   CwmScreenImage *lookup(CwmScreen &screen);
+
+ private:
+  typedef std::vector<CwmScreenImage *> ScreenImageList;
+
+  std::string     name_;
+  CImagePtr       image_;
+  ScreenImageList images_;
+
+  static unsigned char image_data_[];
 };
 
 class CwmScreenImage {
- private:
-  typedef vector<CwmImage *>      ImageList;
-  typedef vector<CwmTiledImage *> TiledImageList;
-
-  CwmScreen      &screen_;
-  CImagePtr       image_;
-  ImageList       images_;
-  TiledImageList  tiled_images_;
-
  public:
   CwmScreenImage(CwmScreen &screen, const CImagePtr &image);
   CwmScreenImage(CwmScreen &screen);
@@ -87,16 +76,18 @@ class CwmScreenImage {
   CwmImage *lookupBest(int width, int height);
 
   CwmTiledImage *lookupTiled(int width, int height, int halign, int valign);
+
+ private:
+  typedef std::vector<CwmImage *>      ImageList;
+  typedef std::vector<CwmTiledImage *> TiledImageList;
+
+  CwmScreen      &screen_;
+  CImagePtr       image_;
+  ImageList       images_;
+  TiledImageList  tiled_images_;
 };
 
 class CwmTiledImage {
- private:
-  CwmImage *image_;
-  int       width_;
-  int       height_;
-  int       halign_;
-  int       valign_;
-
  public:
   CwmTiledImage(CwmScreen &screen, CwmImage *image, int width, int height,
                 int halign, int valign);
@@ -107,17 +98,16 @@ class CwmTiledImage {
   int       getHeight() { return height_; }
   int       getHAlign() { return halign_; }
   int       getVAlign() { return valign_; }
+
+ private:
+  CwmImage *image_;
+  int       width_;
+  int       height_;
+  int       halign_;
+  int       valign_;
 };
 
 class CwmImage {
- private:
-  CwmScreen  &screen_;
-  CImagePtr   image_;
-  int         width_;
-  int         height_;
-  CwmXPixmap *pixmap_;
-  CwmXPixmap *pixmap_mask_;
-
  public:
   CwmImage(CwmScreen &screen, const CImagePtr &image);
   CwmImage(CwmScreen &screen, const CImagePtr &image, int width, int height);
@@ -138,6 +128,14 @@ class CwmImage {
   void init();
 
   void createPixmap(CwmGraphics *graphics);
+
+ private:
+  CwmScreen  &screen_;
+  CImagePtr   image_;
+  int         width_;
+  int         height_;
+  CwmXPixmap *pixmap_;
+  CwmXPixmap *pixmap_mask_;
 };
 
 #endif

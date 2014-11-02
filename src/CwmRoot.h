@@ -1,4 +1,10 @@
 class CwmRootImage {
+ public:
+  CwmRootImage(CwmScreen &screen, const std::string &spec);
+ ~CwmRootImage();
+
+  void draw();
+
  private:
   CwmScreen &screen_;
   CwmImage  *image_;
@@ -7,12 +13,6 @@ class CwmRootImage {
   Pixel      bg_;
   Pixel      fg_;
   int        bgindex_;
-
- public:
-  CwmRootImage(CwmScreen &screen, const std::string &spec);
- ~CwmRootImage();
-
-  void draw();
 };
 
 #define CwmRootEventFunctionMgrInst CwmRootEventFunctionMgr::getInstance()
@@ -20,11 +20,6 @@ class CwmRootImage {
 class CwmRootEventFunction;
 
 class CwmRootEventFunctionMgr {
- private:
-  typedef vector<CwmRootEventFunction *> RootEventFunctionList;
-
-  RootEventFunctionList functions_;
-
  public:
   static CwmRootEventFunctionMgr *getInstance();
 
@@ -38,17 +33,16 @@ class CwmRootEventFunctionMgr {
   CwmRootEventFunctionMgr();
 
   void addFunctions();
+
+ private:
+  typedef std::vector<CwmRootEventFunction *> RootEventFunctionList;
+
+  RootEventFunctionList functions_;
 };
 
 class CwmRootEventFunction {
- private:
-  CXNamedEvent    *event_;
-  CwmFunctionDef  *function_;
-  CwmData          data_;
-
  public:
-  CwmRootEventFunction(CXNamedEvent *event, CwmFunctionDef *function,
-                       CwmData data);
+  CwmRootEventFunction(CXNamedEvent *event, CwmFunctionDef *function, CwmData data);
  ~CwmRootEventFunction();
 
   CXNamedEvent *getEvent() const { return event_; }
@@ -61,4 +55,9 @@ class CwmRootEventFunction {
   void process(CwmScreen &screen) {
     function_->processRoot(screen, data_);
   }
+
+ private:
+  CXNamedEvent    *event_;
+  CwmFunctionDef  *function_;
+  CwmData          data_;
 };

@@ -3,9 +3,6 @@
 class CConfig;
 
 class CwmConfig {
- private:
-  CConfig *config_;
-
  public:
   static CwmConfig *getInstance();
 
@@ -31,4 +28,7 @@ class CwmConfig {
 
  private:
   CwmConfig();
+
+ private:
+  CConfig *config_;
 };

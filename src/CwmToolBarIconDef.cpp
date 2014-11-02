@@ -1,4 +1,4 @@
-#include "CwmToolBarI.h"
+#include <CwmToolBarI.h>
 
 CwmToolBarIconDefMgr *
 CwmToolBarIconDefMgr::
@@ -6,7 +6,7 @@ getInstance()
 {
   static CwmToolBarIconDefMgr *instance;
 
-  if (instance == NULL)
+  if (! instance)
     instance = new CwmToolBarIconDefMgr();
 
   return instance;
@@ -29,9 +29,9 @@ CwmToolBarIconDefMgr::
 
 void
 CwmToolBarIconDefMgr::
-addToolBarIcon(const string &icon, const string &label,
-               const string &command, bool add_display,
-               const string &bg, const string &fg)
+addToolBarIcon(const std::string &icon, const std::string &label,
+               const std::string &command, bool add_display,
+               const std::string &bg, const std::string &fg)
 {
   CwmToolBarIconDef *toolbar_icon =
     new CwmToolBarIconDef(icon, label, command, add_display, bg, fg);
@@ -51,9 +51,9 @@ addToolBarIcons(CwmToolBar &toolbar)
 }
 
 CwmToolBarIconDef::
-CwmToolBarIconDef(const string &icon, const string &label,
-                  const string &command, bool add_display,
-                  const string &bg, const string &fg) :
+CwmToolBarIconDef(const std::string &icon, const std::string &label,
+                  const std::string &command, bool add_display,
+                  const std::string &bg, const std::string &fg) :
  icon_(icon), label_(label), command_(command),
  add_display_(add_display), bg_(bg), fg_(fg)
 {

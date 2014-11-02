@@ -5,11 +5,6 @@ class CwmScreenWindowGroups;
 class CwmCirculateWindowStack;
 
 class CwmWindowGroup {
- private:
-  typedef vector<CwmWMWindow *> WMWindowList;
-
-  WMWindowList window_stack_;
-
  public:
   CwmWindowGroup(CwmWMWindow *window);
  ~CwmWindowGroup();
@@ -30,16 +25,14 @@ class CwmWindowGroup {
  private:
   void stackChildren(CwmWMWindow *window);
   void stackParents(CwmWMWindow *window);
+
+ private:
+  typedef std::vector<CwmWMWindow *> WMWindowList;
+
+  WMWindowList window_stack_;
 };
 
 class CwmCirculateWindowStack {
- private:
-  typedef vector<CwmWindowGroup *> WindowGroupList;
-
-  CwmScreen             &screen_;
-  CwmScreenWindowGroups *screen_window_groups_;
-  WindowGroupList        window_groups_;
-
  public:
   CwmCirculateWindowStack(CwmScreen &screen);
  ~CwmCirculateWindowStack();
@@ -64,14 +57,16 @@ class CwmCirculateWindowStack {
   CwmWindowGroup &operator[](int i) const;
 
   bool isTop(CwmWMWindow *window);
+
+ private:
+  typedef std::vector<CwmWindowGroup *> WindowGroupList;
+
+  CwmScreen             &screen_;
+  CwmScreenWindowGroups *screen_window_groups_;
+  WindowGroupList        window_groups_;
 };
 
 class CwmScreenWindowGroups {
- private:
-  typedef vector<CwmWindowGroup *> WindowGroupList;
-
-  WindowGroupList window_groups_;
-
  public:
   CwmScreenWindowGroups(CwmScreen &screen);
  ~CwmScreenWindowGroups();
@@ -82,6 +77,11 @@ class CwmScreenWindowGroups {
   CwmWindowGroup &getBottomGroup() const;
 
   CwmWindowGroup &operator[](int i) const;
+
+ private:
+  typedef std::vector<CwmWindowGroup *> WindowGroupList;
+
+  WindowGroupList window_groups_;
 };
 
 #endif

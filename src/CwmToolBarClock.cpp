@@ -31,11 +31,11 @@ CwmToolBarClock(CwmToolBar &toolbar1) :
 
   //------
 
-  timer_ = NULL;
+  timer_ = 0;
 
   //------
 
-  string time_string;
+  std::string time_string;
 
   if (format_ != "")
     time_string = COSTime::getTimeString(format_);
@@ -84,7 +84,7 @@ redraw()
 {
   xwindow_->clear();
 
-  string time_string;
+  std::string time_string;
 
   if (format_ != "")
     time_string = COSTime::getTimeString(format_);
@@ -114,7 +114,7 @@ disable()
 {
   delete timer_;
 
-  timer_ = NULL;
+  timer_ = 0;
 }
 
 int
@@ -141,7 +141,7 @@ idleProc(CwmWindow *, CwmData data, CwmData detail)
   CwmScreen &screen = clock->toolbar_.getScreen();
 
   if (idle_state->getActive()) {
-    string time_string = COSTime::getTimeString("%c");
+    std::string time_string = COSTime::getTimeString("%c");
 
     screen.showInfo(time_string);
   }

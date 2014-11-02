@@ -1,7 +1,7 @@
-#include "CwmI.h"
-#include "CXMachine.h"
-#include "CXtTimer.h"
-#include "X11/XKBlib.h"
+#include <CwmI.h>
+#include <CXMachine.h>
+#include <CXtTimer.h>
+#include <X11/XKBlib.h>
 
 CwmMachine *
 CwmMachine::
@@ -9,7 +9,7 @@ getInstance()
 {
   static CwmMachine *instance;
 
-  if (instance == NULL)
+  if (! instance)
     instance = new CwmMachine();
 
   return instance;
@@ -53,7 +53,7 @@ init()
 
 bool
 CwmMachine::
-init(const string &display_name)
+init(const std::string &display_name)
 {
   Display *display;
 
@@ -63,7 +63,7 @@ init(const string &display_name)
   display = CXMachineInst->openDisplay(display_name);
 #endif
 
-  if (display == NULL)
+  if (! display)
     return false;
 
   return true;
@@ -71,7 +71,7 @@ init(const string &display_name)
 
 Display *
 CwmMachine::
-openXtDisplay(const string &display_name)
+openXtDisplay(const std::string &display_name)
 {
   int    i;
   int    argc;
@@ -83,10 +83,9 @@ openXtDisplay(const string &display_name)
 
   for (i = 0; i < argc; ++i)
     argv1[i] = strdup(argv[i]);
-  argv1[i] = NULL;
+  argv1[i] = 0;
 
-  Display *display =
-    CXMachineInst->openXtDisplay(display_name, "Cwm", &argc, argv1);
+  Display *display = CXMachineInst->openXtDisplay(display_name, "Cwm", &argc, argv1);
 
   for (i = 0; i < argc; ++i)
     free((char *) argv1[i]);
@@ -106,7 +105,7 @@ term()
   screen_mgr_->term();
 }
 
-string
+std::string
 CwmMachine::
 getDisplayName() const
 {
@@ -205,7 +204,7 @@ getWindowCwmXWindow(Window xwin)
     if ((*p1)->getXWin() == xwin)
       return *p1;
 
-  return NULL;
+  return 0;
 }
 
 bool
@@ -459,8 +458,7 @@ getWindowViewable(Window xwin)
 
 void
 CwmMachine::
-getWindowGeometry(Window xwin, int *x, int *y,
-                  int *width, int *height, int *border)
+getWindowGeometry(Window xwin, int *x, int *y, int *width, int *height, int *border)
 {
   trapStart();
 
@@ -566,8 +564,7 @@ CwmMachine::
 translateCoords(Window src_w, Window dest_w, int src_x, int src_y,
                 int *dest_x, int *dest_y, Window *child)
 {
-  return CXMachineInst->translateCoords(src_w, dest_w, src_x, src_y,
-                                        dest_x, dest_y, child);
+  return CXMachineInst->translateCoords(src_w, dest_w, src_x, src_y, dest_x, dest_y, child);
 }
 
 bool
@@ -772,8 +769,7 @@ ungrabKey(Window xwin, int keycode, int state)
 
 void
 CwmMachine::
-grabButton(Window xwin, int button, int modifiers,
-           int event_mask, Cursor cursor)
+grabButton(Window xwin, int button, int modifiers, int event_mask, Cursor cursor)
 {
   WindowButtonModifiersTriplet triplet(xwin, button, modifiers);
 
@@ -808,8 +804,7 @@ CwmMachine::
 createWindow(int x, int y, int width, int height, int border,
              uint attr_mask, XSetWindowAttributes *attr)
 {
-  return CXMachineInst->createWindow(x, y, width, height, border,
-                                     attr_mask, attr);
+  return CXMachineInst->createWindow(x, y, width, height, border, attr_mask, attr);
 }
 
 Window
@@ -817,8 +812,7 @@ CwmMachine::
 createWindow(Window parent_xwin, int x, int y, int width, int height,
              int border, uint attr_mask, XSetWindowAttributes *attr)
 {
-  return CXMachineInst->createWindow(parent_xwin, x, y, width, height,
-                                     border, attr_mask, attr);
+  return CXMachineInst->createWindow(parent_xwin, x, y, width, height, border, attr_mask, attr);
 }
 
 Pixmap
@@ -865,8 +859,7 @@ installColormap(Colormap cmap)
 
 void
 CwmMachine::
-changeWindowAtributes(Window xwin, uint attr_mask,
-                      XSetWindowAttributes *attr)
+changeWindowAtributes(Window xwin, uint attr_mask, XSetWindowAttributes *attr)
 {
   CXMachineInst->changeWindowAtributes(xwin, attr_mask, attr);
 }
@@ -887,7 +880,7 @@ setIntegerProperty(Window xwin, const CXAtom &name, int value)
 
 void
 CwmMachine::
-setStringProperty(Window xwin, const CXAtom &name, const string &value)
+setStringProperty(Window xwin, const CXAtom &name, const std::string &value)
 {
   CXMachineInst->setStringProperty(xwin, name, value);
 }
@@ -908,24 +901,21 @@ setWindowProperty(Window xwin, const CXAtom &name, Window value)
 
 void
 CwmMachine::
-setWindowArrayProperty(Window xwin, const CXAtom &name,
-                       Window *xwins, int num_xwins)
+setWindowArrayProperty(Window xwin, const CXAtom &name, Window *xwins, int num_xwins)
 {
   CXMachineInst->setWindowArrayProperty(xwin, name, xwins, num_xwins);
 }
 
 void
 CwmMachine::
-setAtomArrayProperty(Window xwin, const CXAtom &name,
-                     const CXAtom **atoms, int num_atoms)
+setAtomArrayProperty(Window xwin, const CXAtom &name, const CXAtom **atoms, int num_atoms)
 {
   CXMachineInst->setAtomArrayProperty(xwin, name, atoms, num_atoms);
 }
 
 void
 CwmMachine::
-setStringListProperty(Window xwin, const CXAtom &name,
-                      char **strs, int num_strs)
+setStringListProperty(Window xwin, const CXAtom &name, char **strs, int num_strs)
 {
   CXMachineInst->setStringListProperty(xwin, name, strs, num_strs);
 }
@@ -946,14 +936,14 @@ getIntegerProperty(Window xwin, const CXAtom &name, int *value)
 
 bool
 CwmMachine::
-getStringProperty(const CXAtom &name, string &value)
+getStringProperty(const CXAtom &name, std::string &value)
 {
   return CXMachineInst->getStringProperty(name, value);
 }
 
 bool
 CwmMachine::
-getStringProperty(Window xwin, const CXAtom &name, string &value)
+getStringProperty(Window xwin, const CXAtom &name, std::string &value)
 {
   return CXMachineInst->getStringProperty(xwin, name, value);
 }
@@ -1009,14 +999,14 @@ isWMStateIconic(Window xwin)
 
 void
 CwmMachine::
-getWMName(Window xwin, string &name)
+getWMName(Window xwin, std::string &name)
 {
   CXMachineInst->getWMName(xwin, name);
 }
 
 void
 CwmMachine::
-getWMIconName(Window xwin, string &name)
+getWMIconName(Window xwin, std::string &name)
 {
   CXMachineInst->getWMIconName(xwin, name);
 }
@@ -1051,7 +1041,7 @@ getWMClassHint(Window xwin, XClassHint **class_hint)
 
 void
 CwmMachine::
-getWMClientMachine(Window xwin, string &client_machine)
+getWMClientMachine(Window xwin, std::string &client_machine)
 {
   CXMachineInst->getWMClientMachine(xwin, client_machine);
 }
@@ -1065,8 +1055,7 @@ getWMCommand(Window xwin, int *argc, char ***argv)
 
 void
 CwmMachine::
-getWMColormapWindows(Window xwin, Window **cmap_windows,
-                     int *num_cmap_windows)
+getWMColormapWindows(Window xwin, Window **cmap_windows, int *num_cmap_windows)
 {
   CXMachineInst->getWMColormapWindows(xwin, cmap_windows, num_cmap_windows);
 }
@@ -1263,8 +1252,7 @@ CwmMachine::
 sendConfigureNotifyEvent(Window xwin, int x, int y, int width, int height,
                          int border, Window above_xwin)
 {
-  return CXMachineInst->sendConfigureNotifyEvent(xwin, x, y, width, height,
-                                                 border, above_xwin);
+  return CXMachineInst->sendConfigureNotifyEvent(xwin, x, y, width, height, border, above_xwin);
 }
 
 void
@@ -1432,13 +1420,11 @@ copyArea(Window src_xwin, Window dest_xwin, GC gc, int src_x, int src_y,
 
 void
 CwmMachine::
-copyPlanes(Window src_xwin, int src_depth, Window dest_xwin, int dest_depth,
-           GC gc, int src_x, int src_y, int src_width, int src_height,
-           int desy_x, int desy_y)
+copyPlanes(Window src_xwin, int src_depth, Window dest_xwin, int dest_depth, GC gc,
+           int src_x, int src_y, int src_width, int src_height, int desy_x, int desy_y)
 {
-  CXMachineInst->copyPlanes(src_xwin, src_depth, dest_xwin, dest_depth,
-                            gc, src_x, src_y, src_width, src_height,
-                            desy_x, desy_y);
+  CXMachineInst->copyPlanes(src_xwin, src_depth, dest_xwin, dest_depth, gc, src_x, src_y,
+                            src_width, src_height, desy_x, desy_y);
 }
 
 Pixmap
@@ -1461,7 +1447,7 @@ createStippleCwmXPixmap(CwmScreen &screen)
 
 const CXAtom &
 CwmMachine::
-getAtom(const string &name)
+getAtom(const std::string &name)
 {
   return CXMachineInst->getAtom(name);
 }
@@ -1487,7 +1473,7 @@ getEventWindow(XEvent *event)
   return CXMachineInst->getEventWindow(event);
 }
 
-string
+std::string
 CwmMachine::
 getEventName(XEvent *event)
 {
@@ -1503,29 +1489,23 @@ getEventTime(XEvent *event)
 
 bool
 CwmMachine::
-sendIntegerServerMessage(Window client_xwin, Window server_xwin,
-                         int value)
+sendIntegerServerMessage(Window client_xwin, Window server_xwin, int value)
 {
-  return sendStringServerMessage(client_xwin, server_xwin,
-                                 CStrUtil::toString(value));
+  return sendStringServerMessage(client_xwin, server_xwin, CStrUtil::toString(value));
 }
 
 bool
 CwmMachine::
-sendStringServerMessage(Window client_xwin, Window server_xwin,
-                        const string &value)
+sendStringServerMessage(Window client_xwin, Window server_xwin, const std::string &value)
 {
-  return CXMachineInst->sendStringServerMessage
-          (client_xwin, server_xwin, value);
+  return CXMachineInst->sendStringServerMessage(client_xwin, server_xwin, value);
 }
 
 bool
 CwmMachine::
-readStringClientMessage(Window server_xwin, Window *client_xwin,
-                        string &value)
+readStringClientMessage(Window server_xwin, Window *client_xwin, std::string &value)
 {
-  return CXMachineInst->readStringClientMessage
-          (server_xwin, client_xwin, value);
+  return CXMachineInst->readStringClientMessage(server_xwin, client_xwin, value);
 }
 
 void
@@ -1544,14 +1524,14 @@ trapEnd()
 
 void
 CwmMachine::
-logXError(const string &msg)
+logXError(const std::string &msg)
 {
   CwmMachineInst->logf("%s\n", msg.c_str());
 }
 
 void
 CwmMachine::
-log(const string &str)
+log(const std::string &str)
 {
   log_->print(str);
 }
@@ -1585,7 +1565,7 @@ getDebug()
 
 void
 CwmMachine::
-debug(const string &str)
+debug(const std::string &str)
 {
   debug_->print(str);
 }

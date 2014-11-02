@@ -1,13 +1,6 @@
 #define CwmCmdIconMgrInst CwmCmdIconMgr::getInstance()
 
 class CwmCmdIconMgr {
- private:
-  typedef std::vector<CwmCmdIcon *>      CmdIconList;
-  typedef std::map<Window, CwmCmdIcon *> CmdIconMap;
-
-  CmdIconList command_icon_list_;
-  CmdIconMap  command_icon_map_;
-
  public:
   static CwmCmdIconMgr *getInstance();
 
@@ -20,9 +13,33 @@ class CwmCmdIconMgr {
   CwmCmdIcon *lookup(Window xwin);
 
   void deleteAll();
+
+ private:
+  typedef std::vector<CwmCmdIcon *>      CmdIconList;
+  typedef std::map<Window, CwmCmdIcon *> CmdIconMap;
+
+  CmdIconList command_icon_list_;
+  CmdIconMap  command_icon_map_;
 };
 
 class CwmCmdIcon {
+ public:
+  CwmCmdIcon(CwmScreen &screen, CwmCustomIcon &icon_def);
+ ~CwmCmdIcon();
+
+  void redraw();
+  void invoke();
+  void move();
+
+  CwmWindow *getXWindow() { return xwindow_; }
+
+ private:
+  void createMask();
+
+  void reposition();
+
+  static void invokeProc(CwmWindow *xwindow, CwmData data, CwmData detail);
+
  private:
   CwmScreen   &screen_;
   CwmWindow   *xwindow_;
@@ -42,21 +59,4 @@ class CwmCmdIcon {
   int          label_height_;
   std::string  label_;
   std::string  command_;
-
- public:
-  CwmCmdIcon(CwmScreen &screen, CwmCustomIcon &icon_def);
- ~CwmCmdIcon();
-
-  void redraw();
-  void invoke();
-  void move();
-
-  CwmWindow *getXWindow() { return xwindow_; }
-
- private:
-  void createMask();
-
-  void reposition();
-
-  static void invokeProc(CwmWindow *xwindow, CwmData data, CwmData detail);
 };

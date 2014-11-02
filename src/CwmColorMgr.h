@@ -1,20 +1,10 @@
 #ifndef CWM_COLOR_MGR_H
 #define CWM_COLOR_MGR_H
 
-#include "CPair.h"
-#include "CXColor.h"
+#include <CPair.h>
+#include <CXColor.h>
 
 class CwmColorMgr {
- private:
-  typedef CPair<const CXColor &, const CXColor &> ColorPair;
-
-  typedef std::map<ColorPair, CwmColor *>        ColorList;
-  typedef std::map<std::string, const CXColor *> NamedColorMap;
-
-  ColorList      colors_;
-  NamedColorMap  named_colors_;
-  CXColorMgr    *color_mgr_;
-
  public:
   CwmColorMgr(CwmScreen &screen);
  ~CwmColorMgr();
@@ -26,13 +16,19 @@ class CwmColorMgr {
   Pixel getDarkPixel(Pixel pixel);
   Pixel getLightPixel(Pixel pixel);
   Pixel getInvPixel(Pixel pixel);
+
+ private:
+  typedef CPair<const CXColor &, const CXColor &> ColorPair;
+
+  typedef std::map<ColorPair, CwmColor *>        ColorList;
+  typedef std::map<std::string, const CXColor *> NamedColorMap;
+
+  ColorList      colors_;
+  NamedColorMap  named_colors_;
+  CXColorMgr    *color_mgr_;
 };
 
 class CwmColor {
- private:
-  const CXColor &fg_;
-  const CXColor &bg_;
-
  public:
   CwmColor(const CXColor &fg, const CXColor &bg) :
    fg_(fg), bg_(bg) {
@@ -50,6 +46,10 @@ class CwmColor {
   CRGBA getLightRGBA() const { return bg_.getRGBA().getLightRGBA  (); }
   CRGBA getDarkRGBA () const { return bg_.getRGBA().getDarkRGBA   (); }
   CRGBA getInvRGBA  () const { return bg_.getRGBA().getInverseRGBA(); }
+
+ private:
+  const CXColor &fg_;
+  const CXColor &bg_;
 };
 
 #endif

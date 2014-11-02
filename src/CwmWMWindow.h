@@ -24,12 +24,6 @@ typedef void (*CwmWindowNotifyProc)
                 (CwmWMWindow *window, CwmWindowNotifyType type, CwmData data);
 
 class CwmWindowNotifyData {
- private:
-  CwmWindowNotifyType type;
-  CwmWindowNotifyProc proc;
-  CwmData             data;
-  bool                called;
-
  public:
   CwmWindowNotifyData(CwmWindowNotifyType type1, CwmWindowNotifyProc proc1,
                       CwmData data1) : type(type1), proc(proc1), data(data1) {
@@ -52,6 +46,12 @@ class CwmWindowNotifyData {
 
   void setCalled(bool flag) { called = flag; }
   bool getCalled() const { return called; }
+
+ private:
+  CwmWindowNotifyType type;
+  CwmWindowNotifyProc proc;
+  CwmData             data;
+  bool                called;
 };
 
 //-------------------------------
@@ -59,10 +59,7 @@ class CwmWindowNotifyData {
 #define CwmWindowEventFunctionMgrInst CwmWindowEventFunctionMgr::getInstance()
 
 class CwmWindowEventFunctionMgr {
-  typedef list<CwmWindowEventFunction *> WindowEventFunctionList;
-
- private:
-  WindowEventFunctionList event_functions_;
+  typedef std::list<CwmWindowEventFunction *> WindowEventFunctionList;
 
  public:
   static CwmWindowEventFunctionMgr *getInstance();
@@ -72,12 +69,10 @@ class CwmWindowEventFunctionMgr {
   void add(CwmWindowEventFunction *event_function);
   void remove(CwmWindowEventFunction *event_function);
 
-  void addEventFunction(CwmWMWindow *window, int area,
-                        CXNamedEvent *event,
+  void addEventFunction(CwmWMWindow *window, int area, CXNamedEvent *event,
                         CwmFunctionDef *function, CwmData data);
 
-  void addPatternEventFunction(const std::string &pattern, int area,
-                               CXNamedEvent *event,
+  void addPatternEventFunction(const std::string &pattern, int area, CXNamedEvent *event,
                                CwmFunctionDef *function, CwmData data);
 
   void processEventFunction(CwmWMWindow *window, int area, XEvent *event);
@@ -88,6 +83,9 @@ class CwmWindowEventFunctionMgr {
 
   void grabEventKeys(CwmWMWindow *window);
   void ungrabEventKeys(CwmWMWindow *window);
+
+ private:
+  WindowEventFunctionList event_functions_;
 };
 
 //-------------------------------
@@ -95,10 +93,7 @@ class CwmWindowEventFunctionMgr {
 #define CwmWindowGlobalNotifyMgrInst CwmWindowGlobalNotifyMgr::getInstance()
 
 class CwmWindowGlobalNotifyMgr {
-  typedef list<CwmWindowNotifyData *> WindowNotifyDataList;
-
- private:
-  WindowNotifyDataList notify_procs_;
+  typedef std::list<CwmWindowNotifyData *> WindowNotifyDataList;
 
  public:
   static CwmWindowGlobalNotifyMgr *getInstance();
@@ -111,22 +106,18 @@ class CwmWindowGlobalNotifyMgr {
 
   void clear();
 
-  void addProc(CwmWindowNotifyType type, CwmWindowNotifyProc proc,
-               CwmData data);
-  void removeProc(CwmWindowNotifyType type, CwmWindowNotifyProc proc,
-                  CwmData data);
+  void addProc(CwmWindowNotifyType type, CwmWindowNotifyProc proc, CwmData data);
+  void removeProc(CwmWindowNotifyType type, CwmWindowNotifyProc proc, CwmData data);
 
   void callProcs(CwmWMWindow *window, CwmWindowNotifyType type);
+
+ private:
+  WindowNotifyDataList notify_procs_;
 };
 
 //-------------------------------
 
 class CwmWMWindowMgr {
- private:
-  typedef list<CwmWMWindow *> WindowList;
-
-  WindowList window_list_;
-
  public:
   CwmWMWindowMgr();
  ~CwmWMWindowMgr();
@@ -139,38 +130,17 @@ class CwmWMWindowMgr {
 
   CwmWMWindow *lookupFromWindow(Window xwin);
   CwmWMWindow *lookupFromUserWindow(Window xwin);
+
+ private:
+  typedef std::list<CwmWMWindow *> WindowList;
+
+  WindowList window_list_;
 };
 
 class CwmWMWindow {
  public:
-  typedef list<CwmWMWindow *>         WMWindowList;
-  typedef list<CwmWindowNotifyData *> WindowNotifyDataList;
-
- private:
-  CwmScreen            &screen_;
-
-  Colormap              cmap_;
-  CwmGraphics          *normal_graphics_;
-  CwmGraphics          *focus_graphics_;
-  CwmGraphics          *graphics_;
-  CwmUserWindow        *user_;
-  CwmFrameWindow       *frame_;
-  CwmDecoration        *decoration_;
-  CwmWindowState        state_;
-  int                   normal_x_;
-  int                   normal_y_;
-  int                   normal_width_;
-  int                   normal_height_;
-  CwmHints             *hints_;
-  CwmWMWindow          *parent_;
-  bool                  focus_auto_raise_;
-  bool                  circulate_skip_;
-  bool                  toolbar_skip_;
-  bool                  rolled_up_;
-  CwmWindowMenu        *window_menu_;
-  WMWindowList          children_;
-  CwmWindowImageList   *image_list_;
-  WindowNotifyDataList  notify_procs_;
+  typedef std::list<CwmWMWindow *>         WMWindowList;
+  typedef std::list<CwmWindowNotifyData *> WindowNotifyDataList;
 
  public:
   CwmWMWindow(CwmScreen &screen, Window xwin);
@@ -354,8 +324,7 @@ class CwmWMWindow {
   std::string getResClass();
   std::string getIconName();
 
-  void addEventFunction(int area, CXNamedEvent *event,
-                        CwmFunctionDef *function, CwmData data);
+  void addEventFunction(int area, CXNamedEvent *event, CwmFunctionDef *function, CwmData data);
 
   void print();
 
@@ -414,10 +383,8 @@ class CwmWMWindow {
   static void processEvents();
   static void processWindowMenu(CwmWMWindow *window, CwmData data);
 
-  void addNotifyProc(CwmWindowNotifyType type,
-                     CwmWindowNotifyProc proc, CwmData data);
-  void removeNotifyProc(CwmWindowNotifyType type,
-                        CwmWindowNotifyProc proc, CwmData data);
+  void addNotifyProc(CwmWindowNotifyType type, CwmWindowNotifyProc proc, CwmData data);
+  void removeNotifyProc(CwmWindowNotifyType type, CwmWindowNotifyProc proc, CwmData data);
 
  private:
   static void processEvent(XEvent *event);
@@ -441,6 +408,32 @@ class CwmWMWindow {
   void callNotifyProcs(CwmWindowNotifyType type);
 
   static void processPendingEvents();
+
+ private:
+  CwmScreen            &screen_;
+
+  Colormap              cmap_;
+  CwmGraphics          *normal_graphics_;
+  CwmGraphics          *focus_graphics_;
+  CwmGraphics          *graphics_;
+  CwmUserWindow        *user_;
+  CwmFrameWindow       *frame_;
+  CwmDecoration        *decoration_;
+  CwmWindowState        state_;
+  int                   normal_x_;
+  int                   normal_y_;
+  int                   normal_width_;
+  int                   normal_height_;
+  CwmHints             *hints_;
+  CwmWMWindow          *parent_;
+  bool                  focus_auto_raise_;
+  bool                  circulate_skip_;
+  bool                  toolbar_skip_;
+  bool                  rolled_up_;
+  CwmWindowMenu        *window_menu_;
+  WMWindowList          children_;
+  CwmWindowImageList   *image_list_;
+  WindowNotifyDataList  notify_procs_;
 };
 
 #endif

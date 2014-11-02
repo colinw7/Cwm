@@ -1,5 +1,5 @@
-#include "CwmI.h"
-#include "CConfig.h"
+#include <CwmI.h>
+#include <CConfig.h>
 
 CwmConfig *
 CwmConfig::
@@ -7,7 +7,7 @@ getInstance()
 {
   static CwmConfig *instance;
 
-  if (instance == NULL)
+  if (! instance)
     instance = new CwmConfig();
 
   return instance;
@@ -32,12 +32,11 @@ save()
   config_->save();
 }
 
-string
+std::string
 CwmConfig::
-getSectionValue(const string &path, const string &section,
-                const string &fallback)
+getSectionValue(const std::string &path, const std::string &section, const std::string &fallback)
 {
-  string value = fallback;
+  std::string value = fallback;
 
   if (! config_->getValue(path, section, value))
     value = fallback;
@@ -45,11 +44,11 @@ getSectionValue(const string &path, const string &section,
   return value;
 }
 
-string
+std::string
 CwmConfig::
-getValue(const string &path, const string &fallback)
+getValue(const std::string &path, const std::string &fallback)
 {
-  string value = fallback;
+  std::string value = fallback;
 
   if (! config_->getValue(path, "", value))
     value = fallback;
@@ -59,12 +58,11 @@ getValue(const string &path, const string &fallback)
 
 int
 CwmConfig::
-getSectionValue(const string &path, const string &section,
-                int fallback)
+getSectionValue(const std::string &path, const std::string &section, int fallback)
 {
   int value = fallback;
 
-  string str;
+  std::string str;
 
   if (! config_->getValue(path, section, str))
     return value;
@@ -77,11 +75,11 @@ getSectionValue(const string &path, const string &section,
 
 int
 CwmConfig::
-getValue(const string &path, int fallback)
+getValue(const std::string &path, int fallback)
 {
   int value = fallback;
 
-  string str;
+  std::string str;
 
   if (! config_->getValue(path, "", str))
     return value;
@@ -94,30 +92,28 @@ getValue(const string &path, int fallback)
 
 void
 CwmConfig::
-setSectionValue(const string &path, const string &section,
-                const string &value)
+setSectionValue(const std::string &path, const std::string &section, const std::string &value)
 {
   config_->setValue(path, section, value);
 }
 
 void
 CwmConfig::
-setValue(const string &path, const string &value)
+setValue(const std::string &path, const std::string &value)
 {
   config_->setValue(path, "", value);
 }
 
 void
 CwmConfig::
-getGroups(const string &path, StringVectorT &groupNames,
-          StringVectorT &groupPaths)
+getGroups(const std::string &path, StringVectorT &groupNames, StringVectorT &groupPaths)
 {
   config_->getGroups(path, groupNames, groupPaths);
 }
 
 void
 CwmConfig::
-getSections(const string &path, StringVectorT &sections)
+getSections(const std::string &path, StringVectorT &sections)
 {
   config_->getSections(path, sections);
 }

@@ -1,4 +1,4 @@
-#include "CwmI.h"
+#include <CwmI.h>
 
 struct CwmCell {
   int   x;
@@ -30,7 +30,7 @@ CwmGrid(CwmScreen &screen1, int cell_width1, int cell_height1) :
       cell->x    = x;
       cell->y    = y;
       cell->used = false;
-      cell->id   = NULL;
+      cell->id   = 0;
 
       x += cell_width;
     }
@@ -198,7 +198,7 @@ remove(void *id)
     for (int col = 0; col < num_cols; col++)
       if (cells[row][col].id == id) {
         cells[row][col].used = false;
-        cells[row][col].id   = NULL;
+        cells[row][col].id   = 0;
 
         found = true;
       }
@@ -229,8 +229,7 @@ placeInCells(void *id, int row, int col, int num_rows1, int num_cols1)
 
 void
 CwmGrid::
-setPosition(int row, int col, int num_rows1, int num_cols1,
-            int *x1, int *y1, int *x2, int *y2)
+setPosition(int row, int col, int num_rows1, int num_cols1, int *x1, int *y1, int *x2, int *y2)
 {
   CwmCell *cell = &cells[row][col];
 

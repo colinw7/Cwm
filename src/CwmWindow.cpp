@@ -1,4 +1,4 @@
-#include "CwmI.h"
+#include <CwmI.h>
 
 CwmWindow::
 CwmWindow(CwmScreen &screen, CwmWindow *parent, int x, int y,
@@ -25,10 +25,8 @@ CwmWindow(CwmScreen &screen, Window parent, int x, int y,
 }
 
 CwmWindow::
-CwmWindow(CwmScreen &screen, Window xwin, int x, int y,
-          int width, int height, bool mapped) :
- screen_(screen), xwin_(xwin), x_(x), y_(y),
- width_(width), height_(height), mapped_(mapped)
+CwmWindow(CwmScreen &screen, Window xwin, int x, int y, int width, int height, bool mapped) :
+ screen_(screen), xwin_(xwin), x_(x), y_(y), width_(width), height_(height), mapped_(mapped)
 {
   owner_ = false;
 
@@ -37,8 +35,7 @@ CwmWindow(CwmScreen &screen, Window xwin, int x, int y,
 
 void
 CwmWindow::
-create(CwmScreen &screen, Window parent,
-       uint event_mask, CwmCursorType cursor)
+create(CwmScreen &screen, Window parent, uint event_mask, CwmCursorType cursor)
 {
   XSetWindowAttributes attr;
 
@@ -48,10 +45,7 @@ create(CwmScreen &screen, Window parent,
 
   uint attr_mask = CWEventMask | CWCursor | CWOverrideRedirect;
 
-  xwin_ =
-    CwmMachineInst->createWindow(parent,
-                                 x_, y_, width_, height_, 0,
-                                 attr_mask, &attr);
+  xwin_ = CwmMachineInst->createWindow(parent, x_, y_, width_, height_, 0, attr_mask, &attr);
 
   owner_ = true;
 }
@@ -227,7 +221,7 @@ setStackMode(int stack_mode, CwmWMWindow *sibling)
 
   xwc.stack_mode = stack_mode;
 
-  if (sibling != NULL) {
+  if (sibling != 0) {
     xwc.sibling = sibling->getXWin();
 
     mask |= CWSibling;
@@ -235,7 +229,7 @@ setStackMode(int stack_mode, CwmWMWindow *sibling)
 
   CwmMachineInst->debugf("Stack Mode = %d\n", xwc.stack_mode);
 
-  if (sibling != NULL)
+  if (sibling != 0)
     CwmMachineInst->debugf("Sibling %s\n", sibling->getName().c_str());
 
   CwmMachineInst->configureWindow(xwin_, mask, &xwc);
@@ -296,8 +290,7 @@ getChildWindows(Window **windows, int *num_windows)
 {
   CwmMachineInst->trapStart();
 
-  bool flag =
-    CwmMachineInst->getWindowChildren(xwin_, windows, num_windows);
+  bool flag = CwmMachineInst->getWindowChildren(xwin_, windows, num_windows);
 
   if (! CwmMachineInst->trapEnd())
     return false;
@@ -311,8 +304,7 @@ grabButtonPress()
 {
   Cursor cursor = screen_.getCursor(CWM_CURSOR_TITLE);
 
-  CwmMachineInst->grabButton(xwin_, AnyButton, AnyModifier, ButtonPressMask,
-                             cursor);
+  CwmMachineInst->grabButton(xwin_, AnyButton, AnyModifier, ButtonPressMask, cursor);
 }
 
 void
@@ -321,8 +313,7 @@ grabButton1Press()
 {
   Cursor cursor = screen_.getCursor(CWM_CURSOR_TITLE);
 
-  CwmMachineInst->grabButton(xwin_, Button1, AnyModifier, ButtonPressMask,
-                             cursor);
+  CwmMachineInst->grabButton(xwin_, Button1, AnyModifier, ButtonPressMask, cursor);
 }
 
 void
@@ -409,8 +400,7 @@ coordsToRoot(int x, int y, int *root_x, int *root_y)
 {
   Window child;
 
-  CwmMachineInst->translateCoords(xwin_, screen_.getRoot()->xwin_,
-                                  x, y, root_x, root_y, &child);
+  CwmMachineInst->translateCoords(xwin_, screen_.getRoot()->xwin_, x, y, root_x, root_y, &child);
 }
 
 void
@@ -470,8 +460,7 @@ void
 CwmWindow::
 addCallback(CwmXWindowCallType type, CwmXWindowCallProc proc, CwmData data)
 {
-  CwmXWindowCallback *callback =
-   new CwmXWindowCallback(this, type, proc, data);
+  CwmXWindowCallback *callback = new CwmXWindowCallback(this, type, proc, data);
 
   callbacks_.push_back(callback);
 }
@@ -491,8 +480,7 @@ callCallbacks(CwmXWindowCallType type, CwmData detail)
 
 void
 CwmWindow::
-deleteCallback(CwmXWindowCallType type, CwmXWindowCallProc proc,
-               CwmData data)
+deleteCallback(CwmXWindowCallType type, CwmXWindowCallProc proc, CwmData data)
 {
   XWindowCallbackList::const_iterator pcallback1 = callbacks_.begin();
   XWindowCallbackList::const_iterator pcallback2 = callbacks_.end  ();
@@ -515,7 +503,7 @@ Pixmap
 CwmWindow::
 toMask()
 {
-  CImageNameSrc src(string("mask_") + CStrUtil::toString(xwin_) +
+  CImageNameSrc src(std::string("mask_") + CStrUtil::toString(xwin_) +
                     "?width="  + CStrUtil::toString(width_) +
                     "?height=" + CStrUtil::toString(height_));
 
@@ -550,14 +538,14 @@ void
 CwmWindow::
 getPosition(int *x, int *y)
 {
-  CwmMachineInst->getWindowGeometry(xwin_, x, y, NULL, NULL, NULL);
+  CwmMachineInst->getWindowGeometry(xwin_, x, y, 0, 0, 0);
 }
 
 void
 CwmWindow::
 getSize(int *width, int *height)
 {
-  CwmMachineInst->getWindowGeometry(xwin_, NULL, NULL, width, height, NULL);
+  CwmMachineInst->getWindowGeometry(xwin_, 0, 0, width, height, 0);
 }
 
 void
@@ -569,14 +557,11 @@ getGeometry(int *x, int *y, int *width, int *height, int *border)
 
 bool
 CwmWindow::
-translateCoords(CwmWindow *dest, int src_x, int src_y,
-                int *dest_x, int *dest_y)
+translateCoords(CwmWindow *dest, int src_x, int src_y, int *dest_x, int *dest_y)
 {
   Window child;
 
-  if (! CwmMachineInst->translateCoords(xwin_, dest->xwin_,
-                                        src_x, src_y, dest_x, dest_y,
-                                        &child))
+  if (! CwmMachineInst->translateCoords(xwin_, dest->xwin_, src_x, src_y, dest_x, dest_y, &child))
     return false;
 
   return true;

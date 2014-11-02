@@ -1,4 +1,4 @@
-#include "CwmDecorationI.h"
+#include <CwmDecorationI.h>
 
 static const uint event_mask =
   ButtonPressMask | ButtonReleaseMask |

@@ -1,4 +1,4 @@
-#include "CwmI.h"
+#include <CwmI.h>
 
 // Window Group of Base Window and Transient Children in Top to Bottom Order
 
@@ -39,7 +39,7 @@ stackParents(CwmWMWindow *window)
 {
   CwmWMWindow *parent = window->getParent();
 
-  if (parent == NULL)
+  if (! parent)
     return;
 
   const CwmWMWindow::WMWindowList children = parent->getChildren();
@@ -146,7 +146,7 @@ operator[](int i) const
 
 CwmCirculateWindowStack::
 CwmCirculateWindowStack(CwmScreen &screen) :
- screen_(screen), screen_window_groups_(NULL)
+ screen_(screen), screen_window_groups_(0)
 {
   update();
 }
@@ -186,7 +186,7 @@ update()
 
       CwmDeskIcon *desk_icon = desk_icon_mgr->lookup(&window);
 
-      if (desk_icon == NULL)
+      if (! desk_icon)
         continue;
     }
 
@@ -234,7 +234,7 @@ lower(CwmWMWindow *window)
   CwmWindowGroup *bottom_group = &getBottomGroup();
   CwmWindowGroup *lower_group  = getWindowGroup(window);
 
-  if (lower_group == NULL) {
+  if (! lower_group) {
     window->getFrameWindow()->lower();
     return;
   }
@@ -248,8 +248,7 @@ lower(CwmWMWindow *window)
   xwc.stack_mode = Below;
 
   CwmMachineInst->configureWindow(lower_window.getFrameWindow()->getXWin(),
-                                  CWSibling | CWStackMode,
-                                  &xwc);
+                                  CWSibling | CWStackMode, &xwc);
 
   lower_group->restack();
 }
@@ -268,7 +267,7 @@ raise(CwmWMWindow *window)
   CwmWindowGroup *top_group   = &getTopGroup();
   CwmWindowGroup *raise_group = getWindowGroup(window);
 
-  if (raise_group == NULL) {
+  if (! raise_group) {
     window->getFrameWindow()->raise();
     return;
   }
@@ -282,8 +281,7 @@ raise(CwmWMWindow *window)
   xwc.stack_mode = Above;
 
   CwmMachineInst->configureWindow(raise_window.getFrameWindow()->getXWin(),
-                                  CWSibling | CWStackMode,
-                                  &xwc);
+                                  CWSibling | CWStackMode, &xwc);
 
   raise_group->restack();
 }
@@ -296,7 +294,7 @@ getWindowGroup(CwmWMWindow *window)
     if (window_groups_[i]->contains(window))
       return window_groups_[i];
 
-  return NULL;
+  return 0;
 }
 
 void
@@ -379,7 +377,7 @@ CwmScreenWindowGroups(CwmScreen &screen)
   for (int i = (int) num_children - 1; i >= 0; i--) {
     CwmWMWindow *window = CwmMachineInst->getWindowWMWindow(children[i]);
 
-    if (window == NULL || window->getParent() != NULL)
+    if (! window || window->getParent() != 0)
       continue;
 
     CwmWindowGroup *window_group = new CwmWindowGroup(window);
@@ -387,7 +385,7 @@ CwmScreenWindowGroups(CwmScreen &screen)
     window_groups_.push_back(window_group);
   }
 
-  if (children != NULL)
+  if (children != 0)
     XFree((char *) children);
 }
 

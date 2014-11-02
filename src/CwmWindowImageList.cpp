@@ -1,5 +1,5 @@
-#include "CwmI.h"
-#include "CXScreen.h"
+#include <CwmI.h>
+#include <CXScreen.h>
 
 CwmWindowImageList::
 CwmWindowImageList(CwmWMWindow *window) :
@@ -7,12 +7,12 @@ CwmWindowImageList(CwmWMWindow *window) :
 {
   CwmScreen &screen = window->getScreen();
 
-  string image_file = CwmCustomDeskIconMgrInst->getIcon(window);
+  std::string image_file = CwmCustomDeskIconMgrInst->getIcon(window);
 
   if (image_file != "") {
     CwmImage *image = CwmImageMgrInst->getImage(screen, image_file);
 
-    if (image != NULL)
+    if (image != 0)
       addImage(image, image_file);
   }
 
@@ -21,7 +21,7 @@ CwmWindowImageList(CwmWMWindow *window) :
   if (image_file != "") {
     CwmImage *image = CwmImageMgrInst->getImage(screen, image_file);
 
-    if (image != NULL)
+    if (image != 0)
       addImage(image, image_file);
   }
 
@@ -30,7 +30,7 @@ CwmWindowImageList(CwmWMWindow *window) :
   if (image_file != "") {
     CwmImage *image = CwmImageMgrInst->getImage(screen, image_file);
 
-    if (image != NULL)
+    if (image != 0)
       addImage(image, image_file);
   }
 
@@ -40,11 +40,11 @@ CwmWindowImageList(CwmWMWindow *window) :
     xwin = None;
 
   if (xwin != None) {
-    string name = " " + window->getNameHint() + "_icon_window";
+    std::string name = " " + window->getNameHint() + "_icon_window";
 
     CwmImage *image = CwmImageMgrInst->getImage(screen, name);
 
-    if (image == NULL) {
+    if (! image) {
       CXScreen *cxscreen = screen.getCXScreen();
 
       CImagePtr cimage;
@@ -62,11 +62,11 @@ CwmWindowImageList(CwmWMWindow *window) :
   Pixmap pixmap = window->getIconPixmapHint();
 
   if (pixmap != None) {
-    string name = "Cwm/" + window->getNameHint() + "_icon_pixmap";
+    std::string name = "Cwm/" + window->getNameHint() + "_icon_pixmap";
 
     CwmImage *image = CwmImageMgrInst->getImage(screen, name);
 
-    if (image == NULL) {
+    if (! image) {
       CXScreen *cxscreen = screen.getCXScreen();
 
       CImagePtr cimage;
@@ -108,7 +108,7 @@ CwmWindowImageList::
 
 void
 CwmWindowImageList::
-addImage(CwmImage *image, const string &name)
+addImage(CwmImage *image, const std::string &name)
 {
   CwmWindowImage *window_image = new CwmWindowImage(image, name);
 
@@ -119,7 +119,7 @@ CwmImage *
 CwmWindowImageList::
 getImage(int width, int height)
 {
-  CwmWindowImage *image = NULL;
+  CwmWindowImage *image = 0;
   int             dxy   = 0;
 
   WindowImageList::const_iterator pimage1 = images_.begin();
@@ -131,23 +131,22 @@ getImage(int width, int height)
 
     int dxy1 = dx*dx + dy*dy;
 
-    if (image == NULL || dxy1 < dxy) {
+    if (! image || dxy1 < dxy) {
       image = *pimage1;
 
       dxy = dxy1;
     }
   }
 
-  if (image == NULL)
-    return NULL;
+  if (! image)
+    return 0;
 
   int dx = width  - image->getWidth ();
   int dy = height - image->getHeight();
 
   if (dx < 0 || dy < 0) {
-    CwmImage *image1 =
-      CwmImageMgrInst->getImage(window_->getScreen(), image->getName(),
-                                width, height);
+    CwmImage *image1 = CwmImageMgrInst->getImage(window_->getScreen(), image->getName(),
+                                                 width, height);
 
     addImage(image1, image->getName());
 
@@ -162,13 +161,13 @@ CwmWindowImageList::
 getImage()
 {
   if (images_.size() == 0)
-    return NULL;
+    return 0;
 
   return images_[0]->getImage();
 }
 
 CwmWindowImage::
-CwmWindowImage(CwmImage *image, const string &name) :
+CwmWindowImage(CwmImage *image, const std::string &name) :
  image_(image), name_(name)
 {
 }

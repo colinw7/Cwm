@@ -1,17 +1,17 @@
-#include "CwmToolBarI.h"
+#include <CwmToolBarI.h>
 
 CwmToolBarCmd::
 CwmToolBarCmd(CwmToolBar &toolbar, CwmToolBarIconDef *icon_def, int x) :
  toolbar_(toolbar), screen_(toolbar.getScreen())
 {
-  string fg_color = icon_def->getFg();
+  std::string fg_color = icon_def->getFg();
 
   if (fg_color == "")
     fg_color = CwmResourceDataInst->getIconForeground();
 
   Pixel fg = screen_.getPixel(fg_color, screen_.getBlackPixel());
 
-  string bg_color = icon_def->getBg();
+  std::string bg_color = icon_def->getBg();
 
   if (bg_color == "")
     bg_color = CwmResourceDataInst->getIconBackground();
@@ -26,10 +26,9 @@ CwmToolBarCmd(CwmToolBar &toolbar, CwmToolBarIconDef *icon_def, int x) :
 
   //------
 
-  image_ = CwmImageMgrInst->getImage(screen_, icon_def->getIcon(),
-                                     16, 16);
+  image_ = CwmImageMgrInst->getImage(screen_, icon_def->getIcon(), 16, 16);
 
-  if (image_ == NULL)
+  if (image_ == 0)
     image_ = CwmImageMgrInst->getImage(screen_, "", 16, 16);
 
   //------

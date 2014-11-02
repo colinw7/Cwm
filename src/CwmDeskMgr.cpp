@@ -1,4 +1,4 @@
-#include "CwmDeskI.h"
+#include <CwmDeskI.h>
 
 CwmDeskMgr::
 CwmDeskMgr(CwmScreen &screen, int num_desks) :
@@ -10,8 +10,8 @@ CwmDeskMgr(CwmScreen &screen, int num_desks) :
     desks_.push_back(desk);
   }
 
-  current_desk_ = NULL;
-  menu_def_     = NULL;
+  current_desk_ = 0;
+  menu_def_     = 0;
 }
 
 CwmDeskMgr::
@@ -41,7 +41,7 @@ changeDesk(CwmDesk *desk)
 
   callNotifyProcs(CWM_DESK_MGR_NOTIFY_CHANGE_START);
 
-  if (current_desk_ != NULL)
+  if (current_desk_ != 0)
     current_desk_->hide();
 
   current_desk_ = desk;
@@ -74,7 +74,7 @@ CwmMenuDef *
 CwmDeskMgr::
 getMenuDef()
 {
-  if (menu_def_ != NULL)
+  if (menu_def_ != 0)
     return menu_def_;
 
   menu_def_ = new CwmMenuDef();
@@ -83,7 +83,7 @@ getMenuDef()
   menu_def_->addSplitter("----");
 
   for (int i = 0; i < (int) desks_.size(); i++) {
-    string desk_name = desks_[i]->getName();
+    std::string desk_name = desks_[i]->getName();
     char   mnemonic  = desks_[i]->getMnemonic();
 
     menu_def_->addToggle("",
@@ -108,7 +108,7 @@ getDeskNum(CwmWMWindow *window)
 {
   CwmDesk *desk = getDesk(window);
 
-  if (desk != NULL)
+  if (desk != 0)
     return desk->getNum();
 
   return 0;
@@ -120,7 +120,7 @@ getDesk(int num)
 {
   if (num < 0 || num >= (int) desks_.size()) {
     CwmMachineInst->logf("Invalid Desk Number %d\n", num);
-    return NULL;
+    return 0;
   }
 
   return desks_[num];
@@ -145,7 +145,7 @@ getDesk(CwmWMWindow *window)
         return desk;
   }
 
-  return NULL;
+  return 0;
 }
 
 int
@@ -161,7 +161,7 @@ getInstance()
 {
   static CwmDeskResourceMgr *instance;
 
-  if (instance == NULL)
+  if (! instance)
     instance = new CwmDeskResourceMgr();
 
   return instance;
@@ -177,7 +177,7 @@ CwmDeskResourceMgr::
 {
 }
 
-string
+std::string
 CwmDeskResourceMgr::
 getDeskName(int desk_num)
 {
@@ -207,7 +207,7 @@ getDeskDisplayToolBar(int desk_num)
     return true;
 }
 
-string
+std::string
 CwmDeskResourceMgr::
 getDeskImage(int desk_num)
 {
@@ -219,7 +219,7 @@ getDeskImage(int desk_num)
 
 void
 CwmDeskResourceMgr::
-setDeskName(int desk_num, const string &name)
+setDeskName(int desk_num, const std::string &name)
 {
   desk_name_[desk_num] = name;
 }
@@ -240,7 +240,7 @@ setDeskDisplayToolBar(int desk_num, bool display_toolbar)
 
 void
 CwmDeskResourceMgr::
-setDeskImage(int desk_num, const string &image_name)
+setDeskImage(int desk_num, const std::string &image_name)
 {
   desk_image_name_[desk_num] = image_name;
 }
@@ -326,7 +326,7 @@ disable()
 
 CwmDesk::
 CwmDesk(CwmDeskMgr *mgr, int num) :
- mgr_(mgr), num_(num), root_image_(NULL)
+ mgr_(mgr), num_(num), root_image_(0)
 {
   name_ = CwmDeskResourceMgrInst->getDeskName(num);
 
@@ -340,12 +340,12 @@ CwmDesk(CwmDeskMgr *mgr, int num) :
   if (CwmDeskResourceMgrInst->getDeskDisplayIcons(num))
     icon_mgr_ = new CwmDeskIconMgr(*this);
   else
-    icon_mgr_ = NULL;
+    icon_mgr_ = 0;
 
   if (CwmDeskResourceMgrInst->getDeskDisplayToolBar(num))
     toolbar_mgr_ = new CwmToolBarMgr(*this);
   else
-    toolbar_mgr_ = NULL;
+    toolbar_mgr_ = 0;
 }
 
 CwmDesk::
@@ -405,7 +405,7 @@ show()
 
 void
 CwmDesk::
-setRootImage(const string &spec)
+setRootImage(const std::string &spec)
 {
   root_image_spec_ = spec;
 
@@ -416,7 +416,7 @@ void
 CwmDesk::
 drawRootImage()
 {
-  if (root_image_ == NULL)
+  if (root_image_ == 0)
     initRootImage();
 
   CwmGrabServer grab;
@@ -444,17 +444,17 @@ CwmToolBar *
 CwmDesk::
 getToolBar() const
 {
-  if (toolbar_mgr_ != NULL)
+  if (toolbar_mgr_ != 0)
     return toolbar_mgr_->getToolBar();
   else
-    return NULL;
+    return 0;
 }
 
 void
 CwmDesk::
 enable()
 {
-  if (toolbar_mgr_ != NULL)
+  if (toolbar_mgr_ != 0)
     toolbar_mgr_->enable();
 }
 
@@ -462,6 +462,6 @@ void
 CwmDesk::
 disable()
 {
-  if (toolbar_mgr_ != NULL)
+  if (toolbar_mgr_ != 0)
     toolbar_mgr_->disable();
 }

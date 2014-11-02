@@ -1,5 +1,5 @@
-#include "CwmToolBarI.h"
-#include "CImageLib.h"
+#include <CwmToolBarI.h>
+#include <CImageLib.h>
 
 const char *
 CwmToolBarMenu::menu_image[] = {
@@ -43,11 +43,11 @@ CwmToolBarMenu(CwmToolBar &toolbar) :
 
   //------
 
-  string name = "CwmToolBarMenu/menu_image";
+  std::string name = "CwmToolBarMenu/menu_image";
 
   image_ = CwmImageMgrInst->getImage(screen, name);
 
-  if (image_ == NULL) {
+  if (image_ == 0) {
     CImageNameSrc src(name);
 
     CImagePtr image1 = CImageMgrInst->createImage(src);
@@ -120,14 +120,14 @@ void
 CwmToolBarMenu::
 processMenu()
 {
-  string name = "ToolBar Run Menu";
+  std::string name = "ToolBar Run Menu";
 
   CwmMenuDef *menu_def = CwmNamedMenuMgrInst->lookupMenuDef(name);
 
-  if (menu_def != NULL) {
+  if (menu_def != 0) {
     CwmScreen &screen = toolbar_.getScreen();
 
-    menu_def->setClientData(&screen, NULL, NULL);
+    menu_def->setClientData(&screen, 0, 0);
 
     CwmMenu::processWindowMenu(screen, xwindow_, menu_def, 0, 0,
                                CHALIGN_TYPE_LEFT, CVALIGN_TYPE_BOTTOM);

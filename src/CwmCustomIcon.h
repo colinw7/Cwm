@@ -1,38 +1,27 @@
 #define CwmCustomIconMgrInst CwmCustomIconMgr::getInstance()
 
 class CwmCustomIconMgr {
- private:
-  typedef list<CwmCustomIcon *> CustomIconList;
-
-  CustomIconList custom_icons_;
-
  public:
   static CwmCustomIconMgr *getInstance();
 
   CwmCustomIconMgr();
  ~CwmCustomIconMgr();
 
-  void addCustomIcon(const std::string &icon, const std::string &label,
-                     const std::string &command, const std::string &bg,
-                     const std::string &fg, int x, int y);
+  void addCustomIcon(const std::string &icon, const std::string &label, const std::string &command,
+                     const std::string &bg, const std::string &fg, int x, int y);
 
   void addCustomIcons(CwmScreen &screen);
+
+ private:
+  typedef std::list<CwmCustomIcon *> CustomIconList;
+
+  CustomIconList custom_icons_;
 };
 
 class CwmCustomIcon {
- private:
-  std::string icon_;
-  std::string label_;
-  std::string command_;
-  std::string bg_;
-  std::string fg_;
-  int         x_;
-  int         y_;
-
  public:
-  CwmCustomIcon(const std::string &icon, const std::string &label,
-                const std::string &command, const std::string &bg,
-                const std::string &fg, int x, int y);
+  CwmCustomIcon(const std::string &icon, const std::string &label, const std::string &command,
+                const std::string &bg, const std::string &fg, int x, int y);
  ~CwmCustomIcon();
 
   std::string getIcon   () const;
@@ -49,4 +38,13 @@ class CwmCustomIcon {
   CwmColor    *getColor(CwmScreen &screen) const;
   CwmFont     *getFont(CwmScreen &screen) const;
   CwmGraphics *getGraphics(CwmScreen &screen) const;
+
+ private:
+  std::string icon_;
+  std::string label_;
+  std::string command_;
+  std::string bg_;
+  std::string fg_;
+  int         x_;
+  int         y_;
 };

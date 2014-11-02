@@ -1,4 +1,4 @@
-#include "CwmI.h"
+#include <CwmI.h>
 
 CwmMoveFeedback::
 CwmMoveFeedback(CwmScreen &screen1) :
@@ -24,7 +24,7 @@ CwmMoveFeedback(CwmScreen &screen1) :
 
   int width, height;
 
-  string max_str = "-8888,-8888";
+  std::string max_str = "-8888,-8888";
 
   graphics->getTextSize(max_str, &width, &height);
 
@@ -115,7 +115,7 @@ update(int x, int y)
 
   graphics->drawButtonOut(xwindow, 0, 0, xwindow->getWidth (), xwindow->getHeight(), 2);
 
-  string position_string = CStrUtil::toString(x) + "," + CStrUtil::toString(y);
+  std::string position_string = CStrUtil::toString(x) + "," + CStrUtil::toString(y);
 
   graphics->drawTextCentered(xwindow, 4, 4, xwindow->getWidth () - 8,
                              xwindow->getHeight() - 8, position_string);

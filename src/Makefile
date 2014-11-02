@@ -2,7 +2,7 @@ CC = g++
 AR = ar
 RM = rm
 
-CDEBUG = -g -DSHAPE -DCWM_USE_XT
+CDEBUG = -g -DSHAPE -DCWM_USE_XT -DMWM_UTIL
 LDEBUG = -g
 
 INC_DIR = ../include

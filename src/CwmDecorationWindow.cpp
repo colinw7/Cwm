@@ -1,4 +1,4 @@
-#include "CwmDecorationI.h"
+#include <CwmDecorationI.h>
 
 CwmWindowChild::
 CwmWindowChild(CwmDecoration *decoration, CwmWMWindow *window,
@@ -115,7 +115,7 @@ drawSidesIn(int sides)
 
 void
 CwmWindowChild::
-drawText(const string &text)
+drawText(const std::string &text)
 {
   CHAlignType align = CwmResourceDataInst->getTitleAlign();
 
