@@ -1,6 +1,5 @@
 #include <CwmI.h>
 #include <CXAtom.h>
-
 #include <cassert>
 #include <sstream>
 
