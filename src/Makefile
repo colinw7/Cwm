@@ -91,6 +91,7 @@ CImageGC.cpp \
 OBJS = $(patsubst %.cpp,$(OBJ_DIR)/%.o,$(SRC))
 
 CPPFLAGS = \
+-std=c++11 \
 -DSHAPE \
 -I$(INC_DIR) \
 -I../../CXLib/include \
@@ -118,6 +119,8 @@ LFLAGS = \
 -L../../CConfig/lib \
 -L../../CTimer/lib \
 -L../../CFile/lib \
+-L../../CFileUtil/lib \
+-L../../CRegExp/lib \
 -L../../CMath/lib \
 -L../../CGlob/lib \
 -L../../CRGBName/lib \
@@ -125,9 +128,9 @@ LFLAGS = \
 -L../../CUtil/lib \
 
 LIBS = \
--lCXLib -lCTimer -lCImageLib -lCFont -lCArgs -lCConfig -lCFile -lCUtil -lCOS \
--lCGlob -lCStrUtil -lCRGBName \
--lXt -lX11 -lpng -ljpeg
+-lCXLib -lCTimer -lCImageLib -lCFont -lCArgs -lCConfig -lCFile -lCFileUtil -lCUtil -lCOS \
+-lCRegExp -lCGlob -lCStrUtil -lCRGBName \
+-lXt -lX11 -lpng -ljpeg -ltre
 
 clean:
 	$(RM) -f $(OBJ_DIR)/*.o

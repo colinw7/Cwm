@@ -188,20 +188,24 @@ add(void *id, int *x1, int *y1, int *x2, int *y2,
   setPosition(row, col, num_rows1, num_cols1, x1, y1, x2, y2);
 }
 
-void
+bool
 CwmGrid::
 remove(void *id)
 {
   bool found = false;
 
-  for (int row = 0; row < num_rows; row++)
-    for (int col = 0; col < num_cols; col++)
+  for (int row = 0; row < num_rows; row++) {
+    for (int col = 0; col < num_cols; col++) {
       if (cells[row][col].id == id) {
         cells[row][col].used = false;
         cells[row][col].id   = 0;
 
         found = true;
       }
+    }
+  }
+
+  return found;
 }
 
 bool

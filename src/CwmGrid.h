@@ -22,7 +22,8 @@ class CwmGrid {
 
   void add(CwmData id, int *x1, int *y1, int *x2, int *y2,
            CwmGridInsertType insert_major, CwmGridInsertType insert_minor);
-  void remove(CwmData id);
+
+  bool remove(CwmData id);
 
   bool checkCells(int row, int col, int num_rows1, int num_cols1);
 
