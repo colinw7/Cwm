@@ -1076,7 +1076,7 @@ getWMIconWindowHint(Window xwin)
 
 bool
 CwmMachine::
-getWMMwmHints(Window xwin, MotifWmHints **mwm_hints)
+getWMMwmHints(Window xwin, MotifWmHints &mwm_hints)
 {
   return CXMachineInst->getWMMwmHints(xwin, mwm_hints);
 }

@@ -176,7 +176,7 @@ class CwmMachine {
   void   getWMCommand(Window xwin, int *argc, char ***argv);
   void   getWMColormapWindows(Window xwin, Window **cmap_windows, int *num_cmap_windows);
   void   getWMProtocols(Window xwin, const CXAtom ***protocols, int *num_protocols);
-  bool   getWMMwmHints(Window xwin, MotifWmHints **mwm_hints);
+  bool   getWMMwmHints(Window xwin, MotifWmHints &mwm_hints);
 
   const CXAtom &getWMProtocolsAtom();
   const CXAtom &getWMDeleteWindowAtom();

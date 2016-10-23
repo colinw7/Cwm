@@ -425,22 +425,22 @@ readMwmHints()
   mwm_input_mode_  = MWM_INPUT_MODELESS;
   mwm_status_      = 0;
 
-  MotifWmHints *mwm_hints;
+  MotifWmHints mwm_hints;
 
-  if (! CwmMachineInst->getWMMwmHints(user_xwin_, &mwm_hints))
+  if (! CwmMachineInst->getWMMwmHints(user_xwin_, mwm_hints))
     return;
 
-  if (mwm_hints->flags & MWM_HINTS_FUNCTIONS)
-    mwm_functions_ = mwm_hints->functions;
+  if (mwm_hints.flags & MWM_HINTS_FUNCTIONS)
+    mwm_functions_ = mwm_hints.functions;
 
-  if (mwm_hints->flags & MWM_HINTS_DECORATIONS)
-    mwm_decorations_ = mwm_hints->decorations;
+  if (mwm_hints.flags & MWM_HINTS_DECORATIONS)
+    mwm_decorations_ = mwm_hints.decorations;
 
-  if (mwm_hints->flags & MWM_HINTS_INPUT_MODE)
-    mwm_input_mode_ = mwm_hints->input_mode;
+  if (mwm_hints.flags & MWM_HINTS_INPUT_MODE)
+    mwm_input_mode_ = mwm_hints.input_mode;
 
-  if (mwm_hints->flags & MWM_HINTS_STATUS)
-    mwm_status_ = mwm_hints->status;
+  if (mwm_hints.flags & MWM_HINTS_STATUS)
+    mwm_status_ = mwm_hints.status;
 }
 
 void

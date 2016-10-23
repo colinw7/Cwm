@@ -1,0 +1,27 @@
+/* XPM */
+static char *clock_small[] = {
+/* width height num_colors chars_per_pixel */
+"    16    16        4            1",
+/* colors */
+"  c none   ",
+". c #000000",
+"a c #808080",
+"b c #ffffff",
+/* pixels */
+"      ....      ",
+"    ..bbbb..    ",
+"   .bbb..bbb.   ",
+"  .b.bbbbb.bb.  ",
+" .bbbbbb.bbbbb. ",
+" .b.bbbb.bbb.b. ",
+".bbbbbb..bbbbbb.",
+".b.bbbb.bbbbb.b.",
+".b.bbbb.bbbbb.b.",
+".bbbbb..bbbbbbb.",
+".bb.b..bbbbb.bb.",
+" .bbb.bbbbbbbb. ",
+" .bb.bbbbbb.bb. ",
+"  .bbbb..bbbb.  ",
+"    ..bbbb..    ",
+"      ....      "
+};

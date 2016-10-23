@@ -1,0 +1,31 @@
+/* XPM */
+static char *netscape_small[] = {
+/* width height num_colors chars_per_pixel */
+"    16    16        8            1",
+/* colors */
+". c #000000",
+"# c #808000",
+"a c #008080",
+"  c none",
+"c c #808080",
+"d c #ffff00",
+"e c #0000ff",
+"f c #ffffff",
+/* pixels */
+"aeaeaea#.eaeaeae",
+"ea.aeae .aeae#d.",
+"ad#.ae#d.#ae# . ",
+"e#f#.dfffd #d.  ",
+"ae#fd#.f. #d.   ",
+"eae#f#ed.ad#.   ",
+"ae# .d#d..c #.  ",
+"ead .adcc.  #.  ",
+"c fffdcfd     d#",
+"..#d..cdc...d.. ",
+"aead#. c.d .#.  ",
+"eae#d#  . d#d.  ",
+"ae#d.d#d.##d#.  ",
+"e#d. .# .#..d#. ",
+"ad.     #.   d#.",
+"e.     #.       "
+};
