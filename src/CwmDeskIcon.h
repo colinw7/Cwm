@@ -1,4 +1,12 @@
+#ifndef CwmDeskIcon_H
+#define CwmDeskIcon_H
+
+#include <vector>
+
 class CwmCustomDeskIcon;
+
+class CFmtString;
+class CGlob;
 
 class CwmDeskIconMgr {
  public:
@@ -185,3 +193,5 @@ class CwmCustomDeskIcon {
   std::string  icon_;
   std::string  icon_small_;
 };
+
+#endif

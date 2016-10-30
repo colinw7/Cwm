@@ -1,6 +1,8 @@
 #ifndef CWM_WINDOW_H
 #define CWM_WINDOW_H
 
+#include <std_Xt.h>
+
 class CwmXWindowCallback {
  public:
   CwmXWindowCallback(CwmWindow *xwindow, CwmXWindowCallType type,

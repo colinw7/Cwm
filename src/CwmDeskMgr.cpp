@@ -1,4 +1,5 @@
 #include <CwmDeskI.h>
+#include <CwmAdvHints.h>
 
 CwmDeskMgr::
 CwmDeskMgr(CwmScreen &screen, int num_desks) :
@@ -48,9 +49,11 @@ changeDesk(CwmDesk *desk)
 
   current_desk_->show();
 
-  CwmGnomeInst->setCurrentDesktop(screen_);
+  //CwmGnomeInst->setCurrentDesktop(screen_);
+  //CwmGnomeInst->setListOfManagedClients(screen_);
 
-  CwmGnomeInst->setListOfManagedClients(screen_);
+  CwmAdvHintsInst->setCurrentDesktop(screen_);
+  CwmAdvHintsInst->setClientList(screen_);
 
   callNotifyProcs(CWM_DESK_MGR_NOTIFY_CHANGE_END);
 }
@@ -363,7 +366,9 @@ addWMWindow(CwmWMWindow *window)
 
   CwmScreen &screen = mgr_->getScreen();
 
-  CwmGnomeInst->setListOfManagedClients(screen);
+  //CwmGnomeInst->setListOfManagedClients(screen);
+
+  CwmAdvHintsInst->setClientList(screen);
 }
 
 void
@@ -374,7 +379,9 @@ removeWMWindow(CwmWMWindow *window)
 
   CwmScreen &screen = mgr_->getScreen();
 
-  CwmGnomeInst->setListOfManagedClients(screen);
+  //CwmGnomeInst->setListOfManagedClients(screen);
+
+  CwmAdvHintsInst->setClientList(screen);
 }
 
 void

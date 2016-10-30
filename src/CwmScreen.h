@@ -1,7 +1,10 @@
 #ifndef CWM_SCREEN_H
 #define CWM_SCREEN_H
 
-class CXScreen;
+#include <CwmTypes.h>
+#include <CRGBA.h>
+
+#include <std_Xt.h>
 
 class CwmScreenMgr {
  public:
@@ -136,36 +139,36 @@ class CwmScreen {
  private:
   typedef std::list<CwmWMWindow *> WMWindowList;
 
-  int                      num_;
+  int                      num_ { 0 };
 
-  CXScreen                *cxscreen_;
+  CXScreen                *cxscreen_ { nullptr };
 
-  CwmGraphics             *graphics_;
-  CwmGraphics             *xor_graphics_;
+  CwmGraphics             *graphics_ { nullptr };
+  CwmGraphics             *xor_graphics_ { nullptr };
 
-  CwmWindow               *root_;
+  CwmWindow               *root_ { nullptr };
 
-  CwmColor                *color_;
+  CwmColor                *color_ { nullptr };
 
-  CwmDeskMgr              *desk_mgr_;
-  CwmColorMgr             *color_mgr_;
-  CwmFontMgr              *font_mgr_;
-  CwmCursorMgr            *cursor_mgr_;
-  CwmColormapMgr          *colormap_mgr_;
+  CwmDeskMgr              *desk_mgr_ { nullptr };
+  CwmColorMgr             *color_mgr_ { nullptr };
+  CwmFontMgr              *font_mgr_ { nullptr };
+  CwmCursorMgr            *cursor_mgr_ { nullptr };
+  CwmColormapMgr          *colormap_mgr_ { nullptr };
 
-  CwmGrid                 *icon_grid_;
+  CwmGrid                 *icon_grid_ { nullptr };
 
-  CwmMoveFeedback         *move_feedback_;
-  CwmResizeFeedback       *resize_feedback_;
+  CwmMoveFeedback         *move_feedback_ { nullptr };
+  CwmResizeFeedback       *resize_feedback_ { nullptr };
 
-  CwmInfo                 *info_;
+  CwmInfo                 *info_ { nullptr };
 
-  int                      default_x_;
-  int                      default_y_;
+  int                      default_x_ { 0 };
+  int                      default_y_ { 0 };
 
-  CwmCirculateWindowStack *window_stack_;
+  CwmCirculateWindowStack *window_stack_ { nullptr };
 
-  CwmTabWindow            *tab_window_;
+  CwmTabWindow            *tab_window_ { nullptr };
 
   WMWindowList             windows_;
 };

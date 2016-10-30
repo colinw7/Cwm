@@ -1,6 +1,8 @@
 #ifndef CWM_WM_WINDOW_H
 #define CWM_WM_WINDOW_H
 
+#include <CwmHints.h>
+
 enum CwmWindowArea {
   CWM_WINDOW_MENU_AREA     = (1<<0),
   CWM_WINDOW_TITLE_AREA    = (1<<1),

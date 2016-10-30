@@ -1,6 +1,8 @@
 #ifndef CWM_WINDOW_STACK_H
 #define CWM_WINDOW_STACK_H
 
+#include <CwmTypes.h>
+
 class CwmScreenWindowGroups;
 class CwmCirculateWindowStack;
 

@@ -19,8 +19,6 @@
 #include <list>
 #include <algorithm>
 
-typedef std::vector<std::string> StringVectorT;
-
 #include <CwmLib.h>
 
 #include <CwmTypes.h>

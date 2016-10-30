@@ -1,6 +1,8 @@
 #ifndef CWM_HINTS_H
 #define CWM_HINTS_H
 
+#include <std_Xt.h>
+
 #define CwmCustomHintMgrInst CwmCustomHintMgr::getInstance()
 
 class CwmCustomHintMgr {

@@ -1,4 +1,5 @@
 #include <CwmI.h>
+#include <CwmAdvHints.h>
 #include <CXAtom.h>
 #include <cassert>
 #include <sstream>
@@ -774,8 +775,13 @@ bool
 CwmEventMgr::
 processClientMessage(XClientMessageEvent *event)
 {
-  if (event->window == CwmMachineInst->getRoot())
-    CwmGnomeInst->processRootClientMessage(event);
+  if (event->window == CwmMachineInst->getRoot()) {
+    //CwmGnomeInst->processRootClientMessage(event);
+
+  }
+
+  if (CwmAdvHintsInst->processRootClientMessage(event))
+    return true;
 
   if (CwmMessageInst->processClientMessage(event))
     return true;

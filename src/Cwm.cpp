@@ -6,16 +6,6 @@
 Cwm::
 Cwm()
 {
-  argc_         = 0;
-  argv_         = 0;
-  pedantic_     = false;
-  synchronize_  = false;
-  root_image_   = "";
-  home_dir_     = "";
-  print_hints_  = false;
-  display_name_ = "";
-  gnome_        = false;
-
   setHomeDir();
 }
 
@@ -181,21 +171,18 @@ processScreenWindows(CwmScreen &screen)
     return;
 
   for (int i = 0; i < num_children; ++i) {
-    if (children[i] != None &&
-        CwmEventMgrInst->isDestroyPending(children[i]))
+    if (children[i] != None && CwmEventMgrInst->isDestroyPending(children[i]))
       children[i] = None;
 
     if (children[i] != None)
       resetIconWindows(i, children, num_children);
 
-    if (children[i] != None &&
-        ! CwmMachineInst->isWMWindow(children[i]))
+    if (children[i] != None && ! CwmMachineInst->isWMWindow(children[i]))
       children[i] = None;
   }
 
   for (int i = 0; i < num_children; i++) {
-    if (children[i] != None &&
-        CwmEventMgrInst->isDestroyPending(children[i]))
+    if (children[i] != None && CwmEventMgrInst->isDestroyPending(children[i]))
       children[i] = None;
 
     if (children[i] != None) {

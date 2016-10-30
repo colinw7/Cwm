@@ -1,4 +1,12 @@
-#include <CwmI.h>
+#include <CwmFocusMgr.h>
+#include <CwmMachine.h>
+#include <CwmScreen.h>
+#include <CwmWindow.h>
+#include <CwmWMWindow.h>
+#include <CwmAdvHints.h>
+#include <CwmResourceData.h>
+#include <CwmDeskIcon.h>
+#include <CwmDeskMgr.h>
 #include <CXtTimer.h>
 
 class CwmFocusMgrTimer : CXtTimer {
@@ -15,11 +23,6 @@ class CwmFocusMgrTimer : CXtTimer {
 CwmFocusMgr::
 CwmFocusMgr()
 {
-  focus_window_        = 0;
-  auto_raise_timer_    = 0;
-  user_window_         = 0;
-  top_window_          = 0;
-  grab_buttons_window_ = 0;
 }
 
 CwmFocusMgr::
@@ -172,6 +175,8 @@ setFocusWindow(CwmWMWindow *window)
   }
 
   window->focusIn();
+
+  CwmAdvHintsInst->setActiveWindow(window->getScreen(), window);
 }
 
 bool
@@ -215,6 +220,8 @@ resetFocusWindow()
   CwmWindow *xwindow = screen.getRoot();
 
   setInputFocus(xwindow);
+
+  CwmAdvHintsInst->setActiveWindow(screen, 0);
 }
 
 void

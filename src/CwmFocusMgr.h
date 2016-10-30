@@ -1,16 +1,12 @@
 #ifndef CWM_FOCUS_MGR_H
 #define CWM_FOCUS_MGR_H
 
+#include <CwmTypes.h>
+#include <std_Xt.h>
+
 class CwmFocusMgrTimer;
 
 class CwmFocusMgr {
- private:
-  CwmWMWindow      *focus_window_;
-  CwmFocusMgrTimer *auto_raise_timer_;
-  CwmWMWindow      *user_window_;
-  CwmWMWindow      *top_window_;
-  CwmWMWindow      *grab_buttons_window_;
-
  public:
   CwmFocusMgr();
  ~CwmFocusMgr();
@@ -43,6 +39,13 @@ class CwmFocusMgr {
   bool isValidWindow(CwmWMWindow *window, Window xwin);
 
   static void autoRaiseProc(CwmData data, XtIntervalId *id);
+
+ private:
+  CwmWMWindow      *focus_window_ { nullptr };
+  CwmFocusMgrTimer *auto_raise_timer_ { nullptr };
+  CwmWMWindow      *user_window_ { nullptr };
+  CwmWMWindow      *top_window_ { nullptr };
+  CwmWMWindow      *grab_buttons_window_ { nullptr };
 };
 
 #endif

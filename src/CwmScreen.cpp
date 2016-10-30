@@ -1,5 +1,26 @@
-#include <CwmI.h>
+#include <CwmScreen.h>
+#include <CwmMachine.h>
+#include <CwmWindow.h>
+#include <CwmFontMgr.h>
+#include <CwmColorMgr.h>
+#include <CwmResourceData.h>
+#include <CwmGraphics.h>
+#include <CwmColormapMgr.h>
+#include <CwmCursorMgr.h>
+#include <CwmDeskIcon.h>
+#include <CwmDeskMgr.h>
+#include <CwmGrid.h>
+#include <CwmMoveFeedback.h>
+#include <CwmResizeFeedback.h>
+#include <CwmWindowStack.h>
+#include <CwmTabWindow.h>
+#include <CwmInfo.h>
+#include <CwmGnome.h>
+#include <CwmAdvHints.h>
+#include <CwmEventMgr.h>
 #include <CXScreen.h>
+#include <CFuncs.h>
+
 #include <X11/XKBlib.h>
 #include <climits>
 
@@ -115,11 +136,6 @@ CwmScreen::
 CwmScreen(int screen_num) :
  num_(screen_num)
 {
-  default_x_ = 0;
-  default_y_ = 0;
-
-  //------
-
   cxscreen_ = new CXScreen(screen_num);
 
   //------
@@ -165,7 +181,11 @@ CwmScreen(int screen_num) :
 
   tab_window_ = new CwmTabWindow(*this);
 
-  CwmGnomeInst->init(*this);
+  //------
+
+  //CwmGnomeInst->init(*this);
+
+  CwmAdvHintsInst->init(*this);
 }
 
 CwmScreen::

@@ -73,7 +73,6 @@ Display *
 CwmMachine::
 openXtDisplay(const std::string &display_name)
 {
-  int    i;
   int    argc;
   char **argv;
 
@@ -81,13 +80,16 @@ openXtDisplay(const std::string &display_name)
 
   char **argv1 = new char * [argc + 1];
 
+  int i;
+
   for (i = 0; i < argc; ++i)
     argv1[i] = strdup(argv[i]);
+
   argv1[i] = 0;
 
   Display *display = CXMachineInst->openXtDisplay(display_name, "Cwm", &argc, argv1);
 
-  for (i = 0; i < argc; ++i)
+  for (int i = 0; i < argc; ++i)
     free((char *) argv1[i]);
 
   delete [] argv1;
@@ -876,6 +878,13 @@ CwmMachine::
 setIntegerProperty(Window xwin, const CXAtom &name, int value)
 {
   CXMachineInst->setIntegerProperty(xwin, name, value);
+}
+
+void
+CwmMachine::
+setIntegerArrayProperty(Window xwin, const CXAtom &name, int *values, int num_values)
+{
+  CXMachineInst->setIntegerArrayProperty(xwin, name, values, num_values);
 }
 
 void

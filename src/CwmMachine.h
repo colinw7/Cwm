@@ -1,4 +1,9 @@
+#ifndef CwmMachine_H
+#define CwmMachine_H
+
+#include <CwmTypes.h>
 #include <CTriplet.h>
+#include <std_Xt.h>
 
 #define CwmMachineInst CwmMachine::getInstance()
 
@@ -151,19 +156,35 @@ class CwmMachine {
 
   void killClient(Window xwin);
 
+  //---
+
   void setIntegerProperty(Window xwin, const CXAtom &name, int value);
+  void setIntegerArrayProperty(Window xwin, const CXAtom &name, int *values, int num_values);
+
   void setStringProperty(Window xwin, const CXAtom &name, const std::string &value);
+  void setStringListProperty(Window xwin, const CXAtom &name, char **strs, int num_strs);
+
   void setWindowProperty(const CXAtom &name, Window value);
   void setWindowProperty(Window xwin, const CXAtom &name, Window value);
   void setWindowArrayProperty(Window xwin, const CXAtom &name, Window *xwins, int num_xwins);
+
   void setAtomArrayProperty(Window xwin, const CXAtom &name, const CXAtom **atoms, int num_atoms);
-  void setStringListProperty(Window xwin, const CXAtom &name, char **strs, int num_strs);
+
+  //---
+
   bool getIntegerProperty(Window xwin, const CXAtom &name, int *value);
   bool getIntegerProperty(const CXAtom &name, int *value);
+
   bool getStringProperty(Window xwin, const CXAtom &name, std::string &value);
   bool getStringProperty(const CXAtom &name, std::string &value);
+
   bool getPixmapProperty(Window xwin, const CXAtom &name, Pixmap *value);
+
+  //---
+
   void deleteProperty(Window xwin, const CXAtom &name);
+
+  //---
 
   void   getWMName(Window xwin, std::string &name);
   void   getWMIconName(Window xwin, std::string &name);
@@ -307,21 +328,23 @@ class CwmMachine {
   typedef std::map<WindowKeyCodeStateTriplet,int>    GrabKeyMap;
   typedef std::map<WindowButtonModifiersTriplet,int> GrabButtonMap;
 
-  CwmScreenMgr   *screen_mgr_;
-  CwmWMWindowMgr *window_mgr_;
+  CwmScreenMgr   *screen_mgr_ { 0 };
+  CwmWMWindowMgr *window_mgr_ { 0 };
   XWindowList     cwm_xwindows_;
-  CwmFocusMgr    *focus_mgr_;
+  CwmFocusMgr    *focus_mgr_  { 0 };
 
-  int    grab_server_count_;
-  Window grab_pointer_xwin_;
-  Window grab_keyboard_xwin_;
-  Window grab_button_xwin_;
-  int    grab_button_button_;
-  int    grab_button_modifiers_;
+  int    grab_server_count_     { 0 };
+  Window grab_pointer_xwin_     { None };
+  Window grab_keyboard_xwin_    { None };
+  Window grab_button_xwin_      { None };
+  int    grab_button_button_    { 0 };
+  int    grab_button_modifiers_ { 0 };
 
   GrabKeyMap    grab_key_map_;
   GrabButtonMap grab_button_map_;
 
-  CwmLog   *log_;
-  CwmDebug *debug_;
+  CwmLog   *log_   { 0 };
+  CwmDebug *debug_ { 0 };
 };
+
+#endif

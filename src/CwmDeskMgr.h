@@ -1,3 +1,8 @@
+#ifndef CwmDeskMgr_H
+#define CwmDeskMgr_H
+
+#include <CwmTypes.h>
+
 class CwmDesk;
 class CwmDeskMgr;
 class CwmToolBarMgr;
@@ -35,6 +40,8 @@ class CwmDeskMgrNotifyData {
   CwmData              data_;
   bool                 called_;
 };
+
+//------
 
 #define CwmDeskResourceMgrInst CwmDeskResourceMgr::getInstance()
 
@@ -160,3 +167,5 @@ class CwmDesk {
   CwmDeskIconMgr *icon_mgr_;
   CwmToolBarMgr  *toolbar_mgr_;
 };
+
+#endif

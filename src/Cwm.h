@@ -50,15 +50,15 @@ class Cwm {
   static void signalHandler(int sig);
 
  private:
-  int           argc_;
-  char        **argv_;
-  bool          pedantic_;
-  bool          synchronize_;
-  std::string   root_image_;
-  std::string   home_dir_;
-  bool          print_hints_;
-  std::string   display_name_;
-  bool          gnome_;
+  int          argc_        { 0 };
+  char**       argv_        { nullptr };
+  bool         pedantic_    { false };
+  bool         synchronize_ { false };
+  std::string  root_image_;
+  std::string  home_dir_;
+  bool         print_hints_ { false };
+  std::string  display_name_;
+  bool         gnome_       { false };
 };
 
 #endif

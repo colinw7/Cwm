@@ -1,4 +1,12 @@
-#include <CwmI.h>
+#include <CwmWindowStack.h>
+#include <CwmMachine.h>
+#include <CwmScreen.h>
+#include <CwmWindow.h>
+#include <CwmWMWindow.h>
+#include <CwmDeskMgr.h>
+#include <CwmDeskIcon.h>
+#include <CwmResourceData.h>
+#include <CwmAdvHints.h>
 
 // Window Group of Base Window and Transient Children in Top to Bottom Order
 
@@ -144,11 +152,19 @@ operator[](int i) const
   return *(window_stack_[i]);
 }
 
+//---
+
 CwmCirculateWindowStack::
 CwmCirculateWindowStack(CwmScreen &screen) :
  screen_(screen), screen_window_groups_(0)
 {
   update();
+}
+
+CwmCirculateWindowStack::
+~CwmCirculateWindowStack()
+{
+  delete screen_window_groups_;
 }
 
 void
@@ -192,12 +208,6 @@ update()
 
     window_groups_.push_back(&(*screen_window_groups_)[i]);
   }
-}
-
-CwmCirculateWindowStack::
-~CwmCirculateWindowStack()
-{
-  delete screen_window_groups_;
 }
 
 void
@@ -251,6 +261,8 @@ lower(CwmWMWindow *window)
                                   CWSibling | CWStackMode, &xwc);
 
   lower_group->restack();
+
+  CwmAdvHintsInst->setStackedClientList(screen_);
 }
 
 void
@@ -284,6 +296,8 @@ raise(CwmWMWindow *window)
                                   CWSibling | CWStackMode, &xwc);
 
   raise_group->restack();
+
+  CwmAdvHintsInst->setStackedClientList(screen_);
 }
 
 CwmWindowGroup *
@@ -307,6 +321,8 @@ restack()
     window_groups_[i]->restack();
 
   update();
+
+  CwmAdvHintsInst->setStackedClientList(screen_);
 }
 
 int
@@ -359,6 +375,8 @@ isTop(CwmWMWindow *window)
 
   return (window == top_window);
 }
+
+//------
 
 CwmScreenWindowGroups::
 CwmScreenWindowGroups(CwmScreen &screen)

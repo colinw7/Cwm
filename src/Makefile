@@ -13,6 +13,7 @@ BIN_DIR = ../bin
 all: $(BIN_DIR)/Cwm
 
 SRC = \
+CwmAdvHints.cpp \
 CwmCmdIcon.cpp \
 CwmColormapMgr.cpp \
 CwmColorMgr.cpp \
