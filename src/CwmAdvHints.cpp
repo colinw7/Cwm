@@ -274,8 +274,9 @@ processRootClientMessage(XClientMessageEvent *event)
   //const CXAtom &request_frame_atom      = CwmMachineInst->getAtom("_NET_REQUEST_FRAME_EXTENTS");
 
   const CXAtom &activeAtom = CwmMachineInst->getAtom("_NET_ACTIVE_WINDOW");
+  const CXAtom &closeAtom  = CwmMachineInst->getAtom("_NET_CLOSE_WINDOW" );
 
-  if (event->message_type == activeAtom.getXAtom()) {
+  if      (event->message_type == activeAtom.getXAtom()) {
     Window xwin = event->window;
 
     CwmWMWindow *win = CwmMachineInst->getWindowWMWindow(xwin);
@@ -285,6 +286,14 @@ processRootClientMessage(XClientMessageEvent *event)
 
       CwmMachineInst->setFocusWindow(win);
     }
+  }
+  else if (event->message_type == closeAtom.getXAtom()) {
+    Window xwin = event->window;
+
+    CwmWMWindow *win = CwmMachineInst->getWindowWMWindow(xwin);
+
+    if (win)
+      win->close();
   }
   else {
     const CXAtom &atom = CwmMachineInst->getAtom(event->message_type);

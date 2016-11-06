@@ -53,7 +53,9 @@ changeDesk(CwmDesk *desk)
   //CwmGnomeInst->setListOfManagedClients(screen_);
 
   CwmAdvHintsInst->setCurrentDesktop(screen_);
+
   CwmAdvHintsInst->setClientList(screen_);
+  CwmAdvHintsInst->setStackedClientList(screen_);
 
   callNotifyProcs(CWM_DESK_MGR_NOTIFY_CHANGE_END);
 }
@@ -369,6 +371,7 @@ addWMWindow(CwmWMWindow *window)
   //CwmGnomeInst->setListOfManagedClients(screen);
 
   CwmAdvHintsInst->setClientList(screen);
+  CwmAdvHintsInst->setStackedClientList(screen);
 }
 
 void
@@ -382,6 +385,7 @@ removeWMWindow(CwmWMWindow *window)
   //CwmGnomeInst->setListOfManagedClients(screen);
 
   CwmAdvHintsInst->setClientList(screen);
+  CwmAdvHintsInst->setStackedClientList(screen);
 }
 
 void

@@ -1,4 +1,5 @@
 #include <CwmI.h>
+#include <CwmAdvHints.h>
 #include <CXAtom.h>
 
 struct CwmWindowEventDef {
@@ -1056,7 +1057,13 @@ remove()
 
   //------
 
+  CwmScreen &screen = screen_;
+
   delete this;
+
+  //------
+
+  CwmAdvHintsInst->setStackedClientList(screen);
 }
 
 void
@@ -1388,6 +1395,8 @@ void
 CwmWMWindow::
 close()
 {
+  // update happens in process of Unmap event
+
   if (getNotifyDeleteWindowHint())
     notifyDeleteWindow();
   else {
