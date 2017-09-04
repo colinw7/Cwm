@@ -129,8 +129,8 @@ LFLAGS = \
 -L../../CUtil/lib \
 
 LIBS = \
--lCXLib -lCTimer -lCImageLib -lCFont -lCArgs -lCConfig -lCFile -lCFileUtil -lCUtil -lCOS \
--lCRegExp -lCGlob -lCStrUtil -lCRGBName \
+-lCXLib -lCTimer -lCImageLib -lCFont -lCArgs -lCConfig -lCFile -lCFileUtil -lCMath \
+-lCUtil -lCOS -lCRegExp -lCGlob -lCStrUtil -lCRGBName \
 -lXt -lX11 -lpng -ljpeg -ltre
 
 clean:

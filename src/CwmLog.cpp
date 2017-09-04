@@ -33,7 +33,7 @@ open()
 
     file_->remove();
 
-    return file_->open(CFile::APPEND);
+    return file_->open(CFile::Mode::APPEND);
   }
   else {
     file_ = 0;

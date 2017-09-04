@@ -1,6 +1,6 @@
 #include <CImageDraw.h>
 #include <CImageGC.h>
-#include <CMathGen.h>
+#include <CMathRound.h>
 
 #include <CLine2D.h>
 #include <CBresenham.h>
@@ -136,7 +136,7 @@ fillPolygon(const CImageGC &gc, int *x, int *y, int num_xy)
 
       double factor = double(x[i2] - x[i1])/double(y[i2] - y[i1]);
 
-      int xx = CMathGen::Round((yy - y[i1])*factor + x[i1]);
+      int xx = CMathRound::Round((yy - y[i1])*factor + x[i1]);
 
       xmin = std::min(xmin, xx);
       xmax = std::max(xmax, xx);
