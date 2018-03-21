@@ -103,7 +103,8 @@ CwmWindowImageList(CwmWMWindow *window) :
 CwmWindowImageList::
 ~CwmWindowImageList()
 {
-  std::for_each(images_.begin(), images_.end(), CDeletePointer());
+  for (auto &image : images_)
+    delete image;
 }
 
 void

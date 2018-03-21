@@ -511,7 +511,8 @@ CwmCustomHintMgr()
 CwmCustomHintMgr::
 ~CwmCustomHintMgr()
 {
-  std::for_each(custom_hints_.begin(), custom_hints_.end(), CDeletePointer());
+  for (auto &custom_hint : custom_hints_)
+    delete custom_hint;
 }
 
 void
@@ -623,7 +624,8 @@ CwmCustomHint::
 {
   delete compile_;
 
-  std::for_each(values_.begin(), values_.end(), CDeletePointer());
+  for (auto &value : values_)
+    delete value;
 }
 
 void

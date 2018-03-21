@@ -40,8 +40,7 @@ isKeyPressEvent(XKeyPressedEvent *event, int key)
 
   uint keycode = CwmMachineInst->keysymToKeycode(keysym);
 
-  if (event->keycode == keycode &&
-      (event->state == 0 || event->state == 1))
+  if (event->keycode == keycode && (event->state == 0 || event->state == 1))
     return true;
 
   return false;

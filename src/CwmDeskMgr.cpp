@@ -20,7 +20,8 @@ CwmDeskMgr::
 {
   notify_procs_.clear();
 
-  std::for_each(desks_.begin(), desks_.end(), CDeletePointer());
+  for (auto &desk : desks_)
+    delete desk;
 }
 
 void
@@ -142,11 +143,8 @@ getDesk(CwmWMWindow *window)
 
     CwmDesk::WMWindowList windows = desk->getWindows();
 
-    CwmDesk::WMWindowList::const_iterator pwindow1 = windows.begin();
-    CwmDesk::WMWindowList::const_iterator pwindow2 = windows.end  ();
-
-    for ( ; pwindow1 != pwindow2; ++pwindow1)
-      if (*pwindow1 == window)
+    for (auto &window1 : windows)
+      if (window1 == window)
         return desk;
   }
 
@@ -293,6 +291,8 @@ callNotifyProcs(CwmDeskMgrNotifyType type)
   for ( ; pnotify_proc1 != pnotify_proc2; ++pnotify_proc1)
     (*pnotify_proc1)->setCalled(false);
 
+  //---
+
   pnotify_proc1 = notify_procs_.begin();
 
   while (pnotify_proc1 != pnotify_proc2) {
@@ -392,24 +392,18 @@ void
 CwmDesk::
 hide()
 {
-  WMWindowList::const_iterator pwindow1 = windows_.begin();
-  WMWindowList::const_iterator pwindow2 = windows_.end  ();
-
-  for ( ; pwindow1 != pwindow2; ++pwindow1)
-    if (! (*pwindow1)->isIconised())
-      (*pwindow1)->unmap();
+  for (auto &window : windows_)
+    if (! window->isIconised())
+      window->unmap();
 }
 
 void
 CwmDesk::
 show()
 {
-  WMWindowList::const_iterator pwindow1 = windows_.begin();
-  WMWindowList::const_iterator pwindow2 = windows_.end  ();
-
-  for ( ; pwindow1 != pwindow2; ++pwindow1)
-    if (! (*pwindow1)->isIconised())
-      (*pwindow1)->map();
+  for (auto &window : windows_)
+    if (! window->isIconised())
+      window->map();
 
   drawRootImage();
 }

@@ -108,13 +108,10 @@ setClientList(CwmScreen &screen)
 
   Window *xwins = new Window [windows.size()];
 
-  CwmDesk::WMWindowList::const_iterator pwindow1 = windows.begin();
-  CwmDesk::WMWindowList::const_iterator pwindow2 = windows.end  ();
-
   int num_xwins = 0;
 
-  for ( ; pwindow1 != pwindow2; ++pwindow1)
-    xwins[num_xwins++] = (*pwindow1)->getXWin();
+  for (auto &window : windows)
+    xwins[num_xwins++] = window->getXWin();
 
   CwmMachineInst->setWindowArrayProperty(root_xwin, atom, xwins, num_xwins);
 

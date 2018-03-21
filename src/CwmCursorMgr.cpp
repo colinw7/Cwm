@@ -49,14 +49,15 @@ CwmCursorMgr(CwmScreen &screen) :
 CwmCursorMgr::
 ~CwmCursorMgr()
 {
-  std::for_each(cursor_list_.begin(), cursor_list_.end(), CDeletePointer());
+  for (auto &cursor : cursor_list_)
+    delete cursor;
 }
 
 Cursor
 CwmCursorMgr::
 getCursor(CwmCursorType type) const
 {
-  CursorMap::const_iterator pcursor = cursor_map_.find(type);
+  auto pcursor = cursor_map_.find(type);
 
   if (pcursor == cursor_map_.end())
     return None;

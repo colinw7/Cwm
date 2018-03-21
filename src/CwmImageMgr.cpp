@@ -69,7 +69,8 @@ CwmImageMgr()
 CwmImageMgr::
 ~CwmImageMgr()
 {
-  std::for_each(images_.begin(), images_.end(), CDeletePointer());
+  for (auto &image : images_)
+    delete image;
 }
 
 CwmImage *
@@ -245,7 +246,8 @@ CwmNamedImage(const std::string &name, const CImagePtr &image) :
 CwmNamedImage::
 ~CwmNamedImage()
 {
-  std::for_each(images_.begin(), images_.end(), CDeletePointer());
+  for (auto &image : images_)
+    delete image;
 }
 
 CwmImage *
@@ -304,7 +306,8 @@ CwmScreenImage(CwmScreen &screen, const CImagePtr &image) :
 CwmScreenImage::
 ~CwmScreenImage()
 {
-  std::for_each(images_.begin(), images_.end(), CDeletePointer());
+  for (auto &image : images_)
+    delete image;
 }
 
 CwmImage *

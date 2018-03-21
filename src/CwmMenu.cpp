@@ -106,7 +106,8 @@ CwmMenuDef(const CwmMenuDef &menu_def)
 CwmMenuDef::
 ~CwmMenuDef()
 {
-  std::for_each(entries_.begin(), entries_.end(), CDeletePointer());
+  for (auto &entry : entries_)
+    delete entry;
 }
 
 void
@@ -1611,7 +1612,8 @@ void
 CwmNamedMenuMgr::
 deleteAll()
 {
-  std::for_each(named_menus_.begin(), named_menus_.end(), CDeletePointer());
+  for (auto &named_menu : named_menus_)
+    delete named_menu;
 
   named_menus_.clear();
 }

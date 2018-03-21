@@ -31,13 +31,10 @@ stackChildren(CwmWMWindow *window)
 {
   const CwmWMWindow::WMWindowList children = window->getChildren();
 
-  CwmWMWindow::WMWindowList::const_iterator pchild1 = children.begin();
-  CwmWMWindow::WMWindowList::const_iterator pchild2 = children.end  ();
+  for (auto &child : children) {
+    stackChildren(child);
 
-  for ( ; pchild1 != pchild2; ++pchild1) {
-    stackChildren(*pchild1);
-
-    window_stack_.push_back(*pchild1);
+    window_stack_.push_back(child);
   }
 }
 
@@ -52,16 +49,13 @@ stackParents(CwmWMWindow *window)
 
   const CwmWMWindow::WMWindowList children = parent->getChildren();
 
-  CwmWMWindow::WMWindowList::const_iterator pchild1 = children.begin();
-  CwmWMWindow::WMWindowList::const_iterator pchild2 = children.end  ();
-
-  for ( ; pchild1 != pchild2; ++pchild1) {
-    if (*pchild1 == window)
+  for (auto &child : children) {
+    if (child == window)
       continue;
 
-    stackChildren(*pchild1);
+    stackChildren(child);
 
-    window_stack_.push_back(*pchild1);
+    window_stack_.push_back(child);
   }
 
   window_stack_.push_back(parent);

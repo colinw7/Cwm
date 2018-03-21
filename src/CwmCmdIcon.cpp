@@ -63,7 +63,8 @@ void
 CwmCmdIconMgr::
 deleteAll()
 {
-  std::for_each(command_icon_list_.begin(), command_icon_list_.end(), CDeletePointer());
+  for (auto &command_icon : command_icon_list_)
+    delete command_icon;
 
   command_icon_list_.clear();
 }

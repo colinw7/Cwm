@@ -111,26 +111,22 @@ processEventFunction(CwmWMWindow *window, int area, XEvent *event)
   std::string res_name  = window->getResName ();
   std::string res_class = window->getResClass();
 
-  WindowEventFunctionList::const_iterator pef1 = event_functions_.begin();
-  WindowEventFunctionList::const_iterator pef2 = event_functions_.end  ();
-
-  for ( ; pef1 != pef2; ++pef1) {
-    if (! ((*pef1)->area & area))
+  for (auto &event_function : event_functions_) {
+    if (! (event_function->area & area))
       continue;
 
-    if      ((*pef1)->window != 0) {
-      if ((*pef1)->window != window)
+    if      (event_function->window != 0) {
+      if (event_function->window != window)
         continue;
     }
-    else if ((*pef1)->compile != 0) {
-      if (! (*pef1)->compile->compare(res_name) &&
-          ! (*pef1)->compile->compare(res_class))
+    else if (event_function->compile != 0) {
+      if (! event_function->compile->compare(res_name) &&
+          ! event_function->compile->compare(res_class))
         continue;
     }
 
-    if ((*pef1)->event->matchEvent(event)) {
-      (*pef1)->function->processWindow
-        (window, (*pef1)->data);
+    if (event_function->event->matchEvent(event)) {
+      event_function->function->processWindow(window, event_function->data);
 
       return;
     }
@@ -162,7 +158,8 @@ void
 CwmWindowEventFunctionMgr::
 removeAllEventFunctions()
 {
-  std::for_each(event_functions_.begin(), event_functions_.end(), CDeletePointer());
+  for (auto &event_function : event_functions_)
+    delete event_function;
 
   event_functions_.clear();
 }
@@ -171,19 +168,16 @@ void
 CwmWindowEventFunctionMgr::
 grabEventKeys(CwmWMWindow *window)
 {
-  WindowEventFunctionList::const_iterator pef1 = event_functions_.begin();
-  WindowEventFunctionList::const_iterator pef2 = event_functions_.end  ();
-
-  for ( ; pef1 != pef2; ++pef1) {
-    if ((*pef1)->window != window)
+  for (auto &event_function : event_functions_) {
+    if (event_function->window != window)
       continue;
 
-    if (! ((*pef1)->area & CWM_WINDOW_USER_AREA))
+    if (! (event_function->area & CWM_WINDOW_USER_AREA))
       continue;
 
-    XKeyPressedEvent *event = (*pef1)->event->getKeyPressedEvent();
+    XKeyPressedEvent *event = event_function->event->getKeyPressedEvent();
 
-    if (event != 0)
+    if (event)
       CwmMachineInst->grabKey(window->getFrame()->getXWindow()->getXWin(),
                               event->keycode, event->state);
   }
@@ -193,19 +187,16 @@ void
 CwmWindowEventFunctionMgr::
 ungrabEventKeys(CwmWMWindow *window)
 {
-  WindowEventFunctionList::const_iterator pef1 = event_functions_.begin();
-  WindowEventFunctionList::const_iterator pef2 = event_functions_.end  ();
-
-  for ( ; pef1 != pef2; ++pef1) {
-    if ((*pef1)->window != window)
+  for (auto &event_function : event_functions_) {
+    if (event_function->window != window)
       continue;
 
-    if (! ((*pef1)->area & CWM_WINDOW_USER_AREA))
+    if (! (event_function->area & CWM_WINDOW_USER_AREA))
       continue;
 
-    XKeyPressedEvent *event = (*pef1)->event->getKeyPressedEvent();
+    XKeyPressedEvent *event = event_function->event->getKeyPressedEvent();
 
-    if (event != 0)
+    if (event)
       CwmMachineInst->ungrabKey(window->getFrame()->getXWindow()->getXWin(),
                                 event->keycode, event->state);
   }
@@ -329,7 +320,8 @@ void
 CwmWMWindowMgr::
 term()
 {
-  std::for_each(window_list_.begin(), window_list_.end(), CDeletePointer());
+  for (auto &window : window_list_)
+    delete window;
 
   window_list_.clear();
 }
@@ -962,11 +954,8 @@ CwmWMWindow::
 
   //------
 
-  WMWindowList::const_iterator pwindow1 = children_.begin();
-  WMWindowList::const_iterator pwindow2 = children_.end  ();
-
-  for ( ; pwindow1 != pwindow2; ++pwindow1)
-    (*pwindow1)->parent_ = 0;
+  for (auto &child : children_)
+    child->parent_ = nullptr;
 }
 
 CwmFont *

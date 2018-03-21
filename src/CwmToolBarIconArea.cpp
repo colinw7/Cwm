@@ -88,12 +88,9 @@ CwmToolBarIcon *
 CwmToolBarIconArea::
 getIcon(CwmWindow *xwindow)
 {
-  ToolBarIconList::const_iterator picon1 = icons_.begin();
-  ToolBarIconList::const_iterator picon2 = icons_.end  ();
-
-  for ( ; picon1 != picon2; ++picon1)
-    if ((*picon1)->getXWindow() == xwindow)
-      return *picon1;
+  for (auto &icon : icons_)
+    if (icon->getXWindow() == xwindow)
+      return icon;
 
   return 0;
 }
@@ -102,12 +99,9 @@ CwmToolBarIcon *
 CwmToolBarIconArea::
 getIcon(Window xwin)
 {
-  ToolBarIconList::const_iterator picon1 = icons_.begin();
-  ToolBarIconList::const_iterator picon2 = icons_.end  ();
-
-  for ( ; picon1 != picon2; ++picon1)
-    if ((*picon1)->getXWindow()->getXWin() == xwin)
-      return *picon1;
+  for (auto &icon : icons_)
+    if (icon->getXWindow()->getXWin() == xwin)
+      return icon;
 
   return 0;
 }
@@ -116,12 +110,9 @@ CwmToolBarIcon *
 CwmToolBarIconArea::
 getIcon(CwmWMWindow *window)
 {
-  ToolBarIconList::const_iterator picon1 = icons_.begin();
-  ToolBarIconList::const_iterator picon2 = icons_.end  ();
-
-  for ( ; picon1 != picon2; ++picon1)
-    if ((*picon1)->getWindow() == window)
-      return *picon1;
+  for (auto &icon : icons_)
+    if (icon->getWindow() == window)
+      return icon;
 
   return 0;
 }
@@ -138,20 +129,16 @@ redraw()
 
   sortIcons();
 
-  ToolBarIconList::const_iterator picon1 = icons_.begin();
-  ToolBarIconList::const_iterator picon2 = icons_.end  ();
-
-  for ( ; picon1 != picon2; ++picon1)
-    if ((*picon1)->onCurrentDesk())
-      (*picon1)->getXWindow()->map();
+  for (auto &icon : icons_) {
+    if (icon->onCurrentDesk())
+      icon->getXWindow()->map();
     else
-      (*picon1)->getXWindow()->unmap();
+      icon->getXWindow()->unmap();
+  }
 
-  picon1 = icons_.begin();
-
-  for ( ; picon1 != picon2; ++picon1)
-    if ((*picon1)->onCurrentDesk())
-      (*picon1)->redraw();
+  for (auto &icon : icons_)
+    if (icon->onCurrentDesk())
+      icon->redraw();
 }
 
 void
@@ -165,14 +152,11 @@ sortIcons()
 
   int j = 0;
 
-  ToolBarIconList::const_iterator picon1 = icons_.begin();
-  ToolBarIconList::const_iterator picon2 = icons_.end  ();
-
-  for ( ; picon1 != picon2; ++picon1) {
-    if (! (*picon1)->onCurrentDesk())
+  for (auto &icon : icons_) {
+    if (! icon->onCurrentDesk())
       continue;
 
-    (*picon1)->move(j*icon_width_, 0);
+    icon->move(j*icon_width_, 0);
 
     j++;
   }
@@ -184,12 +168,10 @@ resizeIcons()
 {
   int num_icons = 0;
 
-  ToolBarIconList::const_iterator picon1 = icons_.begin();
-  ToolBarIconList::const_iterator picon2 = icons_.end  ();
-
-  for ( ; picon1 != picon2; ++picon1)
-    if ((*picon1)->onCurrentDesk())
+  for (auto &icon : icons_) {
+    if (icon->onCurrentDesk())
       num_icons++;
+  }
 
   if (num_icons == 0)
     return;
@@ -224,15 +206,11 @@ resizeIcons()
 
   int j = 0;
 
-  picon1 = icons_.begin();
-
-  for ( ; picon1 != picon2; ++picon1) {
-    if (! (*picon1)->onCurrentDesk())
+  for (auto &icon : icons_) {
+    if (! icon->onCurrentDesk())
       continue;
 
-    (*picon1)->moveResize(j*icon_width_, 0,
-                          icon_width_, xwindow_->getHeight(),
-                          true);
+    icon->moveResize(j*icon_width_, 0, icon_width_, xwindow_->getHeight(), true);
 
     j++;
   }

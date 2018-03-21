@@ -53,7 +53,8 @@ create(CwmScreen &screen, Window parent, uint event_mask, CwmCursorType cursor)
 CwmWindow::
 ~CwmWindow()
 {
-  std::for_each(callbacks_.begin(), callbacks_.end(), CDeletePointer());
+  for (auto &callback : callbacks_)
+    delete callback;
 
   callbacks_.clear();
 

@@ -165,22 +165,16 @@ void
 CwmDeskIconMgr::
 mapIcons()
 {
-  CwmDeskIconMap::const_iterator picon1 = desk_icon_map_.begin();
-  CwmDeskIconMap::const_iterator picon2 = desk_icon_map_.end  ();
-
-  for ( ; picon1 != picon2; ++picon1)
-    (*picon1).second->map();
+  for (auto &desk_icon : desk_icon_map_)
+    desk_icon.second->map();
 }
 
 void
 CwmDeskIconMgr::
 unmapIcons()
 {
-  CwmDeskIconMap::const_iterator picon1 = desk_icon_map_.begin();
-  CwmDeskIconMap::const_iterator picon2 = desk_icon_map_.end  ();
-
-  for ( ; picon1 != picon2; ++picon1)
-    (*picon1).second->unmap();
+  for (auto &desk_icon : desk_icon_map_) 
+    desk_icon.second->unmap();
 }
 
 CwmDeskIcon *

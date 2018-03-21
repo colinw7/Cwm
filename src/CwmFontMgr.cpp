@@ -12,19 +12,17 @@ CwmFontMgr(CwmScreen &screen) :
 CwmFontMgr::
 ~CwmFontMgr()
 {
-  std::for_each(fonts_.begin(), fonts_.end(), CDeletePointer());
+  for (auto &font : fonts_)
+    delete font;
 }
 
 CwmFont *
 CwmFontMgr::
 getFont(const std::string &name)
 {
-  FontList::const_iterator pfont1 = fonts_.begin();
-  FontList::const_iterator pfont2 = fonts_.end  ();
-
-  for ( ; pfont1 != pfont2; ++pfont1)
-    if (CStrUtil::casecmp((*pfont1)->getName(), name) == 0)
-      return *pfont1;
+  for (auto &font : fonts_)
+    if (CStrUtil::casecmp(font->getName(), name) == 0)
+      return font;
 
   //------
 

@@ -20,7 +20,8 @@ CwmCustomIconMgr()
 CwmCustomIconMgr::
 ~CwmCustomIconMgr()
 {
-  std::for_each(custom_icons_.begin(), custom_icons_.end(), CDeletePointer());
+  for (auto &custom_icon : custom_icons_)
+    delete custom_icon;
 }
 
 void
@@ -37,11 +38,8 @@ void
 CwmCustomIconMgr::
 addCustomIcons(CwmScreen &screen)
 {
-  CustomIconList::const_iterator picon1 = custom_icons_.begin();
-  CustomIconList::const_iterator picon2 = custom_icons_.end  ();
-
-  for ( ; picon1 != picon2; ++picon1)
-    CwmCmdIconMgrInst->addCmdIcon(screen, **picon1);
+  for (auto &icon : custom_icons_)
+    CwmCmdIconMgrInst->addCmdIcon(screen, *icon);
 }
 
 CwmCustomIcon::

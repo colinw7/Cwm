@@ -24,11 +24,10 @@ getColor(Pixel fg, Pixel bg)
 
   ColorPair color_pair(fg_color, bg_color);
 
-  ColorList::const_iterator pcolor1 = colors_.find(color_pair);
-  ColorList::const_iterator pcolor2 = colors_.end ();
+  auto pcolor = colors_.find(color_pair);
 
-  if (pcolor1 != pcolor2)
-    return (*pcolor1).second;
+  if (pcolor != colors_.end())
+    return (*pcolor).second;
 
   CwmColor *color = new CwmColor(fg_color, bg_color);
 
@@ -43,11 +42,10 @@ getPixel(const std::string &name, Pixel default_pixel)
 {
   std::string name1 = CStrUtil::toLower(name);
 
-  NamedColorMap::const_iterator pnamed_color1 = named_colors_.find(name1);
-  NamedColorMap::const_iterator pnamed_color2 = named_colors_.end ();
+  auto pnamed_color = named_colors_.find(name1);
 
-  if (pnamed_color1 != pnamed_color2)
-    return (*pnamed_color1).second->getPixel();
+  if (pnamed_color != named_colors_.end())
+    return (*pnamed_color).second->getPixel();
 
   const CXColor *color;
   double         r, g, b;

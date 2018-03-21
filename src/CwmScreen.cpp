@@ -39,7 +39,8 @@ void
 CwmScreenMgr::
 term()
 {
-  std::for_each(screen_num_map_.begin(), screen_num_map_.end(), CDeleteMapSecond<ScreenNumMap>());
+  for (auto &screen_num : screen_num_map_)
+    delete screen_num.second;
 
   screen_num_map_ .clear();
   screen_root_map_.clear();
@@ -173,13 +174,15 @@ CwmScreen(int screen_num) :
 
   desk_mgr_ = new CwmDeskMgr(*this, 4);
 
-  desk_mgr_->changeDesk(0);
-
   //------
 
   window_stack_ = new CwmCirculateWindowStack(*this);
 
   tab_window_ = new CwmTabWindow(*this);
+
+  //------
+
+  desk_mgr_->changeDesk(0);
 
   //------
 
