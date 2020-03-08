@@ -17,6 +17,8 @@ class CwmFocusMgrTimer : CXtTimer {
  public:
   CwmFocusMgrTimer(CwmFocusMgr *mgr, CwmWMWindow *window);
 
+  CwmFocusMgr *mgr() const { return mgr_; }
+
   void timeOut();
 };
 

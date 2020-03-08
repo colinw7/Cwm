@@ -441,16 +441,16 @@ processEvent(XEvent *event)
             CwmWindow *xwindow = cwm_window->getScreen().getPointerWindow();
 
             if (! xwindow || cwm_window->isUser(xwindow)) {
-              CwmWindow *xwindow = cwm_window->getUserWindow();
+              CwmWindow *xwindow1 = cwm_window->getUserWindow();
 
-              if (xwindow != 0) {
+              if (xwindow1 != 0) {
                 CwmMachineInst->focusLeave(cwm_window);
 
                 cwm_window->raise();
 
                 CwmMachineInst->flushEvents();
 
-                xwindow->replayPointerEvents();
+                xwindow1->replayPointerEvents();
               }
 
               break;

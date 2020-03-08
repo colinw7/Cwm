@@ -5,12 +5,14 @@ class UnixCmd {
  public:
   UnixCmd(CwmScreen &screen, const std::string &command);
 
+  CwmScreen &screen() const { return screen_; }
+
   void setAddDisplay(bool add_display) { add_display_ = add_display; }
 
   void run();
 
  private:
-  CwmScreen   &screen_;
+  CwmScreen&   screen_;
   std::string  command_;
   int          status_;
   bool         add_display_;

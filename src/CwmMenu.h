@@ -141,7 +141,7 @@ class CwmMenuCascadeEntry : public CwmMenuEntry {
   }
 };
 
-struct CwmMenuKeyData;
+class CwmMenuKeyData;
 
 class CwmMenu {
  public:

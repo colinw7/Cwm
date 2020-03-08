@@ -89,8 +89,8 @@ openXtDisplay(const std::string &display_name)
 
   Display *display = CXMachineInst->openXtDisplay(display_name, "Cwm", &argc, argv1);
 
-  for (int i = 0; i < argc; ++i)
-    free((char *) argv1[i]);
+  for (int i1 = 0; i1 < argc; ++i1)
+    free((char *) argv1[i1]);
 
   delete [] argv1;
 

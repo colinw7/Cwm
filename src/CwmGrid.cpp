@@ -135,12 +135,12 @@ add(void *id, int *x1, int *y1, int *x2, int *y2,
     }
 
     for (row = i1; di > 0 ? row <= i2 : row >= i2; row += di) {
-      int col;
+      int col1;
 
-      for (col = j1; dj > 0 ? col <= j2 : col >= j2; col += dj) {
-        if (checkCells(row, col, num_rows1, num_cols1)) {
-          placeInCells(id, row, col, num_rows1, num_cols1);
-          setPosition(row, col, num_rows1, num_cols1, x1, y1, x2, y2);
+      for (col1 = j1; dj > 0 ? col1 <= j2 : col1 >= j2; col1 += dj) {
+        if (checkCells(row, col1, num_rows1, num_cols1)) {
+          placeInCells(id, row, col1, num_rows1, num_cols1);
+          setPosition(row, col1, num_rows1, num_cols1, x1, y1, x2, y2);
           return;
         }
       }

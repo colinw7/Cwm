@@ -138,8 +138,8 @@ setStackedClientList(CwmScreen &screen)
     if (window_group.size() == 0)
       continue;
 
-    for (int i = 0; i < window_group.size(); i++) {
-      CwmWMWindow &window = window_group[i];
+    for (int i1 = 0; i1 < window_group.size(); i1++) {
+      CwmWMWindow &window = window_group[i1];
 
       windowIds.push_back(window.getXWin());
     }
