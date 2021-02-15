@@ -76,21 +76,21 @@ drawImage(const CImageGC &, int x, int y, CImagePtr image)
   if (image_->hasColormap()) {
     int color_ind;
 
-    for (int y = y1; y <= y2; ++y)
-      for (int x = x1; x <= x2; ++x) {
-        color_ind = image->getColorIndexPixel(x - x1, y - y1);
+    for (int yy = y1; yy <= y2; ++yy)
+      for (int xx = x1; xx <= x2; ++xx) {
+        color_ind = image->getColorIndexPixel(xx - x1, yy - y1);
 
-        image_->drawColorIndexPoint(x, y, color_ind);
+        image_->drawColorIndexPoint(xx, yy, color_ind);
       }
   }
   else {
     CRGBA rgba;
 
-    for (int y = y1; y <= y2; ++y)
-      for (int x = x1; x <= x2; ++x) {
-        image->getRGBAPixel(x - x1, y - y1, rgba);
+    for (int yy = y1; yy <= y2; ++yy)
+      for (int xx = x1; xx <= x2; ++xx) {
+        image->getRGBAPixel(xx - x1, yy - y1, rgba);
 
-        image_->drawRGBAPoint(x, y, rgba);
+        image_->drawRGBAPoint(xx, yy, rgba);
       }
   }
 }
@@ -183,18 +183,18 @@ fillRectangle(const CImageGC &gc, int x, int y, int width, int height)
 
       gc.getForeground(color_ind);
 
-      for (int y = y1; y <= y2; ++y)
-        for (int x = x1; x <= x2; ++x)
-          image_->drawColorIndexPoint(x, y, color_ind);
+      for (int yy = y1; yy <= y2; ++yy)
+        for (int xx = x1; xx <= x2; ++xx)
+          image_->drawColorIndexPoint(xx, yy, color_ind);
     }
     else {
       CRGBA rgba;
 
       gc.getForeground(rgba);
 
-      for (int y = y1; y <= y2; ++y)
-        for (int x = x1; x <= x2; ++x)
-          image_->drawRGBAPoint(x, y, rgba);
+      for (int yy = y1; yy <= y2; ++yy)
+        for (int xx = x1; xx <= x2; ++xx)
+          image_->drawRGBAPoint(xx, yy, rgba);
     }
   }
   else {
@@ -317,8 +317,8 @@ drawColorIndexHLine(int x, int y, int length, int color_ind)
   if (y < 0 || y >= iheight)
     return;
 
-  for (int x = x1; x <= x2; ++x)
-    image_->drawColorIndexPoint(x, y, color_ind);
+  for (int xx = x1; xx <= x2; ++xx)
+    image_->drawColorIndexPoint(xx, y, color_ind);
 }
 
 void
@@ -334,8 +334,8 @@ drawRGBAHLine(int x, int y, int length, const CRGBA &rgba)
   if (y < 0 || y >= iheight)
     return;
 
-  for (int x = x1; x <= x2; ++x)
-    image_->drawRGBAPoint(x, y, rgba);
+  for (int xx = x1; xx <= x2; ++xx)
+    image_->drawRGBAPoint(xx, y, rgba);
 }
 
 void
@@ -371,8 +371,8 @@ drawColorIndexVLine(int x, int y, int length, int color_ind)
   if (x < 0 || x >= iwidth)
     return;
 
-  for (int y = y1; y <= y2; ++y)
-    image_->drawColorIndexPoint(x, y, color_ind);
+  for (int yy = y1; yy <= y2; ++yy)
+    image_->drawColorIndexPoint(x, yy, color_ind);
 }
 
 void
@@ -388,8 +388,8 @@ drawRGBAVLine(int x, int y, int length, const CRGBA &rgba)
   if (x < 0 || x >= iwidth)
     return;
 
-  for (int y = y1; y <= y2; ++y)
-    image_->drawRGBAPoint(x, y, rgba);
+  for (int yy = y1; yy <= y2; ++yy)
+    image_->drawRGBAPoint(x, yy, rgba);
 }
 
 void
