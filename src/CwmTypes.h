@@ -187,6 +187,7 @@ typedef void (*CwmSigHandler)
 #include <map>
 #include <vector>
 #include <list>
+#include <string>
 
 typedef std::vector<std::string> StringVectorT;
 

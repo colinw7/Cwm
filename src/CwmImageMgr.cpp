@@ -443,7 +443,7 @@ CwmTiledImage(CwmScreen &screen, CwmImage *image, int width, int height, int hal
       break;
   }
 
-  CImageTile tile(halign2, valign2);
+  CImageTileData tile(halign2, valign2);
 
   CImagePtr cimage1 = cimage->tile(width, height, tile);
 
