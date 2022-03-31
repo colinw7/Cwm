@@ -4,7 +4,9 @@
 #include <QMouseEvent>
 #include <QAbstractNativeEventFilter>
 #include <QHBoxLayout>
+#include <QVBoxLayout>
 #include <QTreeWidget>
+#include <QToolButton>
 
 #include <CXLib.h>
 #include <QX11Info>
@@ -35,12 +37,12 @@ class CQWmPagerXcbEventFilter : public QAbstractNativeEventFilter {
 
   bool nativeEventFilter(const QByteArray &eventType, void *message, long *) {
     if (eventType == "xcb_generic_event_t") {
-      xcb_generic_event_t *ev = static_cast<xcb_generic_event_t *>(message);
+      auto *ev = static_cast<xcb_generic_event_t *>(message);
 
       int type = (ev->response_type & 0x7f);
 
       if      (type == XCB_PROPERTY_NOTIFY) {
-        xcb_property_notify_event_t *ev1 = (xcb_property_notify_event_t *) ev;
+        auto *ev1 = reinterpret_cast<xcb_property_notify_event_t *>(ev);
 
         pager_->windowChanged(ev1->window);
 
@@ -48,7 +50,7 @@ class CQWmPagerXcbEventFilter : public QAbstractNativeEventFilter {
         //  pager_->getSupportedAtomName(ev1->atom) << std::endl;
       }
       else if (type == XCB_CONFIGURE_NOTIFY) {
-        xcb_configure_notify_event_t *ev1 = (xcb_configure_notify_event_t *) ev;
+        auto *ev1 = reinterpret_cast<xcb_configure_notify_event_t *>(ev);
 
         pager_->windowChanged(ev1->window);
 
@@ -72,7 +74,7 @@ class CQWmPagerXcbEventFilter : public QAbstractNativeEventFilter {
 
 CQWmPager::
 CQWmPager() :
- QWidget()
+ CQBypassWindow()
 {
   setWindowTitle("WmPager");
 
@@ -84,11 +86,35 @@ CQWmPager() :
 
   //---
 
-  QHBoxLayout *layout = new QHBoxLayout(this);
+  auto *layout = new QVBoxLayout(this);
 
-  QTabWidget *tab = new QTabWidget;
+  auto *toolbar = new QFrame;
 
-  layout->addWidget(tab);
+  layout->addWidget(toolbar);
+
+  auto *tlayout = new QHBoxLayout(toolbar);
+
+  auto *button = new QToolButton;
+
+  button->setText("Desktop");
+  button->setCheckable(true);
+
+  connect(button, SIGNAL(clicked(bool)), this, SLOT(desktopSlot(bool)));
+
+  tlayout->addWidget(button);
+  tlayout->addStretch(1);
+
+  //---
+
+  auto *tabLayout = new QHBoxLayout;
+
+  layout->addLayout(tabLayout);
+
+  //---
+
+  auto *tab = new QTabWidget;
+
+  tabLayout->addWidget(tab);
 
   canvas_ = new CQWmPagerCanvas(this);
   tree_   = new CQWmPagerTree(this);
@@ -100,15 +126,18 @@ CQWmPager() :
 
   std::vector<CXAtom> atoms;
 
-  const CXAtom &supportedAtom = CXMachineInst->getAtom("_NET_SUPPORTED");
+  const auto &supportedAtom = CXMachineInst->getAtom("_NET_SUPPORTED");
 
-  Window root = QX11Info::appRootWindow();
+  auto root = QX11Info::appRootWindow();
 
   CXMachineInst->getAtomArrayProperty(root, supportedAtom, atoms);
 
   for (uint i = 0; i < atoms.size(); ++i) {
-    supportedNames_[atoms[i].getXAtom()] = atoms[i].getName ();
-    supportedIds_  [atoms[i].getName ()] = atoms[i].getXAtom();
+    auto id = uint(atoms[i].getXAtom());
+
+    supportedNames_[id] = atoms[i].getName();
+
+    supportedIds_[atoms[i].getName()] = id;
   }
 
   //---
@@ -146,14 +175,14 @@ void
 CQWmPager::
 updateWindows()
 {
-  const CXAtom &clientListAtom = CXMachineInst->getAtom("_NET_CLIENT_LIST_STACKING");
-  const CXAtom &stateAtom      = CXMachineInst->getAtom("_NET_WM_STATE");
-  const CXAtom &skipAtom       = CXMachineInst->getAtom("_NET_WM_STATE_SKIP_PAGER");
-  const CXAtom &hiddenAtom     = CXMachineInst->getAtom("_NET_WM_STATE_HIDDEN");
-  const CXAtom &dockAtom       = CXMachineInst->getAtom("_NET_WM_WINDOW_TYPE_DOCK");
-  const CXAtom &activeAtom     = CXMachineInst->getAtom("_NET_ACTIVE_WINDOW");
+  const auto &clientListAtom = CXMachineInst->getAtom("_NET_CLIENT_LIST_STACKING");
+  const auto &stateAtom      = CXMachineInst->getAtom("_NET_WM_STATE");
+  const auto &skipAtom       = CXMachineInst->getAtom("_NET_WM_STATE_SKIP_PAGER");
+  const auto &hiddenAtom     = CXMachineInst->getAtom("_NET_WM_STATE_HIDDEN");
+  const auto &dockAtom       = CXMachineInst->getAtom("_NET_WM_WINDOW_TYPE_DOCK");
+  const auto &activeAtom     = CXMachineInst->getAtom("_NET_ACTIVE_WINDOW");
 
-  Window root = QX11Info::appRootWindow();
+  auto root = QX11Info::appRootWindow();
 
   std::vector<Window> windows;
 
@@ -168,7 +197,7 @@ updateWindows()
   windows_.clear();
 
   for (uint i = 0; i < windows.size(); ++i) {
-    Window xwin = windows[i];
+    auto xwin = windows[i];
 
     //---
 
@@ -217,7 +246,7 @@ updateWindows()
 
     QRect r(x1, y1, width1, height1);
 
-    windows_.push_back(WmWindow(xwin, r, name, active));
+    windows_.push_back(WmWindow(uint(xwin), r, name, active));
   }
 
   //---
@@ -249,13 +278,20 @@ windowChanged(uint xwin)
     updateWindows();
 }
 
+void
+CQWmPager::
+desktopSlot(bool b)
+{
+  CXMachineInst->sendShowDesktop(b);
+}
+
 //------
 
 CQWmPagerCanvas::
 CQWmPagerCanvas(CQWmPager *pager) :
  pager_(pager)
 {
-  Window root = QX11Info::appRootWindow();
+  auto root = QX11Info::appRootWindow();
 
   int root_x, root_y;
 
@@ -272,7 +308,7 @@ paintEvent(QPaintEvent *)
   width_  = width ();
   height_ = height();
 
-  QFont f = font();
+  auto f = font();
 
   f.setPointSizeF(0.6*f.pointSizeF());
 
@@ -286,12 +322,14 @@ paintEvent(QPaintEvent *)
     int x2 = window.rect.right ();
     int y2 = window.rect.bottom();
 
-    QPoint p1 = mapPoint(QPoint(x1, y1));
-    QPoint p2 = mapPoint(QPoint(x2, y2));
+    auto p1 = mapPoint(QPoint(x1, y1));
+    auto p2 = mapPoint(QPoint(x2, y2));
 
     QRect r(p1.x(), p1.y(), p2.x() - p1.x() + 1, p2.y() - p1.y() + 1);
 
-    p.fillRect(r, Qt::black);
+    QColor c(0, 0, 0, 128);
+
+    p.fillRect(r, c);
 
     p.setPen(Qt::white);
 
@@ -311,7 +349,11 @@ void
 CQWmPagerCanvas::
 mousePressEvent(QMouseEvent *me)
 {
-  const CQWmPager::Windows &windows = pager_->windows();
+  if (me->button() == Qt::RightButton) {
+    return;
+  }
+
+  const auto &windows = pager_->windows();
 
   if (windows.empty())
     return;
@@ -322,7 +364,10 @@ mousePressEvent(QMouseEvent *me)
 
   pressWin_ = 0;
 
-  for (int i = windows.size() - 1; i >= 0; --i) {
+  for (size_t i = size_t(windows.size() - 1); i >= 0; --i) {
+    if (windows[i].xwin == topWin_)
+      continue;
+
     if (windows[i].rect.contains(pressPos_)) {
       pressWin_ = windows[i].xwin;
       break;
@@ -332,29 +377,46 @@ mousePressEvent(QMouseEvent *me)
   if (! pressWin_ || pressWin_ == topWin_)
     return;
 
-  CXMachineInst->sendActivate(pressWin_);
+  if (me->button() == Qt::MidButton) {
+    std::cerr << "Close: " << pressWin_ << "\n";
 
-  CXMachineInst->sendRestackWindow(pressWin_, topWin_);
+    CXMachineInst->sendClose(pressWin_);
+  }
+  else {
+    std::cerr << "Activate: " << pressWin_ << "\n";
+
+    CXMachineInst->sendActivate(pressWin_);
+
+    //CXMachineInst->sendRestackWindow(pressWin_, topWin_);
+
+    //QPoint gp = me->globalPos();
+
+    //CXMachineInst->sendDragWindowBy(pressWin_, gp.x(), gp.y(), 1, _NET_WM_MOVERESIZE_MOVE);
+
+    //CXMachineInst->sendWmState(pressWin_, _NET_WM_STATE_ADD, "_NET_WM_ACTION_ABOVE");
+
+    CXMachineInst->flushEvents(/*sync*/true);
+  }
 }
 
 void
 CQWmPagerCanvas::
 mouseMoveEvent(QMouseEvent *me)
 {
-  const CQWmPager::Windows &windows = pager_->windows();
+  const auto &windows = pager_->windows();
 
   if (windows.empty())
     return;
 
-  QPoint p = unmapPoint(me->pos());
+  auto p = unmapPoint(me->pos());
 
-  int dx = p.x() - pressPos_.x();
-  int dy = p.y() - pressPos_.y();
+  //int dx = p.x() - pressPos_.x();
+  //int dy = p.y() - pressPos_.y();
 
   if (! pressWin_ || pressWin_ == topWin_)
     return;
 
-  CXMachineInst->sendMoveWindowBy(pressWin_, dx, dy);
+  //CXMachineInst->sendMoveWindowBy(pressWin_, dx, dy);
 
   pressPos_ = p;
 
@@ -375,7 +437,7 @@ mapPoint(const QPoint &p) const
   double x = width_ *((1.0*p.x())/rootWidth_ );
   double y = height_*((1.0*p.y())/rootHeight_);
 
-  return QPoint(x, y);
+  return QPoint(int(x), int(y));
 }
 
 QPoint
@@ -386,7 +448,7 @@ unmapPoint(const QPoint &p) const
   double x = rootWidth_ *((1.0*p.x())/width_ );
   double y = rootHeight_*((1.0*p.y())/height_);
 
-  return QPoint(x, y);
+  return QPoint(int(x), int(y));
 }
 
 //------
@@ -404,7 +466,7 @@ reload()
   clear();
 
   for (auto window : pager_->windows()) {
-    QTreeWidgetItem *item = new QTreeWidgetItem(QStringList() << window.name.c_str());
+    auto *item = new QTreeWidgetItem(QStringList() << window.name.c_str());
 
     addTopLevelItem(item);
   }

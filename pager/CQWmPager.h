@@ -1,6 +1,7 @@
 #ifndef CQWmPager_H
 #define CQWmPager_H
 
+#include <CQBypassWindow.h>
 #include <QTreeWidget>
 
 class CQWmPagerCanvas;
@@ -11,13 +12,15 @@ struct WmWindow {
    xwin(w), rect(r), name(n), active(a) {
   }
 
-  uint        xwin { 0 };
+  uint        xwin   { 0 };
   QRect       rect;
   std::string name;
   bool        active { false };
 };
 
-class CQWmPager : public QWidget {
+class CQWmPager : public CQBypassWindow {
+  Q_OBJECT
+
  public:
   typedef std::vector<WmWindow> Windows;
 
@@ -33,9 +36,14 @@ class CQWmPager : public QWidget {
 
   void updateWindows();
 
+  QSize sizeHint() const { return QSize(512, 512); }
+
+ private slots:
+  void desktopSlot(bool b);
+
  private:
-  typedef std::map<std::string,uint> SupportAtomIds;
-  typedef std::map<uint,std::string> SupportAtomNames;
+  using SupportAtomIds   = std::map<std::string, uint>;
+  using SupportAtomNames = std::map<uint, std::string>;
 
   CQWmPagerCanvas* canvas_;
   CQWmPagerTree*   tree_;
@@ -45,6 +53,8 @@ class CQWmPager : public QWidget {
 };
 
 class CQWmPagerCanvas : public QWidget {
+  Q_OBJECT
+
  public:
   CQWmPagerCanvas(CQWmPager *pager);
 
@@ -58,24 +68,26 @@ class CQWmPagerCanvas : public QWidget {
   QPoint unmapPoint(const QPoint &p) const;
 
  private:
-  CQWmPager *pager_  { 0 };
-  int        rootWidth_ { 0 };
+  CQWmPager *pager_      { nullptr };
+  int        rootWidth_  { 0 };
   int        rootHeight_ { 0 };
-  int        width_  { 0 };
-  int        height_ { 0 };
-  uint       pressWin_ { 0 };
+  int        width_      { 0 };
+  int        height_     { 0 };
+  uint       pressWin_   { 0 };
   QPoint     pressPos_;
-  uint       topWin_ { 0 };
+  uint       topWin_     { 0 };
 };
 
 class CQWmPagerTree : public QTreeWidget {
+  Q_OBJECT
+
  public:
   CQWmPagerTree(CQWmPager *pager);
 
   void reload();
 
  private:
-  CQWmPager *pager_ { 0 };
+  CQWmPager *pager_ { nullptr };
 };
 
 #endif
