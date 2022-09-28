@@ -28,7 +28,7 @@ isKeyPressEvent(XKeyPressedEvent *event, int key)
 {
   char key_string[2];
 
-  key_string[0] = key;
+  key_string[0] = char(key);
   key_string[1] = '\0';
 
   KeySym keysym = XStringToKeysym(key_string);

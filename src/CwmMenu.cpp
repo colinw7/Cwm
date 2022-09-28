@@ -62,7 +62,7 @@ CwmMenuKeyData *
 CwmMenuKeyData::
 getKeyData(XKeyPressedEvent *event)
 {
-  XEvent *event1 = (XEvent *) event;
+  auto *event1 = reinterpret_cast<XEvent *>(event);
 
   for (int i = 0; menu_key_data_[i].key_ != ""; i++) {
     menu_key_data_[i].init();
@@ -181,18 +181,18 @@ setClientData(CwmScreen *screen, CwmWMWindow *window, CwmDeskIcon *icon)
     (*pentry1)->setClientData(screen, window, icon);
 }
 
-int
+uint
 CwmMenuDef::
 getSize()
 {
-  return entries_.size();
+  return uint(entries_.size());
 }
 
 CwmMenuEntry *
 CwmMenuDef::
-getEntry(int i)
+getEntry(uint i)
 {
-  if (i < 0 || i >= (int) entries_.size())
+  if (i < 0 || i >= uint(entries_.size()))
     throw "Invalid Menu Def Index";
 
   return entries_[i];
@@ -226,9 +226,9 @@ CwmMenuEntry(const CwmMenuEntry &entry)
   selected_    = false;
 
   if (type_ == CWM_MENU_CASCADE_TYPE) {
-    CwmMenuDef *menu_def = (CwmMenuDef *) entry.data1_;
+    auto *menu_def = static_cast<CwmMenuDef *>(entry.data1_);
 
-    data1_ = (CwmData ) new CwmMenuDef(*menu_def);
+    data1_ = static_cast<CwmData >(new CwmMenuDef(*menu_def));
   }
 }
 
@@ -236,7 +236,7 @@ CwmMenuEntry::
 ~CwmMenuEntry()
 {
   if (type_ == CWM_MENU_CASCADE_TYPE) {
-    CwmMenuDef *menu_def = (CwmMenuDef *) data1_;
+    auto *menu_def = static_cast<CwmMenuDef *>(data1_);
 
     delete menu_def;
   }
@@ -247,21 +247,21 @@ CwmMenuEntry::
 setClientData(CwmScreen *screen, CwmWMWindow *window, CwmDeskIcon *icon)
 {
   if      (type_ == CWM_MENU_BUTTON_TYPE) {
-    if (proc_ == (CwmMenuProc) CwmFunctionDef::processProc) {
-      CwmFunctionDef *function = (CwmFunctionDef *) data1_;
+    if (proc_ == reinterpret_cast<CwmMenuProc>(CwmFunctionDef::processProc)) {
+      auto *function = static_cast<CwmFunctionDef *>(data1_);
 
       function->setObjects(screen, window, icon);
     }
   }
   else if (type_ == CWM_MENU_TOGGLE_TYPE) {
-    if (proc_ == (CwmMenuProc) CwmFunctionDef::processProc) {
-      CwmFunctionDef *function = (CwmFunctionDef *) data1_;
+    if (proc_ == reinterpret_cast<CwmMenuProc>(CwmFunctionDef::processProc)) {
+      auto *function = static_cast<CwmFunctionDef *>(data1_);
 
       function->setObjects(screen, window, icon);
     }
   }
   else if (type_ == CWM_MENU_CASCADE_TYPE) {
-    CwmMenuDef *menu_def = (CwmMenuDef *) data1_;
+    auto *menu_def = static_cast<CwmMenuDef *>(data1_);
 
     menu_def->setClientData(screen, window, icon);
   }
@@ -355,7 +355,7 @@ processWindowMenu1(CwmScreen &screen, CwmWindow *xwindow, CwmMenuDef *menu_def,
   if (! xwindow->grab(event_mask, CWM_CURSOR_SELECT))
     return;
 
-  CwmMenu *menu = new CwmMenu(screen, 0, menu_def, x, y, halign, valign);
+  auto *menu = new CwmMenu(screen, 0, menu_def, x, y, halign, valign);
 
   menu->map();
 
@@ -402,7 +402,7 @@ processWindowMenu1(CwmScreen &screen, CwmWindow *xwindow, CwmMenuDef *menu_def,
 
     while (menu->isActive()) {
       while (button_down_ && menu->isActive() &&
-             menu->current_ != 0 && menu->current_->isCascadeMenu())
+             menu->current_ && menu->current_->isCascadeMenu())
         menu->current_->processCascadeMenu(menu);
 
       if (! menu->isActive())
@@ -419,7 +419,7 @@ processWindowMenu1(CwmScreen &screen, CwmWindow *xwindow, CwmMenuDef *menu_def,
 
         menu_item = menu->getMenuItemForWindow(event_window);
 
-        if (menu->current_ != 0)
+        if (menu->current_)
           menu->current_->leave();
 
         if (menu_item != 0)
@@ -460,7 +460,7 @@ processWindowMenu1(CwmScreen &screen, CwmWindow *xwindow, CwmMenuDef *menu_def,
         }
       }
       else if (event->type == KeyPress) {
-        XKeyPressedEvent *event1 = (XKeyPressedEvent *) event;
+        XKeyPressedEvent *event1 = reinterpret_cast<XKeyPressedEvent *>(event);
 
         if (CwmXEventInst->isEscapeKeyEvent(event1))
           menu->complete();
@@ -487,7 +487,7 @@ processWindowMenu1(CwmScreen &screen, CwmWindow *xwindow, CwmMenuDef *menu_def,
         }
       }
       else if (event->type == KeyRelease) {
-        XKeyReleasedEvent *event1 = (XKeyReleasedEvent *) event;
+        XKeyReleasedEvent *event1 = reinterpret_cast<XKeyReleasedEvent *>(event);
 
         if (CwmXEventInst->isEscapeKeyEvent(event1))
           menu->complete();
@@ -541,13 +541,13 @@ processWindowMenu1(CwmScreen &screen, CwmWindow *xwindow, CwmMenuDef *menu_def,
         selected_item_ = 0;
       }
       else if (event->type == KeyPress) {
-        XKeyPressedEvent *event1 = (XKeyPressedEvent *) event;
+        XKeyPressedEvent *event1 = reinterpret_cast<XKeyPressedEvent *>(event);
 
         if (CwmXEventInst->isEscapeKeyEvent(event1))
           menu->complete();
       }
       else if (event->type == KeyRelease) {
-        XKeyReleasedEvent *event1 = (XKeyReleasedEvent *) event;
+        XKeyReleasedEvent *event1 = reinterpret_cast<XKeyReleasedEvent *>(event);
 
         if (CwmXEventInst->isEscapeKeyEvent(event1))
           menu->complete();
@@ -564,7 +564,7 @@ processWindowMenu1(CwmScreen &screen, CwmWindow *xwindow, CwmMenuDef *menu_def,
       }
 
       while (menu->isActive() &&
-             menu->current_ != 0 && menu->current_->isCascadeMenu())
+             menu->current_ && menu->current_->isCascadeMenu())
         menu->current_->processCascadeMenu(menu);
     }
   }
@@ -607,7 +607,7 @@ void
 CwmMenu::
 startCascadeProc(CwmMenu *menu)
 {
-  if (menu->current_ != 0 && menu->current_->isCascadeMenu())
+  if (menu->current_ && menu->current_->isCascadeMenu())
     menu->current_->processCascadeMenu(menu);
   else
     menu->nextItem();
@@ -670,9 +670,9 @@ CwmMenu(CwmScreen &screen, CwmMenu *parent, CwmMenuDef *menu_def1,
   fg = CwmResourceDataInst->getMenuTitleForeground(screen);
   bg = CwmResourceDataInst->getMenuTitleBackground(screen);
 
-  CwmColor *title_color = screen.getColor(fg, bg);
+  auto *title_color = screen.getColor(fg, bg);
 
-  CwmFont *title_font = CwmResourceDataInst->getMenuTitleFont(screen);
+  auto *title_font = CwmResourceDataInst->getMenuTitleFont(screen);
 
   title_graphics_ = new CwmGraphics(screen, title_font, title_color);
 
@@ -684,11 +684,11 @@ CwmMenu(CwmScreen &screen, CwmMenu *parent, CwmMenuDef *menu_def1,
 
   //------
 
-  num_items_ = menu_def1->getSize();
+  num_items_ = int(menu_def1->getSize());
 
-  items_ = new CwmMenuItem * [num_items_];
+  items_ = new CwmMenuItem * [uint(num_items_)];
 
-  current_ = 0;
+  current_ = nullptr;
 
   x_          = x1;
   y_          = y1;
@@ -697,14 +697,14 @@ CwmMenu(CwmScreen &screen, CwmMenu *parent, CwmMenuDef *menu_def1,
   item_width_ = 0;
 
   for (int i = 0; i < num_items_; i++) {
-    CwmMenuItemType type = menu_def1->getEntry(i)->getType();
+    CwmMenuItemType type = menu_def1->getEntry(uint(i))->getType();
 
     if (type == CWM_MENU_TITLE_TYPE)
       items_[i] = new CwmMenuItem(this, title_graphics_, stipple_graphics_,
-                                  menu_def1->getEntry(i));
+                                  menu_def1->getEntry(uint(i)));
     else
       items_[i] = new CwmMenuItem(this, graphics_, stipple_graphics_,
-                                  menu_def1->getEntry(i));
+                                  menu_def1->getEntry(uint(i)));
 
     width_      = std::max(     width_, items_[i]->getWidth    ());
     item_width_ = std::max(item_width_, items_[i]->getItemWidth());
@@ -817,7 +817,7 @@ nextItem()
 {
   int i;
 
-  if (current_ != 0) {
+  if (current_) {
     for (i = 0; i < num_items_; i++)
       if (items_[i] == current_)
         break;
@@ -837,7 +837,7 @@ nextItem()
   if (i >= num_items_)
     return;
 
-  if (current_ != 0)
+  if (current_)
     current_->drawInactive();
 
   current_ = items_[i];
@@ -851,7 +851,7 @@ prevItem()
 {
   int i;
 
-  if (current_ != 0) {
+  if (current_) {
     for (i = 0; i < num_items_; i++)
       if (items_[i] == current_)
         break;
@@ -871,7 +871,7 @@ prevItem()
   if (i < 0)
     return;
 
-  if (current_ != 0)
+  if (current_)
     current_->drawInactive();
 
   current_ = items_[i];
@@ -1101,14 +1101,14 @@ void
 CwmMenuItem::
 processCascadeMenu(CwmMenu *parent)
 {
-  CwmMenuDef *menu_def = (CwmMenuDef *) data1_;
+  auto *menu_def = static_cast<CwmMenuDef *>(data1_);
 
   int root_x, root_y;
 
   xwindow_->coordsToRoot(2*parent->getWidth()/3, height_/2, &root_x, &root_y);
 
-  CwmMenu *menu = new CwmMenu(parent->getScreen(), parent, menu_def, root_x, root_y,
-                              CHALIGN_TYPE_LEFT, CVALIGN_TYPE_TOP);
+  auto *menu = new CwmMenu(parent->getScreen(), parent, menu_def, root_x, root_y,
+                           CHALIGN_TYPE_LEFT, CVALIGN_TYPE_TOP);
 
   menu->map();
 
@@ -1206,7 +1206,7 @@ processCascadeMenu(CwmMenu *parent)
         }
       }
       else if (event->type == KeyPress) {
-        XKeyPressedEvent *event1 = (XKeyPressedEvent *) event;
+        XKeyPressedEvent *event1 = reinterpret_cast<XKeyPressedEvent *>(event);
 
         CwmMenuKeyData *key_data = CwmMenuKeyData::getKeyData(event1);
 
@@ -1419,7 +1419,7 @@ isAcceleratorEvent(XKeyPressedEvent *event)
   if (! accelerator_event_)
     return false;
 
-  return accelerator_event_->matchEvent((XEvent *) event);
+  return accelerator_event_->matchEvent(reinterpret_cast<XEvent *>(event));
 }
 
 void
@@ -1492,13 +1492,13 @@ drawText(CwmGraphics *graphics1)
     x += 14;
   }
 
-  int i;
+  uint i;
 
-  for (i = 0; i < (int) text_.size(); i++)
+  for (i = 0; i < uint(text_.size()); i++)
     if (text_[i] == mnemonic_)
       break;
 
-  if (i < (int) text_.size()) {
+  if (i < uint(text_.size())) {
     int x1 = x;
 
     std::string text1 = text_.substr(0, i);
@@ -1598,8 +1598,8 @@ CwmNamedMenu *
 CwmNamedMenuMgr::
 lookup(const std::string &name)
 {
-  NamedMenuList::const_iterator pnamed_menu1 = named_menus_.begin();
-  NamedMenuList::const_iterator pnamed_menu2 = named_menus_.end  ();
+  auto pnamed_menu1 = named_menus_.begin();
+  auto pnamed_menu2 = named_menus_.end  ();
 
   for ( ; pnamed_menu1 != pnamed_menu2; ++pnamed_menu1)
     if (CStrUtil::casecmp((*pnamed_menu1)->getName(), name) == 0)
@@ -1630,12 +1630,13 @@ createDefaultRootMenu()
     menu_def->addTitle   ("Root Menu" );
     menu_def->addSplitter("----------");
     menu_def->addButton  ("", "New Window", '\0', "",
-                          (CwmMenuProc) &CwmScreenMenu::runXCommandProc, (CwmData) "xterm &");
+                          reinterpret_cast<CwmMenuProc>(&CwmScreenMenu::runXCommandProc),
+                          static_cast<CwmData>(const_cast<char *>("xterm &")));
     menu_def->addButton  ("", "Restart"   , '\0', "",
-                          (CwmMenuProc) &CwmScreenMenu::restartCwmProc, 0);
+                          reinterpret_cast<CwmMenuProc>(&CwmScreenMenu::restartCwmProc), nullptr);
     menu_def->addSplitter("----------");
     menu_def->addButton  ("", "Quit"      , '\0', "",
-                          (CwmMenuProc) &CwmScreenMenu::quitCwmProc, 0);
+                          reinterpret_cast<CwmMenuProc>(&CwmScreenMenu::quitCwmProc), nullptr);
   }
 
   return menu_def;

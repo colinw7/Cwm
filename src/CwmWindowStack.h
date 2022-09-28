@@ -17,12 +17,12 @@ class CwmWindowGroup {
 
   bool contains(CwmWMWindow *window);
 
-  int size() const;
+  uint size() const;
 
   CwmWMWindow &getTopWindow   () const;
   CwmWMWindow &getBottomWindow() const;
 
-  CwmWMWindow &operator[](int i) const;
+  CwmWMWindow &operator[](uint i) const;
 
  private:
   void stackChildren(CwmWMWindow *window);
@@ -51,12 +51,12 @@ class CwmCirculateWindowStack {
 
   void restack();
 
-  int size() const;
+  uint size() const;
 
   CwmWindowGroup &getTopGroup   () const;
   CwmWindowGroup &getBottomGroup() const;
 
-  CwmWindowGroup &operator[](int i) const;
+  CwmWindowGroup &operator[](uint i) const;
 
   bool isTop(CwmWMWindow *window);
 
@@ -73,12 +73,12 @@ class CwmScreenWindowGroups {
   CwmScreenWindowGroups(CwmScreen &screen);
  ~CwmScreenWindowGroups();
 
-  int size() const;
+  uint size() const;
 
   CwmWindowGroup &getTopGroup   () const;
   CwmWindowGroup &getBottomGroup() const;
 
-  CwmWindowGroup &operator[](int i) const;
+  CwmWindowGroup &operator[](uint i) const;
 
  private:
   typedef std::vector<CwmWindowGroup *> WindowGroupList;

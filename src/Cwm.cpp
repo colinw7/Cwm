@@ -80,7 +80,7 @@ Cwm::
 saveArgs(int argc, char **argv)
 {
   argc_ = argc;
-  argv_ = new char * [argc + 3];
+  argv_ = new char * [uint(argc + 3)];
 
   int i;
 
@@ -129,10 +129,10 @@ void
 Cwm::
 setSignals()
 {
-  COSSignal::addSignalHandler(SIGHUP , (CwmSigHandler) &Cwm::signalHandler);
-  COSSignal::addSignalHandler(SIGINT , (CwmSigHandler) &Cwm::signalHandler);
-  COSSignal::addSignalHandler(SIGTERM, (CwmSigHandler) &Cwm::signalHandler);
-  COSSignal::addSignalHandler(SIGQUIT, (CwmSigHandler) &Cwm::signalHandler);
+  COSSignal::addSignalHandler(SIGHUP , reinterpret_cast<CwmSigHandler>(&Cwm::signalHandler));
+  COSSignal::addSignalHandler(SIGINT , reinterpret_cast<CwmSigHandler>(&Cwm::signalHandler));
+  COSSignal::addSignalHandler(SIGTERM, reinterpret_cast<CwmSigHandler>(&Cwm::signalHandler));
+  COSSignal::addSignalHandler(SIGQUIT, reinterpret_cast<CwmSigHandler>(&Cwm::signalHandler));
 }
 
 void
@@ -154,7 +154,7 @@ processWindows()
   int num_screens = CwmMachineInst->getNumScreens();
 
   for (int i = 0; i < num_screens; ++i) {
-    CwmScreen &screen = CwmMachineInst->getScreen(i);
+    auto &screen = CwmMachineInst->getScreen(i);
 
     processScreenWindows(screen);
   }
@@ -200,7 +200,7 @@ void
 Cwm::
 resetIconWindows(int i, Window *children, int num_children)
 {
-  Window icon_window = CwmMachineInst->getWMIconWindowHint(children[i]);
+  auto icon_window = CwmMachineInst->getWMIconWindowHint(children[i]);
 
   if (icon_window == None)
     return;
@@ -217,9 +217,9 @@ drawRootImages()
   int num_screens = CwmMachineInst->getNumScreens();
 
   for (int i = 0; i < num_screens; ++i) {
-    CwmScreen &screen = CwmMachineInst->getScreen(i);
+    auto &screen = CwmMachineInst->getScreen(i);
 
-    CwmDesk *desk = screen.getCurrentDesk();
+    auto *desk = screen.getCurrentDesk();
 
     desk->drawRootImage();
   }
@@ -232,7 +232,7 @@ addCustomIcons()
   int num_screens = CwmMachineInst->getNumScreens();
 
   for (int i = 0; i < num_screens; ++i) {
-    CwmScreen &screen = CwmMachineInst->getScreen(i);
+    auto &screen = CwmMachineInst->getScreen(i);
 
     CwmCustomIconMgrInst->addCustomIcons(screen);
   }
@@ -244,7 +244,7 @@ initClickToFocus()
 {
   CwmMachineInst->resetInputFocus();
 
-  CwmScreen &screen = CwmMachineInst->getScreen(0);
+  auto &screen = CwmMachineInst->getScreen(0);
 
   screen.getRoot()->warpPointer(0, 0);
 }
@@ -258,7 +258,7 @@ processScreenStartup()
   int num_screens = CwmMachineInst->getNumScreens();
 
   for (int i = 0; i < num_screens; ++i) {
-    CwmScreen &screen = CwmMachineInst->getScreen(i);
+    auto &screen = CwmMachineInst->getScreen(i);
 
     CwmResourceDataInst->loadStartupCommands(screen);
   }
@@ -275,7 +275,7 @@ printScreenWindows(CwmScreen &screen)
     return;
 
   for (int i = 0; i < num_children; ++i)
-    CwmMachineInst->logf("Window %x\n", (int) children[i]);
+    CwmMachineInst->logf("Window %x\n", int(children[i]));
 
   if (children != 0)
     XFree(children);
@@ -289,7 +289,7 @@ restart(CwmScreen &, const std::string &program)
     if (root_image_ != "") {
       argv_[argc_++] = strdup("--root");
       argv_[argc_++] = strdup(root_image_.c_str());
-      argv_[argc_++] = 0;
+      argv_[argc_++] = nullptr;
     }
 
     cleanup();
@@ -303,10 +303,10 @@ restart(CwmScreen &, const std::string &program)
 
     int i;
 
-    for (i = 0; i < words.size(); ++i)
-      words1[i] = (char *) words[i].getWord().c_str();
+    for (i = 0; i < int(words.size()); ++i)
+      words1[i] = const_cast<char *>(words[i].getWord().c_str());
 
-    words1[i] = 0;
+    words1[uint(i)] = nullptr;
 
     cleanup();
 

@@ -28,10 +28,10 @@ void
 CwmDeskMgr::
 changeDesk(int desk_num)
 {
-  if (desk_num < 0 || desk_num >= (int) desks_.size())
+  if (desk_num < 0 || desk_num >= int(desks_.size()))
     return;
 
-  changeDesk(desks_[desk_num]);
+  changeDesk(desks_[uint(desk_num)]);
 }
 
 void
@@ -67,7 +67,7 @@ processMenu()
 {
   CwmMenuDef *menu_def = getMenuDef();
 
-  for (int i = 0; i < (int) desks_.size(); i++) {
+  for (uint i = 0; i < uint(desks_.size()); i++) {
     CwmMenuEntry *entry = menu_def->getEntry(i + 2);
 
     entry->setSelected(desks_[i] == current_desk_);
@@ -88,14 +88,14 @@ getMenuDef()
   menu_def_->addTitle   ("Desk");
   menu_def_->addSplitter("----");
 
-  for (int i = 0; i < (int) desks_.size(); i++) {
-    std::string desk_name = desks_[i]->getName();
-    char   mnemonic  = desks_[i]->getMnemonic();
+  for (uint i = 0; i < uint(desks_.size()); i++) {
+    auto desk_name = desks_[i]->getName();
+    auto mnemonic  = desks_[i]->getMnemonic();
 
-    menu_def_->addToggle("",
-                         desk_name, mnemonic, "",
-                         (CwmMenuProc) CwmDeskMgr::moveToDesk,
-                         (CwmData) this, (CwmData) desks_[i]);
+    menu_def_->addToggle("", desk_name, mnemonic, "",
+                         reinterpret_cast<CwmMenuProc>(CwmDeskMgr::moveToDesk),
+                         static_cast<CwmData>(this),
+                         static_cast<CwmData>(desks_[i]));
   }
 
   return menu_def_;
@@ -124,21 +124,21 @@ CwmDesk *
 CwmDeskMgr::
 getDesk(int num)
 {
-  if (num < 0 || num >= (int) desks_.size()) {
+  if (num < 0 || num >= int(desks_.size())) {
     CwmMachineInst->logf("Invalid Desk Number %d\n", num);
     return 0;
   }
 
-  return desks_[num];
+  return desks_[uint(num)];
 }
 
 CwmDesk *
 CwmDeskMgr::
 getDesk(CwmWMWindow *window)
 {
-  int num_desks = desks_.size();
+  auto num_desks = desks_.size();
 
-  for (int i = 0; i < num_desks; i++) {
+  for (uint i = 0; i < num_desks; i++) {
     CwmDesk *desk = desks_[i];
 
     CwmDesk::WMWindowList windows = desk->getWindows();
@@ -313,9 +313,9 @@ void
 CwmDeskMgr::
 enable()
 {
-  int num_desks = desks_.size();
+  auto num_desks = desks_.size();
 
-  for (int i = 0; i < num_desks; i++)
+  for (uint i = 0; i < num_desks; i++)
     desks_[i]->enable();
 }
 
@@ -323,9 +323,9 @@ void
 CwmDeskMgr::
 disable()
 {
-  int num_desks = desks_.size();
+  auto num_desks = desks_.size();
 
-  for (int i = 0; i < num_desks; i++)
+  for (uint i = 0; i < num_desks; i++)
     desks_[i]->disable();
 }
 

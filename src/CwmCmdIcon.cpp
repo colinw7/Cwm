@@ -127,7 +127,8 @@ CwmCmdIcon(CwmScreen &screen, CwmCustomIcon &icon_def) :
 
   //------
 
-  xwindow_->addCallback(CWM_CALLBACK_DOUBLE_CLICK_1, &CwmCmdIcon::invokeProc, (CwmData) this);
+  xwindow_->addCallback(CWM_CALLBACK_DOUBLE_CLICK_1, &CwmCmdIcon::invokeProc,
+                        static_cast<CwmData>(this));
 
   //------
 
@@ -251,7 +252,7 @@ void
 CwmCmdIcon::
 invokeProc(CwmWindow *, CwmData data, CwmData)
 {
-  CwmCmdIcon *icon = (CwmCmdIcon *) data;
+  auto *icon = static_cast<CwmCmdIcon *>(data);
 
   icon->invoke();
 }

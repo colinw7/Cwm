@@ -46,9 +46,9 @@ parseShowFeedback(const std::string &str)
 {
   int feedback = CWM_FEEDBACK_NONE;
 
-  CStrWords words = CStrUtil::toWords(str, 0);
+  auto words = CStrUtil::toWords(str, 0);
 
-  for (int i = 0; i < words.size(); i++) {
+  for (int i = 0; i < int(words.size()); i++) {
     std::string word = words[i].getWord();
 
     if (i == 0 && words[i].getWord()[0] == '-')
@@ -85,7 +85,7 @@ parseShowFeedback(const std::string &str)
       feedback &= ~flag;
   }
 
-  return (CwmFeedbackType) feedback;
+  return CwmFeedbackType(feedback);
 }
 
 CwmIconDecoration
@@ -96,7 +96,7 @@ parseIconDecoration(const std::string &str)
 
   CStrWords words = CStrUtil::toWords(str, 0);
 
-  for (int i = 0; i < words.size(); i++) {
+  for (int i = 0; i < int(words.size()); i++) {
     if      (CStrUtil::casecmp(words[i].getWord(), "label") == 0)
       decoration |= CWM_ICON_DECORATION_LABEL;
     else if (CStrUtil::casecmp(words[i].getWord(), "image") == 0)
@@ -116,7 +116,7 @@ parseIconDecoration(const std::string &str)
   if (! (decoration & CWM_ICON_DECORATION_IMAGE))
     decoration &= ~CWM_ICON_DECORATION_CLIP_LABEL;
 
-  return (CwmIconDecoration) decoration;
+  return CwmIconDecoration(decoration);
 }
 
 void
@@ -147,7 +147,7 @@ parseFeedbackGeometry(const std::string &str, CHAlignType *halign, CVAlignType *
     if (! CStrUtil::isInteger(word))
       return;
 
-    *x_offset = CStrUtil::toInteger(word);
+    *x_offset = int(CStrUtil::toInteger(word));
   }
 
   word = words.getWord(1).getWord();
@@ -163,7 +163,7 @@ parseFeedbackGeometry(const std::string &str, CHAlignType *halign, CVAlignType *
     if (! CStrUtil::isInteger(word))
       return;
 
-    *y_offset = CStrUtil::toInteger(word);
+    *y_offset = int(CStrUtil::toInteger(word));
   }
 }
 
@@ -370,7 +370,7 @@ getIconLabelWidth()
   std::string str = getResource("icon/labelWidth", "9999");
 
   if (CStrUtil::isInteger(str))
-    return CStrUtil::toInteger(str);
+    return int(CStrUtil::toInteger(str));
 
   return 9999;
 }
@@ -745,7 +745,7 @@ getAutoRaiseDelay()
   std::string str = getResource("window/autoRaiseDelay", "500");
 
   if (CStrUtil::isInteger(str))
-    return CStrUtil::toInteger(str);
+    return int(CStrUtil::toInteger(str));
 
   return 500;
 }
@@ -783,7 +783,7 @@ getDoubleClickTime()
   int doubleClickTime = 0;
 
   if (CStrUtil::isInteger(str))
-    doubleClickTime = CStrUtil::toInteger(str);
+    doubleClickTime = int(CStrUtil::toInteger(str));
   else
     doubleClickTime = 0;
 
@@ -824,7 +824,7 @@ getMoveThreshold()
   std::string str = getResource("window/moveThreshold", "4");
 
   if (CStrUtil::isInteger(str))
-    return CStrUtil::toInteger(str);
+    return int(CStrUtil::toInteger(str));
 
   return 4;
 }
@@ -1022,7 +1022,7 @@ getToolBarHeight()
   std::string str = getResource("toolbar/height", "28");
 
   if (CStrUtil::isInteger(str))
-    return CStrUtil::toInteger(str);
+    return int(CStrUtil::toInteger(str));
 
   return 28;
 }
@@ -1034,7 +1034,7 @@ getToolBarIconWidth()
   std::string str = getResource("toolbar/iconWidth", "108");
 
   if (CStrUtil::isInteger(str))
-    return CStrUtil::toInteger(str);
+    return int(CStrUtil::toInteger(str));
 
   return 108;
 }
@@ -1243,7 +1243,7 @@ loadMenu(const std::string &path, const std::string &)
       function_def->setData(new std::string(data));
 
       menu_def->addButton(image, name, (mnemonic.size() > 0 ? mnemonic[0] : '\0'), accelerator,
-                          (CwmMenuProc) CwmFunctionDef::processProc, function_def);
+                          reinterpret_cast<CwmMenuProc>(CwmFunctionDef::processProc), function_def);
     }
     else if (CStrUtil::casecmp(type, "toggle") == 0) {
       std::string name        = getSectionResource(path + "/name", *psection1, "toggle");
@@ -1258,7 +1258,7 @@ loadMenu(const std::string &path, const std::string &)
       function_def->setData(new std::string(data));
 
       menu_def->addToggle(image, name, (mnemonic.size() > 0 ? mnemonic[0] : '\0'), accelerator,
-                          (CwmMenuProc) CwmFunctionDef::processProc, function_def);
+                          reinterpret_cast<CwmMenuProc>(CwmFunctionDef::processProc), function_def);
     }
     else if (CStrUtil::casecmp(type, "cascade") == 0) {
       std::string name  = getSectionResource(path + "/name", *psection1, "cascade");
@@ -1405,30 +1405,30 @@ loadGroups()
       long flags = stringToDecorations(decorations);
 
       CwmCustomHintMgrInst->
-       addCustomHintValue(pattern, CwmNdecorations, CwmTint, (CwmData) flags);
+       addCustomHintValue(pattern, CwmNdecorations, CwmTint, reinterpret_cast<CwmData>(flags));
     }
 
     if (functions != "") {
       long flags = stringToFunctions(functions);
 
       CwmCustomHintMgrInst->
-       addCustomHintValue(pattern, CwmNfunctions, CwmTint, (CwmData) flags);
+       addCustomHintValue(pattern, CwmNfunctions, CwmTint, reinterpret_cast<CwmData>(flags));
     }
 
     if (focusAutoRaise != "")
       CwmCustomHintMgrInst->
        addCustomHintValue(pattern, CwmNfocusAutoRaise, CwmTint,
-                          (CwmData) CStrUtil::toBool(focusAutoRaise));
+                          reinterpret_cast<CwmData>(CStrUtil::toBool(focusAutoRaise)));
 
     if (circulateSkip != "")
       CwmCustomHintMgrInst->
        addCustomHintValue(pattern, CwmNcirculateSkip, CwmTint,
-                          (CwmData) CStrUtil::toBool(circulateSkip));
+                          reinterpret_cast<CwmData>(CStrUtil::toBool(circulateSkip)));
 
     if (toolbarSkip != "")
       CwmCustomHintMgrInst->
        addCustomHintValue(pattern, CwmNtoolbarSkip, CwmTint,
-                          (CwmData) CStrUtil::toBool(toolbarSkip));
+                          reinterpret_cast<CwmData>(CStrUtil::toBool(toolbarSkip)));
 
     loadGroupEvents(pattern, *ppath1 + "/events");
   }
@@ -1470,7 +1470,8 @@ loadGroupEvents(const std::string &pattern, const std::string &path)
     }
 
     CwmWindowEventFunctionMgrInst->
-      addPatternEventFunction(pattern, area1, event1, function1, (CwmData) new std::string(data));
+      addPatternEventFunction(pattern, area1, event1, function1,
+                              static_cast<CwmData>(new std::string(data)));
   }
 }
 
@@ -1568,7 +1569,7 @@ stringToDecorations(const std::string &str)
 
   CStrUtil::addWords(str, words);
 
-  for (int i = 0; i < (int) words.size(); i++) {
+  for (uint i = 0; i < words.size(); i++) {
     std::string word = words[i];
 
     if (i == 0) {
@@ -1628,7 +1629,7 @@ stringToFunctions(const std::string &str)
 
   CStrUtil::addWords(str, words);
 
-  for (int i = 0; i < (int) words.size(); i++) {
+  for (uint i = 0; i < uint(words.size()); i++) {
     std::string word = words[i];
 
     if (i == 0) {

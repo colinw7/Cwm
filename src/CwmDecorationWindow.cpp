@@ -17,7 +17,7 @@ CwmWindowChild(CwmDecoration *decoration, CwmWMWindow *window,
 
   xwindow_->addCallback(CWM_CALLBACK_IDLE,
                         &CwmWindowChild::idleProc,
-                        (CwmData) this);
+                        static_cast<CwmData>(this));
 }
 
 CwmWindowChild::
@@ -207,8 +207,8 @@ void
 CwmWindowChild::
 idleProc(CwmWindow *, CwmData data, CwmData detail)
 {
-  CwmWindowChild *window_child = (CwmWindowChild *) data;
-  CwmIdleState   *idle_state   = (CwmIdleState   *) detail;
+  CwmWindowChild *window_child = static_cast<CwmWindowChild *>(data);
+  CwmIdleState   *idle_state   = static_cast<CwmIdleState   *>(detail);
 
   CwmScreen &screen = window_child->window_->getScreen();
 

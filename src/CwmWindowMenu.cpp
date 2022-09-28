@@ -8,49 +8,60 @@ CwmWindowMenu(CwmWMWindow *window1) :
 
   if (window->getMoveFunctionHint())
     menu_def->addButton("", "Move", 'M', "Alt<Key>F7",
-                        (CwmMenuProc) &CwmWindowMenu::moveProc, (CwmData) window);
+                        reinterpret_cast<CwmMenuProc>(&CwmWindowMenu::moveProc),
+                        static_cast<CwmData>(window));
 
   if (window->getResizeFunctionHint())
     menu_def->addButton("", "Resize", 's', "Alt<Key>F8",
-                        (CwmMenuProc) &CwmWindowMenu::resizeProc, (CwmData) window);
+                        reinterpret_cast<CwmMenuProc>(&CwmWindowMenu::resizeProc),
+                        static_cast<CwmData>(window));
 
   if (window->getIconiseFunctionHint())
     menu_def->addButton("", "Iconise", 'I', "Alt<Key>F9",
-                        (CwmMenuProc) &CwmWindowMenu::iconiseProc, (CwmData) window);
+                        reinterpret_cast<CwmMenuProc>(&CwmWindowMenu::iconiseProc),
+                        static_cast<CwmData>(window));
 
   if (window->getMaximizeFunctionHint())
     menu_def->addButton("", "Maximize", 'x', "Alt<Key>F10",
-                        (CwmMenuProc) &CwmWindowMenu::maximizeProc, (CwmData) window);
+                        reinterpret_cast<CwmMenuProc>(&CwmWindowMenu::maximizeProc),
+                        static_cast<CwmData>(window));
 
   if (window->getMinimizeFunctionHint())
     menu_def->addButton("", "Minimize", 'n', "Alt<Key>F11",
-                        (CwmMenuProc) &CwmWindowMenu::minimizeProc, (CwmData) window);
+                        reinterpret_cast<CwmMenuProc>(&CwmWindowMenu::minimizeProc),
+                        static_cast<CwmData>(window));
 
   if (window->getRestoreFunctionHint())
     menu_def->addButton("", "Restore", 'R', "Alt<Key>F5",
-                        (CwmMenuProc) &CwmWindowMenu::restoreProc, (CwmData) window);
+                        reinterpret_cast<CwmMenuProc>(&CwmWindowMenu::restoreProc),
+                        static_cast<CwmData>(window));
 
   if (window->getRaiseFunctionHint())
     menu_def->addButton("", "Raise", 'a', "Alt<Key>F2",
-                        (CwmMenuProc) &CwmWindowMenu::raiseProc, (CwmData) window);
+                        reinterpret_cast<CwmMenuProc>(&CwmWindowMenu::raiseProc),
+                        static_cast<CwmData>(window));
 
   if (window->getLowerFunctionHint())
     menu_def->addButton("", "Lower", 'L', "Alt<Key>F3",
-                        (CwmMenuProc) &CwmWindowMenu::lowerProc, (CwmData) window);
+                        reinterpret_cast<CwmMenuProc>(&CwmWindowMenu::lowerProc),
+                        static_cast<CwmData>(window));
 
   if (window->getRollUpFunctionHint())
     menu_def->addButton("", "Roll Up", 'U', "",
-                        (CwmMenuProc) &CwmWindowMenu::rollUpProc, (CwmData) window);
+                        reinterpret_cast<CwmMenuProc>(&CwmWindowMenu::rollUpProc),
+                        static_cast<CwmData>(window));
 
   if (window->getRollDownFunctionHint())
     menu_def->addButton("", "Roll Down", 'D', "",
-                        (CwmMenuProc) &CwmWindowMenu::rollDownProc, (CwmData) window);
+                        reinterpret_cast<CwmMenuProc>(&CwmWindowMenu::rollDownProc),
+                        static_cast<CwmData>(window));
 
   if (window->getCloseFunctionHint()) {
     menu_def->addSplitter("--------");
 
     menu_def->addButton("", "Close", 'C', "Alt<Key>F4",
-                        (CwmMenuProc) &CwmWindowMenu::closeProc, (CwmData) window);
+                        reinterpret_cast<CwmMenuProc>( &CwmWindowMenu::closeProc),
+                        static_cast<CwmData>(window));
   }
 }
 
@@ -104,7 +115,7 @@ void
 CwmWindowMenu::
 resizeToSizeProc(CwmWMWindow *window, CwmData data)
 {
-  std::string *size_string = (std::string *) data;
+  std::string *size_string = static_cast<std::string *>(data);
 
   int width, height;
 
@@ -214,7 +225,7 @@ void
 CwmWindowMenu::
 processNamedMenuProc(CwmWMWindow *window, CwmData data)
 {
-  std::string *name = (std::string *) data;
+  std::string *name = static_cast<std::string *>(data);
 
   CwmMenu::processNamedMenu(window, *name);
 }
@@ -223,7 +234,7 @@ void
 CwmWindowMenu::
 pasteProc(CwmWMWindow *window, CwmData data)
 {
-  std::string *text = (std::string *) data;
+  std::string *text = static_cast<std::string *>(data);
 
   if (data != 0)
     CwmPaste::pasteText(window, *text);
@@ -233,7 +244,7 @@ void
 CwmWindowMenu::
 runCommandProc(CwmWMWindow *window, CwmData data)
 {
-  std::string *cmd = (std::string *) data;
+  std::string *cmd = static_cast<std::string *>(data);
 
   UnixCmd command(window->getScreen(), *cmd);
 
@@ -244,7 +255,7 @@ void
 CwmWindowMenu::
 runXCommandProc(CwmWMWindow *window, CwmData data)
 {
-  std::string *cmd = (std::string *) data;
+  std::string *cmd = static_cast<std::string *>(data);
 
   UnixCmd command(window->getScreen(), *cmd);
 

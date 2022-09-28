@@ -320,7 +320,7 @@ getCirculateWindowStack() const
   return *window_stack_;
 }
 
-int
+uint
 CwmScreen::
 getNumDesks()
 {

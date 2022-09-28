@@ -1,38 +1,4 @@
 class CwmDecoration {
- private:
-  CwmWMWindow       *window_;
-
-  CwmContainerChild *container_child_;
-
-  CwmMenuChild      *menu_child_;
-  CwmTitleChild     *title_child_;
-  CwmMinimizeChild  *minimize_child_;
-  CwmMaximizeChild  *maximize_child_;
-  CwmCloseChild     *close_child_;
-  CwmNSideChild     *n_side_child_;
-  CwmSSideChild     *s_side_child_;
-  CwmWSideChild     *w_side_child_;
-  CwmESideChild     *e_side_child_;
-  CwmNWCornerChild  *nw_corner_child_;
-  CwmNECornerChild  *ne_corner_child_;
-  CwmSWCornerChild  *sw_corner_child_;
-  CwmSECornerChild  *se_corner_child_;
-
-  int                top_border_;
-  int                bottom_border_;
-  int                left_border_;
-  int                right_border_;
-
-  int                outside_edge_width_;
-  int                inside_edge_width_;
-  int                button_width_;
-  int                title_height_;
-  int                resize_height_;
-  int                resize_splitter_;
-
-  bool               has_focus_;
-  bool               rolled_up_;
-
  public:
   CwmDecoration(CwmWMWindow *window);
  ~CwmDecoration();
@@ -41,55 +7,55 @@ class CwmDecoration {
   bool processButtonPress(XButtonPressedEvent *event);
 
   CwmWindowChild *getTitle() const {
-   return (CwmWindowChild *) title_child_;
+   return reinterpret_cast<CwmWindowChild *>(title_child_);
   }
 
   CwmWindowChild *getMenu() const {
-   return (CwmWindowChild *) menu_child_;
+   return reinterpret_cast<CwmWindowChild *>(menu_child_);
   }
 
   CwmWindowChild *getMinimize() const {
-   return (CwmWindowChild *) minimize_child_;
+   return reinterpret_cast<CwmWindowChild *>(minimize_child_);
   }
 
   CwmWindowChild *getMaximize() const {
-   return (CwmWindowChild *) maximize_child_;
+   return reinterpret_cast<CwmWindowChild *>(maximize_child_);
   }
 
   CwmWindowChild *getClose() const {
-   return (CwmWindowChild *) close_child_;
+   return reinterpret_cast<CwmWindowChild *>(close_child_);
   }
 
   CwmWindowChild *getNSide() const {
-   return (CwmWindowChild *) n_side_child_;
+   return reinterpret_cast<CwmWindowChild *>(n_side_child_);
   }
 
   CwmWindowChild *getSSide() const {
-   return (CwmWindowChild *) s_side_child_;
+   return reinterpret_cast<CwmWindowChild *>(s_side_child_);
   }
 
   CwmWindowChild *getESide() const {
-   return (CwmWindowChild *) e_side_child_;
+   return reinterpret_cast<CwmWindowChild *>(e_side_child_);
   }
 
   CwmWindowChild *getWSide() const {
-   return (CwmWindowChild *) w_side_child_;
+   return reinterpret_cast<CwmWindowChild *>(w_side_child_);
   }
 
   CwmWindowChild *getNWCorner() const {
-   return (CwmWindowChild *) nw_corner_child_;
+   return reinterpret_cast<CwmWindowChild *>(nw_corner_child_);
   }
 
   CwmWindowChild *getNECorner() const {
-   return (CwmWindowChild *) ne_corner_child_;
+   return reinterpret_cast<CwmWindowChild *>(ne_corner_child_);
   }
 
   CwmWindowChild *getSWCorner() const {
-   return (CwmWindowChild *) sw_corner_child_;
+   return reinterpret_cast<CwmWindowChild *>(sw_corner_child_);
   }
 
   CwmWindowChild *getSECorner() const {
-   return (CwmWindowChild *) se_corner_child_;
+   return reinterpret_cast<CwmWindowChild *>(se_corner_child_);
   }
 
   bool isMenu(CwmWindow *xwindow);
@@ -137,6 +103,39 @@ class CwmDecoration {
 
   bool hasFocus() const { return has_focus_; }
 
-  static void closeDoubleClickProc(CwmWindow *xwindow, CwmData data,
-                                   CwmData detail);
+  static void closeDoubleClickProc(CwmWindow *xwindow, CwmData data, CwmData detail);
+
+ private:
+  CwmWMWindow *window_ { nullptr };
+
+  CwmContainerChild *container_child_ { nullptr };
+
+  CwmMenuChild      *menu_child_      { nullptr };
+  CwmTitleChild     *title_child_     { nullptr };
+  CwmMinimizeChild  *minimize_child_  { nullptr };
+  CwmMaximizeChild  *maximize_child_  { nullptr };
+  CwmCloseChild     *close_child_     { nullptr };
+  CwmNSideChild     *n_side_child_    { nullptr };
+  CwmSSideChild     *s_side_child_    { nullptr };
+  CwmWSideChild     *w_side_child_    { nullptr };
+  CwmESideChild     *e_side_child_    { nullptr };
+  CwmNWCornerChild  *nw_corner_child_ { nullptr };
+  CwmNECornerChild  *ne_corner_child_ { nullptr };
+  CwmSWCornerChild  *sw_corner_child_ { nullptr };
+  CwmSECornerChild  *se_corner_child_ { nullptr };
+
+  int top_border_;
+  int bottom_border_;
+  int left_border_;
+  int right_border_;
+
+  int outside_edge_width_;
+  int inside_edge_width_;
+  int button_width_;
+  int title_height_;
+  int resize_height_;
+  int resize_splitter_;
+
+  bool has_focus_;
+  bool rolled_up_;
 };

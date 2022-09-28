@@ -509,7 +509,7 @@ void
 CwmGraphics::
 setForeground(int ind)
 {
-  CwmMachineInst->setForeground(gc_, ind);
+  CwmMachineInst->setForeground(gc_, Pixel(ind));
 }
 
 void

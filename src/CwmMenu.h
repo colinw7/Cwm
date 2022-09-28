@@ -38,9 +38,9 @@ class CwmMenuDef {
 
   void setClientData(CwmScreen *screen, CwmWMWindow *window, CwmDeskIcon *icon);
 
-  int getSize();
+  uint getSize();
 
-  CwmMenuEntry *getEntry(int i);
+  CwmMenuEntry *getEntry(uint i);
 
  private:
   CwmMenuDef &operator=(const CwmMenuDef &menu_def);
@@ -111,8 +111,9 @@ class CwmMenuButtonEntry : public CwmMenuEntry {
                      const std::string &accelerator, CwmMenuProc proc, CwmData data1 = 0,
                      CwmData data2 = 0, CwmData data3 = 0, CwmData data4 = 0,
                      CwmData data5 = 0, CwmData data6 = 0) :
-   CwmMenuEntry(CWM_MENU_BUTTON_TYPE, image, text, mnemonic, accelerator, (CwmMenuProc) proc,
-                (CwmData) data1, data2, data3, data4, data5, data6) {
+   CwmMenuEntry(CWM_MENU_BUTTON_TYPE, image, text, mnemonic, accelerator,
+                reinterpret_cast<CwmMenuProc>(proc),
+                reinterpret_cast<CwmData>(data1), data2, data3, data4, data5, data6) {
   }
 };
 
@@ -122,8 +123,9 @@ class CwmMenuToggleEntry : public CwmMenuEntry {
                      const std::string &accelerator, CwmMenuProc proc, CwmData data1 = 0,
                      CwmData data2 = 0, CwmData data3 = 0, CwmData data4 = 0,
                      CwmData data5 = 0, CwmData data6 = 0) :
-   CwmMenuEntry(CWM_MENU_TOGGLE_TYPE, "", text, mnemonic, accelerator, (CwmMenuProc) proc,
-                (CwmData) data1, data2, data3, data4, data5, data6) {
+   CwmMenuEntry(CWM_MENU_TOGGLE_TYPE, "", text, mnemonic, accelerator,
+                reinterpret_cast<CwmMenuProc>(proc),
+                reinterpret_cast<CwmData>(data1), data2, data3, data4, data5, data6) {
   }
 };
 
@@ -137,7 +139,8 @@ class CwmMenuSplitterEntry : public CwmMenuEntry {
 class CwmMenuCascadeEntry : public CwmMenuEntry {
  public:
   CwmMenuCascadeEntry(const std::string &text, CwmMenuDef *menu_def) :
-   CwmMenuEntry(CWM_MENU_CASCADE_TYPE, "", text, '\0', "", 0, (CwmData) menu_def, 0, 0, 0, 0, 0) {
+   CwmMenuEntry(CWM_MENU_CASCADE_TYPE, "", text, '\0', "", 0,
+                reinterpret_cast<CwmData>(menu_def), 0, 0, 0, 0, 0) {
   }
 };
 

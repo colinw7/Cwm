@@ -86,7 +86,7 @@ class CwmDeskMgr {
 
   void processMenu();
 
-  int getNumDesks() const { return desks_.size(); }
+  uint getNumDesks() const { return uint(desks_.size()); }
 
   int      getDeskNum(CwmWMWindow *window);
   CwmDesk *getDesk(int num);

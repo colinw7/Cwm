@@ -42,9 +42,9 @@ CwmToolBarClock(CwmToolBar &toolbar1) :
   else
     time_string = COSTime::getTimeString("%H:%M:%S");
 
-  int len = time_string.size();
+  auto len = time_string.size();
 
-  for (int i = 0; i < len; i++)
+  for (uint i = 0; i < len; i++)
     time_string[i] = 'X';
 
   int width1, height1;
@@ -67,7 +67,7 @@ CwmToolBarClock(CwmToolBar &toolbar1) :
 
   //------
 
-  xwindow_->addCallback(CWM_CALLBACK_IDLE, &CwmToolBarClock::idleProc, (CwmData) this);
+  xwindow_->addCallback(CWM_CALLBACK_IDLE, &CwmToolBarClock::idleProc, static_cast<CwmData>(this));
 
   enable();
 }
@@ -135,8 +135,8 @@ void
 CwmToolBarClock::
 idleProc(CwmWindow *, CwmData data, CwmData detail)
 {
-  CwmToolBarClock *clock      = (CwmToolBarClock *) data;
-  CwmIdleState    *idle_state = (CwmIdleState    *) detail;
+  CwmToolBarClock *clock      = static_cast<CwmToolBarClock *>(data);
+  CwmIdleState    *idle_state = static_cast<CwmIdleState    *>(detail);
 
   CwmScreen &screen = clock->toolbar_.getScreen();
 

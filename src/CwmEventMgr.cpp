@@ -94,51 +94,51 @@ processEvent(XEvent *event)
 
   switch (event->type) {
     case MapRequest:
-      return processMapRequest((XMapRequestEvent *) event);
+      return processMapRequest(reinterpret_cast<XMapRequestEvent *>(event));
     case MapNotify:
-      return processMapNotify((XMapEvent *) event);
+      return processMapNotify(reinterpret_cast<XMapEvent *>(event));
     case UnmapNotify:
-      return processUnmapNotify((XUnmapEvent *) event);
+      return processUnmapNotify(reinterpret_cast<XUnmapEvent *>(event));
     case ConfigureRequest:
-      return processConfigureRequest((XConfigureRequestEvent *) event);
+      return processConfigureRequest(reinterpret_cast<XConfigureRequestEvent *>(event));
     case ConfigureNotify:
-      return processConfigureNotify((XConfigureEvent *) event);
+      return processConfigureNotify(reinterpret_cast<XConfigureEvent *>(event));
     case ReparentNotify:
-      return processReparentNotify((XReparentEvent *) event);
+      return processReparentNotify(reinterpret_cast<XReparentEvent *>(event));
     case EnterNotify:
-      return processEnterNotify((XEnterWindowEvent *) event);
+      return processEnterNotify(reinterpret_cast<XEnterWindowEvent *>(event));
     case LeaveNotify:
-      return processLeaveNotify((XLeaveWindowEvent *) event);
+      return processLeaveNotify(reinterpret_cast<XLeaveWindowEvent *>(event));
     case ButtonPress:
-      return processButtonPress((XButtonPressedEvent *) event);
+      return processButtonPress(reinterpret_cast<XButtonPressedEvent *>(event));
     case ButtonRelease:
-      return processButtonRelease((XButtonReleasedEvent *) event);
+      return processButtonRelease(reinterpret_cast<XButtonReleasedEvent *>(event));
     case KeyPress:
-      return processKeyPress((XKeyPressedEvent *) event);
+      return processKeyPress(reinterpret_cast<XKeyPressedEvent *>(event));
     case KeyRelease:
-      return processKeyRelease((XKeyReleasedEvent *) event);
+      return processKeyRelease(reinterpret_cast<XKeyReleasedEvent *>(event));
     case MotionNotify:
-      return processMotionNotify((XMotionEvent *) event);
+      return processMotionNotify(reinterpret_cast<XMotionEvent *>(event));
     case Expose:
-      return processExpose((XExposeEvent *) event);
+      return processExpose(reinterpret_cast<XExposeEvent *>(event));
     case NoExpose:
-      return processNoExpose((XNoExposeEvent *) event);
+      return processNoExpose(reinterpret_cast<XNoExposeEvent *>(event));
     case FocusIn:
-      return processFocusIn((XFocusChangeEvent *) event);
+      return processFocusIn(reinterpret_cast<XFocusChangeEvent *>(event));
     case FocusOut:
-      return processFocusOut((XFocusChangeEvent *) event);
+      return processFocusOut(reinterpret_cast<XFocusChangeEvent *>(event));
     case PropertyNotify:
-      return processPropertyNotify((XPropertyEvent *) event);
+      return processPropertyNotify(reinterpret_cast<XPropertyEvent *>(event));
     case VisibilityNotify:
-      return processVisibilityNotify((XVisibilityEvent *) event);
+      return processVisibilityNotify(reinterpret_cast<XVisibilityEvent *>(event));
     case DestroyNotify:
-      return processDestroyNotify((XDestroyWindowEvent *) event);
+      return processDestroyNotify(reinterpret_cast<XDestroyWindowEvent *>(event));
     case ColormapNotify:
-      return processColormapNotify((XColormapEvent *) event);
+      return processColormapNotify(reinterpret_cast<XColormapEvent *>(event));
     case ClientMessage:
-      return processClientMessage((XClientMessageEvent *) event);
+      return processClientMessage(reinterpret_cast<XClientMessageEvent *>(event));
     case MappingNotify:
-      return processMappingNotify((XMappingEvent *) event);
+      return processMappingNotify(reinterpret_cast<XMappingEvent *>(event));
     default:
       CwmMachineInst->logf("Unhandled Event %s\n", CwmMachineInst->getEventName(event).c_str());
       break;
@@ -157,7 +157,7 @@ printEvent(XEvent *event)
   Window xwin = CwmMachineInst->getEventWindow(event);
 
   if (! CwmMachineInst->isValidWindow(xwin))
-    CwmMachineInst->logf("printEvent: Invalid Window %x, Event %s\n", (uint) xwin,
+    CwmMachineInst->logf("printEvent: Invalid Window %x, Event %s\n", uint(xwin),
                          CwmMachineInst->getEventName(event).c_str());
 
   CwmWMWindow *window = CwmMachineInst->getWindowWMWindow(xwin);
@@ -169,7 +169,7 @@ printEvent(XEvent *event)
   else {
     std::ostringstream ost;
 
-    ost << std::hex << (uint) xwin;
+    ost << std::hex << uint(xwin);
 
     name = ost.str();
   }
@@ -276,7 +276,7 @@ processConfigureRequest(XConfigureRequestEvent *event)
   XEvent event1;
 
   if (CwmMachineInst->checkWindowTypedEvent(event->window, MapRequest, &event1))
-    processMapRequest((XMapRequestEvent *) &event1);
+    processMapRequest(reinterpret_cast<XMapRequestEvent *>(&event1));
 
   CwmWMWindow *window = CwmMachineInst->getWindowWMWindow(event->window);
 
@@ -487,15 +487,15 @@ processButtonPress(XButtonPressedEvent *event)
 
   xwindow->callCallbacks(CWM_CALLBACK_BUTTON_PRESS, event);
 
-  if (event->window == multiclick_window_ && event->button == (uint) multiclick_button_ &&
-      (event->time - multiclick_time_) <= (uint) CwmResourceDataInst->getDoubleClickTime()) {
+  if (event->window == multiclick_window_ && event->button == uint(multiclick_button_) &&
+      (event->time - multiclick_time_) <= uint(CwmResourceDataInst->getDoubleClickTime())) {
     multiclick_time_ = event->time;
 
     multiclick_count_++;
   }
   else {
     multiclick_window_ = event->window;
-    multiclick_button_ = event->button;
+    multiclick_button_ = int(event->button);
     multiclick_time_   = event->time;
     multiclick_count_  = 1;
   }

@@ -27,7 +27,7 @@ clear(const CImageGC &gc)
 
     gc.getBackground(color_ind);
 
-    image_->setColorIndexData(color_ind);
+    image_->setColorIndexData(uint(color_ind));
   }
   else {
     CRGBA rgba;
@@ -47,7 +47,7 @@ fill(const CImageGC &gc)
 
     gc.getForeground(color_ind);
 
-    image_->setColorIndexData(color_ind);
+    image_->setColorIndexData(uint(color_ind));
   }
   else {
     CRGBA rgba;
@@ -62,11 +62,11 @@ void
 CImageDraw::
 drawImage(const CImageGC &, int x, int y, CImagePtr image)
 {
-  int iwidth  = image_->getWidth ();
-  int iheight = image_->getHeight();
+  int iwidth  = int(image_->getWidth ());
+  int iheight = int(image_->getHeight());
 
-  int iwidth1  = image->getWidth ();
-  int iheight1 = image->getHeight();
+  int iwidth1  = int(image->getWidth ());
+  int iheight1 = int(image->getHeight());
 
   int x1 = x;
   int x2 = std::min(x + iwidth1  - 1, iwidth  - 1);
@@ -110,8 +110,8 @@ void
 CImageDraw::
 fillPolygon(const CImageGC &gc, int *x, int *y, int num_xy)
 {
-  int iwidth  = image_->getWidth ();
-  int iheight = image_->getHeight();
+  int iwidth  = int(image_->getWidth ());
+  int iheight = int(image_->getHeight());
 
   int ymin = iheight;
   int ymax = -1;
@@ -170,8 +170,8 @@ CImageDraw::
 fillRectangle(const CImageGC &gc, int x, int y, int width, int height)
 {
   if (compose_) {
-    int iwidth  = image_->getWidth ();
-    int iheight = image_->getHeight();
+    int iwidth  = int(image_->getWidth ());
+    int iheight = int(image_->getHeight());
 
     int x1 = x;
     int x2 = std::min(x + width  - 1, iwidth  - 1);
@@ -308,8 +308,8 @@ void
 CImageDraw::
 drawColorIndexHLine(int x, int y, int length, int color_ind)
 {
-  int iwidth  = image_->getWidth ();
-  int iheight = image_->getHeight();
+  int iwidth  = int(image_->getWidth ());
+  int iheight = int(image_->getHeight());
 
   int x1 = x;
   int x2 = std::min(x + length - 1, iwidth - 1);
@@ -325,8 +325,8 @@ void
 CImageDraw::
 drawRGBAHLine(int x, int y, int length, const CRGBA &rgba)
 {
-  int iwidth  = image_->getWidth ();
-  int iheight = image_->getHeight();
+  int iwidth  = int(image_->getWidth ());
+  int iheight = int(image_->getHeight());
 
   int x1 = x;
   int x2 = std::min(x + length - 1, iwidth - 1);
@@ -362,8 +362,8 @@ void
 CImageDraw::
 drawColorIndexVLine(int x, int y, int length, int color_ind)
 {
-  int iwidth  = image_->getWidth ();
-  int iheight = image_->getHeight();
+  int iwidth  = int(image_->getWidth ());
+  int iheight = int(image_->getHeight());
 
   int y1 = y;
   int y2 = std::min(y + length - 1, iheight - 1);
@@ -379,8 +379,8 @@ void
 CImageDraw::
 drawRGBAVLine(int x, int y, int length, const CRGBA &rgba)
 {
-  int iwidth  = image_->getWidth ();
-  int iheight = image_->getHeight();
+  int iwidth  = int(image_->getWidth ());
+  int iheight = int(image_->getHeight());
 
   int y1 = y;
   int y2 = std::min(y + length - 1, iheight - 1);
@@ -396,8 +396,8 @@ void
 CImageDraw::
 drawDLine(const CImageGC &gc, int x1, int y1, int x2, int y2)
 {
-  int iwidth  = image_->getWidth ();
-  int iheight = image_->getHeight();
+  int iwidth  = int(image_->getWidth ());
+  int iheight = int(image_->getHeight());
 
   if (x1 < 0 || x1 >= iwidth  || x2 < 0 || x2 >= iwidth  ||
       y1 < 0 || y1 >= iheight || y2 < 0 || y2 >= iheight)
@@ -464,8 +464,8 @@ drawLine(const CImageGC &gc, int x1, int y1, int x2, int y2)
     const CImageGC *gc_;
   };
 
-  int iwidth  = image_->getWidth ();
-  int iheight = image_->getHeight();
+  int iwidth  = int(image_->getWidth ());
+  int iheight = int(image_->getHeight());
 
   CLine2D line(x1, y1, x2, y2);
   CBBox2D bbox(0, 0, iwidth - 1, iheight - 1);
@@ -477,16 +477,16 @@ drawLine(const CImageGC &gc, int x1, int y1, int x2, int y2)
 
   CImageDrawBresenham bresenham(this, &gc);
 
-  bresenham.drawLine(cline.start().x, cline.start().y,
-                     cline.end  ().x, cline.end  ().y);
+  bresenham.drawLine(int(cline.start().x), int(cline.start().y),
+                     int(cline.end  ().x), int(cline.end  ().y));
 }
 
 void
 CImageDraw::
 drawPoint(const CImageGC &gc, int x, int y)
 {
-  int iwidth  = image_->getWidth ();
-  int iheight = image_->getHeight();
+  int iwidth  = int(image_->getWidth ());
+  int iheight = int(image_->getHeight());
 
   if (x < 0 || x >= iwidth  ||
       y < 0 || y >= iheight)

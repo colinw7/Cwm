@@ -33,10 +33,9 @@ CwmToolBarMgr::
 
 void
 CwmToolBarMgr::
-deskChangeStartNotifyProc(CwmDeskMgr *desk_mgr, CwmDeskMgrNotifyType,
-                          CwmData data)
+deskChangeStartNotifyProc(CwmDeskMgr *desk_mgr, CwmDeskMgrNotifyType, CwmData data)
 {
-  CwmToolBarMgr *mgr = (CwmToolBarMgr *) data;
+  CwmToolBarMgr *mgr = static_cast<CwmToolBarMgr *>(data);
 
   if (desk_mgr->getCurrentDesk() == &mgr->desk_)
     mgr->toolbar_->unmap();
@@ -44,10 +43,9 @@ deskChangeStartNotifyProc(CwmDeskMgr *desk_mgr, CwmDeskMgrNotifyType,
 
 void
 CwmToolBarMgr::
-deskChangeEndNotifyProc(CwmDeskMgr *desk_mgr, CwmDeskMgrNotifyType,
-                        CwmData data)
+deskChangeEndNotifyProc(CwmDeskMgr *desk_mgr, CwmDeskMgrNotifyType, CwmData data)
 {
-  CwmToolBarMgr *mgr = (CwmToolBarMgr *) data;
+  CwmToolBarMgr *mgr = static_cast<CwmToolBarMgr *>(data);
 
   if (desk_mgr->getCurrentDesk() == &mgr->desk_)
     mgr->toolbar_->map();
@@ -103,8 +101,7 @@ CwmToolBar(CwmToolBarMgr &mgr1) :
                     KeyPressMask    | ExposureMask;
 
   xwindow_ =
-    new CwmWindow(screen, screen.getRoot(),
-                   x, y, width, height,
+    new CwmWindow(screen, screen.getRoot(), x, y, width, height,
                    event_mask, CWM_CURSOR_TITLE);
 
   xwindow_->setBackground(graphics_);
@@ -145,32 +142,23 @@ CwmToolBar(CwmToolBarMgr &mgr1) :
 
   //------
 
-  icon_area_ = new CwmToolBarIconArea(*this, icon_area_x1_,
-                                      icon_area_x2_ - icon_area_x1_);
+  icon_area_ = new CwmToolBarIconArea(*this, icon_area_x1_, icon_area_x2_ - icon_area_x1_);
 
   //------
 
   CwmWindowGlobalNotifyMgrInst->
-    addProc(CWM_WINDOW_NOTIFY_CREATE,
-            &CwmToolBar::createNotifyProc,
-            this);
+    addProc(CWM_WINDOW_NOTIFY_CREATE, &CwmToolBar::createNotifyProc, this);
   CwmWindowGlobalNotifyMgrInst->
-    addProc(CWM_WINDOW_NOTIFY_ICONISE,
-            &CwmToolBar::iconiseNotifyProc,
-            this);
+    addProc(CWM_WINDOW_NOTIFY_ICONISE, &CwmToolBar::iconiseNotifyProc, this);
 }
 
 CwmToolBar::
 ~CwmToolBar()
 {
   CwmWindowGlobalNotifyMgrInst->
-    removeProc(CWM_WINDOW_NOTIFY_CREATE,
-               &CwmToolBar::createNotifyProc,
-               this);
+    removeProc(CWM_WINDOW_NOTIFY_CREATE, &CwmToolBar::createNotifyProc, this);
   CwmWindowGlobalNotifyMgrInst->
-    removeProc(CWM_WINDOW_NOTIFY_ICONISE,
-               &CwmToolBar::iconiseNotifyProc,
-               this);
+    removeProc(CWM_WINDOW_NOTIFY_ICONISE, &CwmToolBar::iconiseNotifyProc, this);
 
   //------
 
@@ -222,10 +210,7 @@ void
 CwmToolBar::
 redraw()
 {
-  graphics_->drawButtonOut(xwindow_, 0, 0,
-                          xwindow_->getWidth(),
-                          xwindow_->getHeight(),
-                          border_);
+  graphics_->drawButtonOut(xwindow_, 0, 0, xwindow_->getWidth(), xwindow_->getHeight(), border_);
 
   if (clock_ != 0)
     clock_->redraw();
@@ -337,12 +322,12 @@ CwmMenuDef *
 CwmToolBar::
 buildMenu(CwmCirculateWindowStack &window_stack)
 {
-  CwmMenuDef *menu_def = new CwmMenuDef();
+  auto *menu_def = new CwmMenuDef();
 
   menu_def->addTitle   ("Window List");
   menu_def->addSplitter("-----------");
 
-  for (int i = 0; i < window_stack.size(); i++) {
+  for (uint i = 0; i < uint(window_stack.size()); i++) {
     CwmWindowGroup &window_group = window_stack[i];
 
     if (window_group.size() == 0)
@@ -356,10 +341,9 @@ buildMenu(CwmCirculateWindowStack &window_stack)
       menu_def->addCascade(window.getName(), menu_def1);
     }
     else
-      menu_def->addButton("",
-                          window.getName(), '\0', "",
-                          (CwmMenuProc) raiseWindowProc,
-                          (CwmData) &window);
+      menu_def->addButton("", window.getName(), '\0', "",
+                          reinterpret_cast<CwmMenuProc>(raiseWindowProc),
+                          static_cast<CwmData>(&window));
   }
 
   return menu_def;
@@ -369,18 +353,17 @@ CwmMenuDef *
 CwmToolBar::
 buildMenuCascade(CwmWindowGroup &window_group)
 {
-  CwmMenuDef *menu_def = new CwmMenuDef();
+  auto *menu_def = new CwmMenuDef();
 
   CwmWMWindow &bottom_window = window_group.getBottomWindow();
 
-  for (int i = 0; i < window_group.size(); i++) {
+  for (uint i = 0; i < uint(window_group.size()); i++) {
     CwmWMWindow &window = window_group[i];
 
     if (&window != &bottom_window)
-      menu_def->addButton("",
-                          window.getName(), '\0', "",
-                          (CwmMenuProc) raiseWindowProc,
-                          (CwmData) &window);
+      menu_def->addButton("", window.getName(), '\0', "",
+                          reinterpret_cast<CwmMenuProc>(raiseWindowProc),
+                          static_cast<CwmData>(&window));
   }
 
   return menu_def;
@@ -452,7 +435,7 @@ createNotifyProc(CwmWMWindow *window, CwmWindowNotifyType, void *data)
   if (window->getToolBarSkip())
     return;
 
-  CwmToolBar *toolbar = (CwmToolBar *) data;
+  CwmToolBar *toolbar = static_cast<CwmToolBar *>(data);
 
   if (toolbar->getAddWindows())
     toolbar->addIcon(window);
@@ -465,7 +448,7 @@ iconiseNotifyProc(CwmWMWindow *window, CwmWindowNotifyType, void *data)
   if (window->getToolBarSkip())
     return;
 
-  CwmToolBar *toolbar = (CwmToolBar *) data;
+  CwmToolBar *toolbar = static_cast<CwmToolBar *>(data);
 
   if (toolbar->getAddIcons())
     toolbar->addIcon(window);

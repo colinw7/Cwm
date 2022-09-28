@@ -65,23 +65,17 @@ CwmToolBarCmd(CwmToolBar &toolbar, CwmToolBarIconDef *icon_def, int x) :
   //------
 
   xwindow_->addCallback(CWM_CALLBACK_ENTER,
-                        CwmToolBarCmd::enterProc,
-                        (CwmData) this);
+                        CwmToolBarCmd::enterProc, static_cast<CwmData>(this));
   xwindow_->addCallback(CWM_CALLBACK_LEAVE,
-                        CwmToolBarCmd::leaveProc,
-                        (CwmData) this);
+                        CwmToolBarCmd::leaveProc, static_cast<CwmData>(this));
   xwindow_->addCallback(CWM_CALLBACK_BUTTON_PRESS,
-                        &CwmToolBarCmd::pressProc,
-                        (CwmData) this);
+                        &CwmToolBarCmd::pressProc, static_cast<CwmData>(this));
   xwindow_->addCallback(CWM_CALLBACK_BUTTON_RELEASE,
-                        &CwmToolBarCmd::releaseProc,
-                        (CwmData) this);
+                        &CwmToolBarCmd::releaseProc, static_cast<CwmData>(this));
   xwindow_->addCallback(CWM_CALLBACK_SINGLE_CLICK_1,
-                        &CwmToolBarCmd::invokeProc,
-                        (CwmData) this);
+                        &CwmToolBarCmd::invokeProc, static_cast<CwmData>(this));
   xwindow_->addCallback(CWM_CALLBACK_IDLE,
-                        &CwmToolBarCmd::idleProc,
-                        (CwmData) this);
+                        &CwmToolBarCmd::idleProc, static_cast<CwmData>(this));
 
   //------
 
@@ -124,9 +118,9 @@ void
 CwmToolBarCmd::
 pressProc(CwmWindow *, CwmData data, CwmData detail)
 {
-  CwmToolBarCmd *icon = (CwmToolBarCmd *) data;
+  CwmToolBarCmd *icon = static_cast<CwmToolBarCmd *>(data);
 
-  XButtonPressedEvent *event = (XButtonPressedEvent *) detail;
+  XButtonPressedEvent *event = static_cast<XButtonPressedEvent *>(detail);
 
   if (event->button != 1)
     return;
@@ -140,9 +134,9 @@ void
 CwmToolBarCmd::
 releaseProc(CwmWindow *, CwmData data, CwmData detail)
 {
-  CwmToolBarCmd *icon = (CwmToolBarCmd *) data;
+  CwmToolBarCmd *icon = static_cast<CwmToolBarCmd *>(data);
 
-  XButtonPressedEvent *event = (XButtonPressedEvent *) detail;
+  XButtonPressedEvent *event = static_cast<XButtonPressedEvent *>(detail);
 
   if (event->button != 1)
     return;
@@ -156,7 +150,7 @@ void
 CwmToolBarCmd::
 invokeProc(CwmWindow *, CwmData data, CwmData)
 {
-  CwmToolBarCmd *icon = (CwmToolBarCmd *) data;
+  CwmToolBarCmd *icon = static_cast<CwmToolBarCmd *>(data);
 
   icon->invoke();
 }
@@ -185,7 +179,7 @@ void
 CwmToolBarCmd::
 enterProc(CwmWindow *, CwmData data, CwmData)
 {
-  CwmToolBarCmd *icon = (CwmToolBarCmd *) data;
+  CwmToolBarCmd *icon = static_cast<CwmToolBarCmd *>(data);
 
   icon->active_ = true;
 
@@ -196,7 +190,7 @@ void
 CwmToolBarCmd::
 leaveProc(CwmWindow *, CwmData data, CwmData)
 {
-  CwmToolBarCmd *icon = (CwmToolBarCmd *) data;
+  CwmToolBarCmd *icon = static_cast<CwmToolBarCmd *>(data);
 
   icon->active_ = false;
 
@@ -207,8 +201,8 @@ void
 CwmToolBarCmd::
 idleProc(CwmWindow *, CwmData data, CwmData detail)
 {
-  CwmToolBarCmd *icon       = (CwmToolBarCmd *) data;
-  CwmIdleState  *idle_state = (CwmIdleState  *) detail;
+  CwmToolBarCmd *icon       = static_cast<CwmToolBarCmd *>(data);
+  CwmIdleState  *idle_state = static_cast<CwmIdleState  *>(detail);
 
   if (idle_state->getActive())
     icon->screen_.showInfo(icon->label_);

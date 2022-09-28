@@ -195,9 +195,9 @@ searchPathList(const std::string &path_list, const std::string &name)
 {
   CStrWords paths = CStrUtil::toFields(path_list, ":");
 
-  int num_paths = paths.size();
+  auto num_paths = paths.size();
 
-  for (int i = 0; i < num_paths; i++) {
+  for (int i = 0; i < int(num_paths); i++) {
     std::string filename = paths[i].getWord() + "/" + name;
 
     CFile file(filename);
@@ -462,8 +462,8 @@ CwmImage::
 CwmImage(CwmScreen &screen, const CImagePtr &image) :
  screen_(screen), image_(image)
 {
-  width_  = image_->getWidth ();
-  height_ = image_->getHeight();
+  width_  = int(image_->getWidth ());
+  height_ = int(image_->getHeight());
 
   init();
 }

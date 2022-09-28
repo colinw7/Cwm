@@ -78,7 +78,7 @@ openXtDisplay(const std::string &display_name)
 
   CwmInst->getArgs(&argc, &argv);
 
-  char **argv1 = new char * [argc + 1];
+  char **argv1 = new char * [uint(argc + 1)];
 
   int i;
 
@@ -90,7 +90,7 @@ openXtDisplay(const std::string &display_name)
   Display *display = CXMachineInst->openXtDisplay(display_name, "Cwm", &argc, argv1);
 
   for (int i1 = 0; i1 < argc; ++i1)
-    free((char *) argv1[i1]);
+    free(argv1[uint(i1)]);
 
   delete [] argv1;
 
@@ -378,21 +378,21 @@ bool
 CwmMachine::
 flushWindowEvent(Window xwin, int mask)
 {
-  return CXMachineInst->flushWindowEvent(xwin, mask);
+  return CXMachineInst->flushWindowEvent(xwin, uint(mask));
 }
 
 int
 CwmMachine::
 flushWindowEvents(Window xwin, int mask)
 {
-  return CXMachineInst->flushWindowEvents(xwin, mask);
+  return CXMachineInst->flushWindowEvents(xwin, uint(mask));
 }
 
 bool
 CwmMachine::
 checkWindowEvent(Window xwin, int mask, XEvent *event)
 {
-  return CXMachineInst->checkWindowEvent(xwin, mask, event);
+  return CXMachineInst->checkWindowEvent(xwin, uint(mask), event);
 }
 
 bool
@@ -443,7 +443,7 @@ getWindowEventMask(Window xwin)
 {
   trapStart();
 
-  int event_mask = CXMachineInst->getWindowEventMask(xwin);
+  int event_mask = int(CXMachineInst->getWindowEventMask(xwin));
 
   if (! trapEnd())
     event_mask = 0;
@@ -1248,7 +1248,7 @@ bool
 CwmMachine::
 sendEvent(Window xwin, int propagate, XEvent *event, int event_mask)
 {
-  if (! CXMachineInst->sendEvent(xwin, propagate, event, event_mask)) {
+  if (! CXMachineInst->sendEvent(xwin, propagate, event, uint(event_mask))) {
     log("Send Event Failed\n");
     return false;
   }
@@ -1268,7 +1268,7 @@ void
 CwmMachine::
 selectInput(Window xwin, int event_mask)
 {
-  CXMachineInst->selectInput(xwin, event_mask);
+  CXMachineInst->selectInput(xwin, uint(event_mask));
 }
 
 void

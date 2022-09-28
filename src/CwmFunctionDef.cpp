@@ -226,7 +226,7 @@ void
 CwmFunctionDef::
 processProc(CwmData data)
 {
-  CwmFunctionDef *function_def = (CwmFunctionDef *) data;
+  auto *function_def = static_cast<CwmFunctionDef *>(data);
 
   function_def->process();
 }

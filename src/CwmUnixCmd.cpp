@@ -43,10 +43,10 @@ run()
     _exit(255);
   }
 
-  CwmSigHandler sig_hup  = (CwmSigHandler) COSSignal::getSignalHandler(SIGHUP );
-  CwmSigHandler sig_int  = (CwmSigHandler) COSSignal::getSignalHandler(SIGINT );
-  CwmSigHandler sig_quit = (CwmSigHandler) COSSignal::getSignalHandler(SIGQUIT);
-  CwmSigHandler sig_term = (CwmSigHandler) COSSignal::getSignalHandler(SIGTERM);
+  CwmSigHandler sig_hup  = static_cast<CwmSigHandler>(COSSignal::getSignalHandler(SIGHUP ));
+  CwmSigHandler sig_int  = static_cast<CwmSigHandler>(COSSignal::getSignalHandler(SIGINT ));
+  CwmSigHandler sig_quit = static_cast<CwmSigHandler>(COSSignal::getSignalHandler(SIGQUIT));
+  CwmSigHandler sig_term = static_cast<CwmSigHandler>(COSSignal::getSignalHandler(SIGTERM));
 
   COSSignal::ignoreSignal(SIGHUP );
   COSSignal::ignoreSignal(SIGINT );

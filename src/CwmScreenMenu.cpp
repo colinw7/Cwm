@@ -178,7 +178,7 @@ void
 CwmScreenMenu::
 processNamedMenuProc(CwmScreen &screen, CwmData data)
 {
-  std::string *name = (std::string *) data;
+  std::string *name = static_cast<std::string *>(data);
 
   CwmMenu::processNamedMenu(screen, *name);
 }
@@ -187,7 +187,7 @@ void
 CwmScreenMenu::
 runCommandProc(CwmScreen &screen, CwmData data)
 {
-  std::string *cmd = (std::string *) data;
+  std::string *cmd = static_cast<std::string *>(data);
 
   UnixCmd command(screen, *cmd);
 
@@ -198,7 +198,7 @@ void
 CwmScreenMenu::
 runXCommandProc(CwmScreen &screen, CwmData data)
 {
-  std::string *cmd = (std::string *) data;
+  std::string *cmd = static_cast<std::string *>(data);
 
   UnixCmd command(screen, *cmd);
 
@@ -211,7 +211,7 @@ void
 CwmScreenMenu::
 setRootImageProc(CwmScreen &screen, CwmData data)
 {
-  std::string *name = (std::string *) data;
+  std::string *name = static_cast<std::string *>(data);
 
   CwmDesk *desk = screen.getCurrentDesk();
 
@@ -237,7 +237,7 @@ void
 CwmScreenMenu::
 restartCwmProc(CwmScreen &screen, CwmData data)
 {
-  std::string *cmd = (std::string *) data;
+  std::string *cmd = static_cast<std::string *>(data);
 
   if (cmd == 0 || *cmd == "") {
     int    argc;
@@ -269,9 +269,9 @@ void
 CwmScreenMenu::
 changeDeskProc(CwmScreen &screen, CwmData data)
 {
-  std::string *str = (std::string *) data;
+  std::string *str = static_cast<std::string *>(data);
 
-  int desk_num = CStrUtil::toInteger(*str);
+  int desk_num = int(CStrUtil::toInteger(*str));
 
   screen.changeDesk(desk_num - 1);
 }

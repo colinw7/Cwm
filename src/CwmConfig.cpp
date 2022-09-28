@@ -68,7 +68,7 @@ getSectionValue(const std::string &path, const std::string &section, int fallbac
     return value;
 
   if (CStrUtil::isInteger(str))
-    value = CStrUtil::toInteger(str);
+    value = int(CStrUtil::toInteger(str));
 
   return value;
 }
@@ -85,7 +85,7 @@ getValue(const std::string &path, int fallback)
     return value;
 
   if (CStrUtil::isInteger(str))
-    value = CStrUtil::toInteger(str);
+    value = int(CStrUtil::toInteger(str));
 
   return value;
 }

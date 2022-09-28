@@ -124,14 +124,14 @@ init()
   //------
 
   if (! CwmCustomHintMgrInst->getCustomHintValue
-         (res_name_, CwmNdecorations, (CwmData) &mwm_decorations_))
+         (res_name_, CwmNdecorations, static_cast<CwmData>(&mwm_decorations_)))
     CwmCustomHintMgrInst->getCustomHintValue
-     (res_class_, CwmNdecorations, (CwmData) &mwm_decorations_);
+     (res_class_, CwmNdecorations, static_cast<CwmData>(&mwm_decorations_));
 
   if (! CwmCustomHintMgrInst->getCustomHintValue
-         (res_name_, CwmNfunctions, (CwmData) &mwm_functions_))
+         (res_name_, CwmNfunctions, static_cast<CwmData>(&mwm_functions_)))
     CwmCustomHintMgrInst->getCustomHintValue
-     (res_class_, CwmNfunctions, (CwmData) &mwm_functions_);
+     (res_class_, CwmNfunctions, static_cast<CwmData>(&mwm_functions_));
 
   //------
 
@@ -257,7 +257,7 @@ readWMSizeHints()
     max_height_ = size_hints->max_height;
   }
   else {
-    CwmScreen &screen = window_->getScreen();
+    auto &screen = window_->getScreen();
 
     max_width_  = screen.getWidth();
     max_height_ = screen.getHeight();
@@ -270,8 +270,8 @@ readWMSizeHints()
     max_height_ = min_height_;
 
   if (size_hints->flags & PAspect) {
-    min_aspect_ = ((double) size_hints->min_aspect.x)/size_hints->min_aspect.y;
-    max_aspect_ = ((double) size_hints->max_aspect.x)/size_hints->max_aspect.y;
+    min_aspect_ = double(size_hints->min_aspect.x)/double(size_hints->min_aspect.y);
+    max_aspect_ = double(size_hints->max_aspect.x)/double(size_hints->max_aspect.y);
   }
   else {
     min_aspect_ = 0.0;
@@ -353,7 +353,7 @@ readClassHint()
   if (res_class_ == "" && res_name_ != "") {
     res_class_ = res_name_;
 
-    res_class_[0] = toupper(res_class_[0]);
+    res_class_[0] = char(toupper(res_class_[0]));
   }
 }
 
@@ -378,8 +378,8 @@ void
 CwmHints::
 readWMCMapWindows()
 {
-  if (cmap_windows_ != 0)
-    XFree((char *) cmap_windows_);
+  if (cmap_windows_)
+    XFree(cmap_windows_);
 
   CwmMachineInst->getWMColormapWindows(user_xwin_, &cmap_windows_, &num_cmap_windows_);
 }
@@ -392,7 +392,7 @@ readWMProtocols()
   save_yourself_ = false;
   delete_window_ = false;
 
-  const CXAtom **protocols     = 0;
+  const CXAtom **protocols     = nullptr;
   int            num_protocols = 0;
 
   CwmMachineInst->getWMProtocols(user_xwin_, &protocols, &num_protocols);
@@ -466,20 +466,20 @@ print()
   CwmMachineInst->logf("win_gravity      = %d\n", win_gravity_);
   CwmMachineInst->logf("input            = %d\n", input_);
   CwmMachineInst->logf("initial_state    = %d\n", initial_state_);
-  CwmMachineInst->logf("icon_window      = %x\n", (uint) icon_window_);
-  CwmMachineInst->logf("icon_pixmap      = %x\n", (uint) icon_pixmap_);
-  CwmMachineInst->logf("icon_mask        = %x\n", (uint) icon_mask_);
+  CwmMachineInst->logf("icon_window      = %x\n", uint(icon_window_));
+  CwmMachineInst->logf("icon_pixmap      = %x\n", uint(icon_pixmap_));
+  CwmMachineInst->logf("icon_mask        = %x\n", uint(icon_mask_));
   CwmMachineInst->logf("icon_depth       = %d\n", icon_depth_);
   CwmMachineInst->logf("icon_x           = %d\n", icon_x_);
   CwmMachineInst->logf("icon_y           = %d\n", icon_y_);
-  CwmMachineInst->logf("window_group     = %x\n", (uint) window_group_);
-  CwmMachineInst->logf("transient        = %x\n", (uint) transient_for_);
+  CwmMachineInst->logf("window_group     = %x\n", uint(window_group_));
+  CwmMachineInst->logf("transient        = %x\n", uint(transient_for_));
   CwmMachineInst->logf("res_name         = %s\n", res_name_.c_str());
   CwmMachineInst->logf("res_class        = %s\n", res_class_.c_str());
   CwmMachineInst->logf("client_machine   = %s\n", client_machine_.c_str());
 
   for (int i = 0; command_argv_.size(); i++)
-    CwmMachineInst->logf("command_argv[%d] = %s\n", i, command_argv_[i].c_str());
+    CwmMachineInst->logf("command_argv[%d] = %s\n", i, command_argv_[uint(i)].c_str());
 
   CwmMachineInst->logf("num_cmap_windows = %d\n", num_cmap_windows_);
   CwmMachineInst->logf("take_focus       = %d\n", take_focus_);
@@ -520,7 +520,7 @@ CwmCustomHintMgr::
 addCustomHintValue(const std::string &pattern, const std::string &name,
                    const char *type, CwmData value)
 {
-  CwmCustomHint *custom_hint = getCustomHint(pattern);
+  auto *custom_hint = getCustomHint(pattern);
 
   custom_hint->addValue(name, type, value);
 }
@@ -542,17 +542,17 @@ getCustomHintValue(const std::string &window, const std::string &name, CwmData v
   if (phint1 == phint2)
     return false;
 
-  CwmCustomHint *custom_hint = *phint1;
+  auto *custom_hint = *phint1;
 
-  CwmCustomHintValue *custom_value = custom_hint->lookup(name);
+  auto *custom_value = custom_hint->lookup(name);
 
   if (! custom_value)
     return false;
 
   if (custom_value->isType(CwmTint)) {
-    int *pvalue = (int *) value;
+    int *pvalue = static_cast<int *>(value);
 
-    *pvalue = (long) custom_value->getValue();
+    *pvalue = int(reinterpret_cast<long>(custom_value->getValue()));
   }
   else
     return false;
@@ -571,7 +571,7 @@ getCustomHint(const std::string &pattern)
     if ((*phint1)->isPattern(pattern))
       return *phint1;
 
-  CwmCustomHint *custom_hint = addCustomHint(pattern);
+  auto *custom_hint = addCustomHint(pattern);
 
   return custom_hint;
 }
@@ -580,7 +580,7 @@ CwmCustomHint *
 CwmCustomHintMgr::
 addCustomHint(const std::string &pattern)
 {
-  CwmCustomHint *custom_hint = new CwmCustomHint(pattern);
+  auto *custom_hint = new CwmCustomHint(pattern);
 
   custom_hints_.push_back(custom_hint);
 
@@ -632,7 +632,7 @@ void
 CwmCustomHint::
 addValue(const std::string &name, const char *type, CwmData value)
 {
-  CwmCustomHintValue *custom_value = new CwmCustomHintValue(name, type, value);
+  auto *custom_value = new CwmCustomHintValue(name, type, value);
 
   values_.push_back(custom_value);
 }

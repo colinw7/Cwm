@@ -303,10 +303,10 @@ CwmToolBarIcon(CwmToolBarIconArea &icon_area1, CwmWMWindow *window1) :
 
   xwindow_->addCallback(CWM_CALLBACK_DOUBLE_CLICK_1,
                         &CwmToolBarIcon::doubleClickProc,
-                        (CwmData) this);
+                        static_cast<CwmData>(this));
   xwindow_->addCallback(CWM_CALLBACK_IDLE,
                         &CwmToolBarIcon::idleProc,
-                        (CwmData) this);
+                        static_cast<CwmData>(this));
 
   //------
 
@@ -455,7 +455,7 @@ void
 CwmToolBarIcon::
 processKeyPress(XKeyPressedEvent *event)
 {
-  XEvent *event1 = (XEvent *) event;
+  XEvent *event1 = reinterpret_cast<XEvent *>(event);
 
   if      (icon_area_.getRestoreEvent()->matchEvent(event1))
     window_->restore();
@@ -499,18 +499,16 @@ createMenuDef()
 {
   menu_def_ = new CwmMenuDef();
 
-  menu_def_->addButton("",
-                       "Restore", 'R', "Alt<Key>F5",
-                       (CwmMenuProc) CwmToolBarIcon::restoreProc,
-                       (CwmData) this);
+  menu_def_->addButton("", "Restore", 'R', "Alt<Key>F5",
+                       reinterpret_cast<CwmMenuProc>(CwmToolBarIcon::restoreProc),
+                       static_cast<CwmData>(this));
 
   if (window_->getCloseFunctionHint()) {
     menu_def_->addSplitter("--------");
 
-    menu_def_->addButton("",
-                         "Close", 'C', "Alt<Key>F4",
-                         (CwmMenuProc) CwmToolBarIcon::closeProc,
-                         (CwmData) this);
+    menu_def_->addButton("", "Close", 'C', "Alt<Key>F4",
+                         reinterpret_cast<CwmMenuProc>(CwmToolBarIcon::closeProc),
+                         static_cast<CwmData>(this));
   }
 }
 
@@ -518,7 +516,7 @@ void
 CwmToolBarIcon::
 doubleClickProc(CwmWindow *, CwmData data, CwmData)
 {
-  CwmToolBarIcon *icon = (CwmToolBarIcon *) data;
+  CwmToolBarIcon *icon = static_cast<CwmToolBarIcon *>(data);
 
   if (icon->window_->isIconised())
     icon->window_->restore();
@@ -542,8 +540,8 @@ void
 CwmToolBarIcon::
 idleProc(CwmWindow *, CwmData data, CwmData detail)
 {
-  CwmToolBarIcon *icon       = (CwmToolBarIcon *) data;
-  CwmIdleState   *idle_state = (CwmIdleState *) detail;
+  CwmToolBarIcon *icon       = static_cast<CwmToolBarIcon *>(data);
+  CwmIdleState   *idle_state = static_cast<CwmIdleState *>(detail);
 
   std::string name = icon->window_->getName();
 
@@ -559,7 +557,7 @@ void
 CwmToolBarIcon::
 moveNotifyProc(CwmWMWindow *, CwmWindowNotifyType, void *data)
 {
-  CwmToolBarIcon *icon = (CwmToolBarIcon *) data;
+  CwmToolBarIcon *icon = static_cast<CwmToolBarIcon *>(data);
 
   icon->toolbar_.redraw();
 }
@@ -568,7 +566,7 @@ void
 CwmToolBarIcon::
 iconiseNotifyProc(CwmWMWindow *, CwmWindowNotifyType, void *data)
 {
-  CwmToolBarIcon *icon = (CwmToolBarIcon *) data;
+  CwmToolBarIcon *icon = static_cast<CwmToolBarIcon *>(data);
 
   icon->toolbar_.redraw();
 }
@@ -577,7 +575,7 @@ void
 CwmToolBarIcon::
 restoreNotifyProc(CwmWMWindow *window, CwmWindowNotifyType, void *data)
 {
-  CwmToolBarIcon *icon = (CwmToolBarIcon *) data;
+  CwmToolBarIcon *icon = static_cast<CwmToolBarIcon *>(data);
 
   CwmToolBar &toolbar = icon->getToolBar();
 
@@ -591,7 +589,7 @@ void
 CwmToolBarIcon::
 destroyNotifyProc(CwmWMWindow *window, CwmWindowNotifyType, void *data)
 {
-  CwmToolBarIcon *icon = (CwmToolBarIcon *) data;
+  CwmToolBarIcon *icon = static_cast<CwmToolBarIcon *>(data);
 
   CwmToolBar &toolbar = icon->getToolBar();
 
@@ -602,7 +600,7 @@ void
 CwmToolBarIcon::
 focusInNotifyProc(CwmWMWindow *, CwmWindowNotifyType, void *data)
 {
-  CwmToolBarIcon *icon = (CwmToolBarIcon *) data;
+  CwmToolBarIcon *icon = static_cast<CwmToolBarIcon *>(data);
 
   icon->focusIn();
 }
@@ -611,7 +609,7 @@ void
 CwmToolBarIcon::
 focusOutNotifyProc(CwmWMWindow *, CwmWindowNotifyType, void *data)
 {
-  CwmToolBarIcon *icon = (CwmToolBarIcon *) data;
+  CwmToolBarIcon *icon = static_cast<CwmToolBarIcon *>(data);
 
   icon->focusOut();
 }

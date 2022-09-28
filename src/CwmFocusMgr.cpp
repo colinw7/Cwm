@@ -48,7 +48,7 @@ focusNext(CwmScreen &screen)
 
   int i;
 
-  CwmWMWindow *window = 0;
+  CwmWMWindow *window = nullptr;
 
   for (i = 0; i < num_windows; ++i) {
     window = CwmMachineInst->getWindowWMWindow(windows[i]);
@@ -81,8 +81,8 @@ focusNext(CwmScreen &screen)
       return;
   }
 
-  if (windows != 0)
-    XFree((char *) windows);
+  if (windows)
+    XFree(windows);
 
   setFocusWindow(window);
 }
@@ -102,7 +102,7 @@ focusPrev(CwmScreen &screen)
 
   int i;
 
-  CwmWMWindow *window = 0;
+  CwmWMWindow *window = nullptr;
 
   for (i = num_windows - 1; i >= 0; i--) {
     window = CwmMachineInst->getWindowWMWindow(windows[i]);
@@ -135,8 +135,8 @@ focusPrev(CwmScreen &screen)
       return;
   }
 
-  if (windows != 0)
-    XFree((char *) windows);
+  if (windows)
+    XFree(windows);
 
   setFocusWindow(window);
 }
@@ -194,11 +194,11 @@ resetFocusWindow()
 {
   delete auto_raise_timer_;
 
-  auto_raise_timer_ = 0;
+  auto_raise_timer_ = nullptr;
 
   CwmWMWindow *window = focus_window_;
 
-  focus_window_ = 0;
+  focus_window_ = nullptr;
 
   if (! window) {
     resetInputFocus();
@@ -256,7 +256,7 @@ ungrabButtons(CwmWMWindow *window)
   if (grab_buttons_window_ != 0)
     grab_buttons_window_->getFrameWindow()->ungrabButtonPress();
 
-  grab_buttons_window_ = 0;
+  grab_buttons_window_ = nullptr;
 }
 
 void
@@ -346,7 +346,7 @@ enterUserWindow(CwmWMWindow *window)
   leaveUserWindow(window);
 
   if (window->getScreen().isTop(window)) {
-    top_window_ = 0;
+    top_window_ = nullptr;
     return;
   }
 
@@ -354,7 +354,7 @@ enterUserWindow(CwmWMWindow *window)
 
   grabButtons(user_window_);
 
-  top_window_ = 0;
+  top_window_ = nullptr;
 }
 
 void
@@ -366,7 +366,7 @@ leaveUserWindow(CwmWMWindow *)
 
   ungrabButtons(user_window_);
 
-  user_window_ = 0;
+  user_window_ = nullptr;
 }
 
 bool
@@ -378,7 +378,7 @@ isUserWindow(CwmWMWindow *window)
 
 CwmFocusMgrTimer::
 CwmFocusMgrTimer(CwmFocusMgr *mgr, CwmWMWindow *window) :
- CXtTimer(CwmResourceDataInst->getAutoRaiseDelay(), CTIMER_FLAGS_NO_DELETE),
+ CXtTimer(uint(CwmResourceDataInst->getAutoRaiseDelay()), CTIMER_FLAGS_NO_DELETE),
  mgr_(mgr), window_(window)
 {
 }

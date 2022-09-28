@@ -225,7 +225,7 @@ processButtonPress(XButtonPressedEvent *event)
   else if (event->button == 2) {
     if      (isMenu(xwindow)) {
       CwmWindowEventFunctionMgrInst->
-        processEventFunction(window, CWM_WINDOW_MENU_AREA, (XEvent *) event);
+        processEventFunction(window, CWM_WINDOW_MENU_AREA, reinterpret_cast<XEvent *>(event));
     }
     else if (isTitle(xwindow)) {
       title_child_->select();
@@ -564,7 +564,7 @@ decorate()
 
   xwindow->addCallback(CWM_CALLBACK_DOUBLE_CLICK_1,
                        &CwmDecoration::closeDoubleClickProc,
-                       (CwmData) window_);
+                       static_cast<CwmData>(window_));
 }
 
 void
@@ -637,7 +637,7 @@ void
 CwmDecoration::
 closeDoubleClickProc(CwmWindow *, CwmData data, CwmData)
 {
-  CwmWMWindow *window = (CwmWMWindow *) data;
+  CwmWMWindow *window = static_cast<CwmWMWindow *>(data);
 
   window->close();
 }

@@ -64,38 +64,38 @@ int
 CwmFont::
 getHeight() const
 {
-  return cxfont_->getICharHeight();
+  return int(cxfont_->getICharHeight());
 }
 
 int
 CwmFont::
 getAscent() const
 {
-  return cxfont_->getICharAscent();
+  return int(cxfont_->getICharAscent());
 }
 
 int
 CwmFont::
 getDescent() const
 {
-  return cxfont_->getICharDescent();
+  return int(cxfont_->getICharDescent());
 }
 
 void
 CwmFont::
 getTextSize(const std::string &text, int *width, int *height)
 {
-  *width  = cxfont_->getIStringWidth(text);
-  *height = cxfont_->getICharHeight();
+  *width  = int(cxfont_->getIStringWidth(text));
+  *height = int(cxfont_->getICharHeight());
 }
 
 void
 CwmFont::
 drawString(CwmWindow *xwindow, CwmGraphics *graphics, int x, int y, const std::string &text)
 {
-  CXFont *xfont = cxfont_.cast<CXFont>();
+  auto *xfont = cxfont_.cast<CXFont>();
 
-  CXrtFont *xrt_font = xfont->getXrtFont();
+  auto *xrt_font = xfont->getXrtFont();
 
   xrt_font->draw(xwindow->getXWin(), graphics->getGC(), x, y, text);
 }
@@ -104,9 +104,9 @@ void
 CwmFont::
 drawString(CwmXPixmap *xpixmap, CwmGraphics *graphics, int x, int y, const std::string &text)
 {
-  CXFont *xfont = cxfont_.cast<CXFont>();
+  auto *xfont = cxfont_.cast<CXFont>();
 
-  CXrtFont *xrt_font = xfont->getXrtFont();
+  auto *xrt_font = xfont->getXrtFont();
 
   xrt_font->draw(xpixmap->getXPixmap(), graphics->getGC(), x, y, text);
 }
@@ -135,11 +135,11 @@ parseName(const std::string &name, std::string *name1, CFontStyle *style, int *s
 
   if (words.size() > 2)
     if (CStrUtil::isInteger(words[2]))
-      *size = CStrUtil::toInteger(words[2]);
+      *size = int(CStrUtil::toInteger(words[2]));
 
   if (words.size() > 3) {
     if (CStrUtil::isInteger(words[3]))
-      *angle = CStrUtil::toInteger(words[3]);
+      *angle = int(CStrUtil::toInteger(words[3]));
   }
 }
 

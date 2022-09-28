@@ -68,7 +68,7 @@ class CwmScreen {
 
   CwmCirculateWindowStack &getCirculateWindowStack() const;
 
-  int getNumDesks();
+  uint getNumDesks();
 
   CwmDesk *getCurrentDesk();
   int      getCurrentDeskNum();

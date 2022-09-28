@@ -179,7 +179,7 @@ grabEventKeys(CwmWMWindow *window)
 
     if (event)
       CwmMachineInst->grabKey(window->getFrame()->getXWindow()->getXWin(),
-                              event->keycode, event->state);
+                              int(event->keycode), int(event->state));
   }
 }
 
@@ -198,7 +198,7 @@ ungrabEventKeys(CwmWMWindow *window)
 
     if (event)
       CwmMachineInst->ungrabKey(window->getFrame()->getXWindow()->getXWin(),
-                                event->keycode, event->state);
+                                int(event->keycode), int(event->state));
   }
 }
 
@@ -459,29 +459,29 @@ processEvent(XEvent *event)
         }
       }
 
-      processButtonPress((XButtonPressedEvent *) event);
+      processButtonPress(reinterpret_cast<XButtonPressedEvent *>(event));
 
       break;
     }
     case ButtonRelease:
-      processButtonRelease((XButtonReleasedEvent *) event);
+      processButtonRelease(reinterpret_cast<XButtonReleasedEvent *>(event));
       break;
     case KeyPress:
-      processKeyPress((XKeyPressedEvent *) event);
+      processKeyPress(reinterpret_cast<XKeyPressedEvent *>(event));
       break;
     case KeyRelease:
-      processKeyRelease((XKeyReleasedEvent *) event);
+      processKeyRelease(reinterpret_cast<XKeyReleasedEvent *>(event));
       break;
     case MotionNotify:
       break;
     case EnterNotify:
-      processEnterNotify((XEnterWindowEvent *) event);
+      processEnterNotify(reinterpret_cast<XEnterWindowEvent *>(event));
       break;
     case LeaveNotify:
-      processLeaveNotify((XLeaveWindowEvent *) event);
+      processLeaveNotify(reinterpret_cast<XLeaveWindowEvent *>(event));
       break;
     case ClientMessage:
-      processClientMessage((XClientMessageEvent *) event);
+      processClientMessage(reinterpret_cast<XClientMessageEvent *>(event));
       break;
     default:
       CwmMachineInst->logf("Unhandled Event Type %d\n", event->type);
@@ -505,7 +505,7 @@ sendToUser(XEvent *event)
   if (cwm_window->isUser(xwindow)) {
     CwmMachineInst->focusLeave(cwm_window);
 
-    xwindow->sendEvent((XEvent *) event, 0xFFFF);
+    xwindow->sendEvent(reinterpret_cast<XEvent *>(event), 0xFFFF);
 
     CwmMachineInst->focusEnter(cwm_window);
   }
@@ -518,7 +518,7 @@ processButtonPress(XButtonPressedEvent *event)
   CwmScreen &screen = CwmMachineInst->getWindowScreen(event->window);
 
   if (event->window == screen.getRoot()->getXWin()) {
-    CwmRootEventFunctionMgrInst->process(screen, (XEvent *) event);
+    CwmRootEventFunctionMgrInst->process(screen, reinterpret_cast<XEvent *>(event));
 
     return;
   }
@@ -528,7 +528,7 @@ processButtonPress(XButtonPressedEvent *event)
   CwmToolBar *toolbar = screen.getCurrentDesk()->getToolBar();
 
   if (toolbar != 0)
-    toolbar->processButtonPress(event->window, event->button);
+    toolbar->processButtonPress(event->window, int(event->button));
 
   //------
 
@@ -608,7 +608,7 @@ processKeyPress(XKeyPressedEvent *event)
   CwmScreen &screen = CwmMachineInst->getWindowScreen(event->window);
 
   if (event->window == screen.getRoot()->getXWin()) {
-    CwmRootEventFunctionMgrInst->process(screen, (XEvent *) event);
+    CwmRootEventFunctionMgrInst->process(screen, reinterpret_cast<XEvent *>(event));
 
     return;
   }
@@ -645,7 +645,7 @@ processKeyPress(XKeyPressedEvent *event)
 
   if (window != 0)
     CwmWindowEventFunctionMgrInst->
-      processEventFunction(window, CWM_WINDOW_ANY_AREA, (XEvent *) event);
+      processEventFunction(window, CWM_WINDOW_ANY_AREA, reinterpret_cast<XEvent *>(event));
 }
 
 void
@@ -655,7 +655,7 @@ processKeyRelease(XKeyReleasedEvent *event)
   CwmScreen &screen = CwmMachineInst->getWindowScreen(event->window);
 
   if (event->window == screen.getRoot()->getXWin()) {
-    CwmRootEventFunctionMgrInst->process(screen, (XEvent *) event);
+    CwmRootEventFunctionMgrInst->process(screen, reinterpret_cast<XEvent *>(event));
 
     return;
   }
@@ -664,7 +664,7 @@ processKeyRelease(XKeyReleasedEvent *event)
 
   if (window != 0)
     CwmWindowEventFunctionMgrInst->
-      processEventFunction(window, CWM_WINDOW_ANY_AREA, (XEvent *) event);
+      processEventFunction(window, CWM_WINDOW_ANY_AREA, reinterpret_cast<XEvent *>(event));
 }
 
 void
@@ -817,27 +817,27 @@ CwmWMWindow(CwmScreen &screen, Window xwin) :
   focus_auto_raise_ = CwmResourceDataInst->getFocusAutoRaise();
 
   if (! CwmCustomHintMgrInst->getCustomHintValue
-         (getResName(), CwmNfocusAutoRaise, (CwmData) &focus_auto_raise_))
+         (getResName(), CwmNfocusAutoRaise, static_cast<CwmData>(&focus_auto_raise_)))
     CwmCustomHintMgrInst->getCustomHintValue
-     (getResClass(), CwmNfocusAutoRaise, (CwmData) &focus_auto_raise_);
+     (getResClass(), CwmNfocusAutoRaise, static_cast<CwmData>(&focus_auto_raise_));
 
   //------
 
   circulate_skip_ = false;
 
   if (! CwmCustomHintMgrInst->getCustomHintValue
-         (getResName(), CwmNcirculateSkip, (CwmData) &circulate_skip_))
+         (getResName(), CwmNcirculateSkip, static_cast<CwmData>(&circulate_skip_)))
     CwmCustomHintMgrInst->getCustomHintValue
-     (getResClass(), CwmNcirculateSkip, (CwmData) &circulate_skip_);
+     (getResClass(), CwmNcirculateSkip, static_cast<CwmData>(&circulate_skip_));
 
   //------
 
   toolbar_skip_ = false;
 
   if (! CwmCustomHintMgrInst->getCustomHintValue
-         (getResName(), CwmNtoolbarSkip, (CwmData) &toolbar_skip_))
+         (getResName(), CwmNtoolbarSkip, static_cast<CwmData>(&toolbar_skip_)))
     CwmCustomHintMgrInst->getCustomHintValue
-     (getResClass(), CwmNtoolbarSkip, (CwmData) &toolbar_skip_);
+     (getResClass(), CwmNtoolbarSkip, static_cast<CwmData>(&toolbar_skip_));
 
   //------
 
@@ -1432,10 +1432,10 @@ notifyDeleteWindow()
   event.message_type = CwmMachineInst->getWMProtocolsAtom().getXAtom();
   event.format       = 32;
 
-  event.data.l[0] = CwmMachineInst->getWMDeleteWindowAtom().getXAtom();
+  event.data.l[0] = long(CwmMachineInst->getWMDeleteWindowAtom().getXAtom());
   event.data.l[1] = CurrentTime;
 
-  user_xwindow->sendEvent((XEvent *) &event, 0);
+  user_xwindow->sendEvent(reinterpret_cast<XEvent *>(&event), 0);
 }
 
 void

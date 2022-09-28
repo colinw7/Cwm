@@ -132,25 +132,25 @@ setStackedClientList(CwmScreen &screen)
 
   WindowIds windowIds;
 
-  for (int i = 0; i < window_stack.size(); i++) {
+  for (uint i = 0; i < uint(window_stack.size()); i++) {
     CwmWindowGroup &window_group = window_stack[i];
 
     if (window_group.size() == 0)
       continue;
 
-    for (int i1 = 0; i1 < window_group.size(); i1++) {
+    for (uint i1 = 0; i1 < uint(window_group.size()); i1++) {
       CwmWMWindow &window = window_group[i1];
 
       windowIds.push_back(window.getXWin());
     }
   }
 
-  int n = windowIds.size();
+  auto n = windowIds.size();
 
-  for (int i = 0; i < n/2; ++i)
+  for (uint i = 0; i < n/2; ++i)
     std::swap(windowIds[i], windowIds[n - i - 1]);
 
-  CwmMachineInst->setWindowArrayProperty(root_xwin, atom, &windowIds[0], windowIds.size());
+  CwmMachineInst->setWindowArrayProperty(root_xwin, atom, &windowIds[0], int(windowIds.size()));
 }
 
 void
@@ -161,9 +161,9 @@ setNumDesktops(CwmScreen &screen)
 
   const CXAtom &atom = CwmMachineInst->getAtom("_NET_NUMBER_OF_DESKTOPS");
 
-  int num_desks = screen.getNumDesks();
+  auto num_desks = screen.getNumDesks();
 
-  CwmMachineInst->setIntegerProperty(root_xwin, atom, num_desks);
+  CwmMachineInst->setIntegerProperty(root_xwin, atom, int(num_desks));
 }
 
 void
@@ -172,7 +172,7 @@ setCurrentDesktop(CwmScreen &screen)
 {
   Window root_xwin = screen.getRoot()->getXWin();
 
-  CwmDesk *desk = screen.getCurrentDesk();
+  auto *desk = screen.getCurrentDesk();
 
   const CXAtom &atom = CwmMachineInst->getAtom("_NET_CURRENT_DESKTOP");
 
@@ -239,21 +239,21 @@ setDesktopNames(CwmScreen &screen)
 
   const CXAtom &atom = CwmMachineInst->getAtom("_NET_DESKTOP_NAMES");
 
-  int num_names = screen.getNumDesks();
+  auto num_names = screen.getNumDesks();
 
   char **names = new char * [num_names];
 
-  for (int i = 0; i < num_names; i++) {
-    std::string name = screen.getDesk(i)->getName();
+  for (uint i = 0; i < num_names; i++) {
+    std::string name = screen.getDesk(int(i))->getName();
 
     names[i] = strdup(name.c_str());
   }
 
-  CwmMachineInst->setStringListProperty(root_xwin, atom, names, num_names);
+  CwmMachineInst->setStringListProperty(root_xwin, atom, names, int(num_names));
 
-  int num_desks = screen.getNumDesks();
+  auto num_desks = screen.getNumDesks();
 
-  for (int i = 0; i < num_desks; i++)
+  for (uint i = 0; i < num_desks; i++)
     free(names[i]);
 
   delete [] names;

@@ -61,12 +61,13 @@ processClientMessage(XClientMessageEvent *event)
 
   CStrUtil::toWords(value, words);
 
-  int num_words = words.size();
+  auto num_words = words.size();
 
   if (num_words == 0)
     goto fail;
 
-  for (int i = 0; i < num_words; ++i) CwmMachineInst->log(words[i] + '\n');
+  for (uint i = 0; i < num_words; ++i)
+    CwmMachineInst->log(words[i] + '\n');
 
   if      (words[0] == "get_windows") {
     const CwmScreen &screen = CwmMachineInst->getScreen(0);
@@ -75,15 +76,15 @@ processClientMessage(XClientMessageEvent *event)
 
     std::string str;
 
-    for (int i = 0; i < window_stack.size(); i++) {
-      CwmWindowGroup &window_group = window_stack[i];
+    for (uint i = 0; i < uint(window_stack.size()); i++) {
+      auto &window_group = window_stack[i];
 
       if (window_group.size() == 0)
         continue;
 
-      int num_windows = window_group.size();
+      auto num_windows = window_group.size();
 
-      for (int j = 0; j < num_windows; ++j) {
+      for (uint j = 0; j < num_windows; ++j) {
         CwmWMWindow &window = window_group[j];
 
         if (str != "")
@@ -335,9 +336,9 @@ CwmWMWindow *
 CwmMessage::
 stringToWindow(const std::string &str)
 {
-  Window xwin = CStrUtil::toInteger(str);
+  Window xwin = Window(CStrUtil::toInteger(str));
 
-  CwmWMWindow *window = CwmMachineInst->getWindowWMWindow(xwin);
+  auto *window = CwmMachineInst->getWindowWMWindow(xwin);
 
   return window;
 }
@@ -346,7 +347,7 @@ void
 CwmMessage::
 updateChangeCount()
 {
-  const CXAtom &atom = CwmMachineInst->getAtom("CHANGE_COUNT");
+  const auto &atom = CwmMachineInst->getAtom("CHANGE_COUNT");
 
   CwmMachineInst->setIntegerProperty(xwin_, atom, change_count_);
 

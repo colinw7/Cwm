@@ -97,9 +97,9 @@ setNumDesktops(CwmScreen &screen)
 
   const CXAtom &atom = CwmMachineInst->getAtom("_WIN_WORKSPACE_COUNT");
 
-  int num_desks = screen.getNumDesks();
+  auto num_desks = screen.getNumDesks();
 
-  CwmMachineInst->setIntegerProperty(root_xwin, atom, num_desks);
+  CwmMachineInst->setIntegerProperty(root_xwin, atom, int(num_desks));
 }
 
 void
@@ -125,21 +125,21 @@ setDesktopNames(CwmScreen &screen)
 
   const CXAtom &atom = CwmMachineInst->getAtom("_WIN_WORKSPACE_NAMES");
 
-  int num_names = screen.getNumDesks();
+  auto num_names = screen.getNumDesks();
 
-  char **names = new char * [num_names];
+  auto **names = new char * [num_names];
 
-  for (int i = 0; i < num_names; i++) {
-    std::string name = screen.getDesk(i)->getName();
+  for (uint i = 0; i < num_names; i++) {
+    auto name = screen.getDesk(int(i))->getName();
 
-    names[i] = strdup(name.c_str());
+    names[uint(i)] = strdup(name.c_str());
   }
 
-  CwmMachineInst->setStringListProperty(root_xwin, atom, names, num_names);
+  CwmMachineInst->setStringListProperty(root_xwin, atom, names, int(num_names));
 
-  int num_desks = screen.getNumDesks();
+  auto num_desks = screen.getNumDesks();
 
-  for (int i = 0; i < num_desks; i++)
+  for (uint i = 0; i < num_desks; i++)
     free(names[i]);
 
   delete [] names;

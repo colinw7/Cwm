@@ -66,9 +66,9 @@ add(CXNamedEvent *event, CwmFunctionDef *function, CwmData data)
   if (! event)
     return;
 
-  int num_functions = functions_.size();
+  auto num_functions = functions_.size();
 
-  for (int i = 0; i < num_functions; i++) {
+  for (uint i = 0; i < num_functions; i++) {
     CXNamedEvent *event1 = functions_[i]->getEvent();
 
     if (event1 != 0 && event1->matchEvent(event)) {
@@ -87,9 +87,9 @@ void
 CwmRootEventFunctionMgr::
 process(CwmScreen &screen, XEvent *event)
 {
-  int num_functions = functions_.size();
+  auto num_functions = functions_.size();
 
-  for (int i = 0; i < num_functions; i++) {
+  for (uint i = 0; i < num_functions; i++) {
     CXNamedEvent *event1 = functions_[i]->getEvent();
 
     if (event1->matchEvent(event)) {
@@ -103,9 +103,9 @@ void
 CwmRootEventFunctionMgr::
 deleteAll()
 {
-  int num_functions = functions_.size();
+  auto num_functions = functions_.size();
 
-  for (int i = 0; i < num_functions; i++)
+  for (uint i = 0; i < num_functions; i++)
     delete functions_[i];
 
   functions_.clear();
@@ -213,13 +213,13 @@ draw()
   if (bgindex_ != -1 && image1->hasColormap()) {
     double r, g, b, a;
 
-    image1->getColorRGBA(bgindex_, &r, &g, &b, &a);
+    image1->getColorRGBA(uint(bgindex_), &r, &g, &b, &a);
 
     std::ostringstream ostr;
 
-    ostr << "#" << std::setw(2) << std::setfill('0') << (int) (r*255) <<
-                   std::setw(2) << std::setfill('0') << (int) (g*255) <<
-                   std::setw(2) << std::setfill('0') << (int) (b*255);
+    ostr << "#" << std::setw(2) << std::setfill('0') << int(r*255) <<
+                   std::setw(2) << std::setfill('0') << int(g*255) <<
+                   std::setw(2) << std::setfill('0') << int(b*255);
 
     Pixel pixel = screen_.getPixel(ostr.str(), screen_.getWhitePixel());
 
@@ -273,7 +273,7 @@ decode(std::string spec)
 
   image_file_ = words[0].getWord();
 
-  for (int i = 1; i < words.size(); i++) {
+  for (int i = 1; i < int(words.size()); i++) {
     std::string word = words[i].getWord();
 
     if      (CStrUtil::casecmp(word, "resize") == 0)
@@ -281,7 +281,7 @@ decode(std::string spec)
     else if (CStrUtil::casecmp(word, "tile") == 0)
       tile_image_ = true;
     else if (CStrUtil::casecmp(word, "bg") == 0) {
-      if (i < words.size() - 1) {
+      if (i < int(words.size() - 1)) {
         word = words[++i].getWord();
 
         bg_color_ = word;
@@ -290,7 +290,7 @@ decode(std::string spec)
         CwmMachineInst->log("Missing color for bg\n");
     }
     else if (CStrUtil::casecmp(word, "fg") == 0) {
-      if (i < words.size() - 1) {
+      if (i < int(words.size() - 1)) {
         word = words[++i].getWord();
 
         fg_color_ = word;
@@ -299,7 +299,7 @@ decode(std::string spec)
         CwmMachineInst->log("Missing color for fg\n");
     }
     else if (CStrUtil::casecmp(word, "halign") == 0) {
-      if (i < words.size() - 1) {
+      if (i < int(words.size() - 1)) {
         i++;
 
         word = words[i].getWord();
@@ -318,7 +318,7 @@ decode(std::string spec)
         CwmMachineInst->log("Missing value for halign\n");
     }
     else if (CStrUtil::casecmp(word, "valign") == 0) {
-      if (i < words.size() - 1) {
+      if (i < int(words.size() - 1)) {
         i++;
 
         word = words[i].getWord();
@@ -337,10 +337,10 @@ decode(std::string spec)
         CwmMachineInst->log("Missing value for valign\n");
     }
     else if (CStrUtil::casecmp(word, "bgindex") == 0) {
-      if (i < words.size() - 1) {
+      if (i < int(words.size() - 1)) {
         word = words[++i].getWord();
 
-        bgindex_ = CStrUtil::toInteger(word);
+        bgindex_ = int(CStrUtil::toInteger(word));
       }
       else
         CwmMachineInst->log("Missing value for bgindex\n");

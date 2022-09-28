@@ -44,7 +44,7 @@ CwmXPixmap(CwmScreen &screen, int width, int height, int depth) :
   if (height_ <= 0)
     height_ = -1;
 
-  xpixmap_ = CwmMachineInst->createPixmap(width_, height_, depth_);
+  xpixmap_ = CwmMachineInst->createPixmap(uint(width_), uint(height_), uint(depth_));
 
   owner_ = true;
 

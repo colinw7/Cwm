@@ -233,7 +233,7 @@ setStackMode(int stack_mode, CwmWMWindow *sibling)
   if (sibling != 0)
     CwmMachineInst->debugf("Sibling %s\n", sibling->getName().c_str());
 
-  CwmMachineInst->configureWindow(xwin_, mask, &xwc);
+  CwmMachineInst->configureWindow(xwin_, uint(mask), &xwc);
 }
 
 void
@@ -263,7 +263,7 @@ selectInput(uint event_mask)
 {
   CwmMachineInst->trapStart();
 
-  CwmMachineInst->selectInput(xwin_, event_mask);
+  CwmMachineInst->selectInput(xwin_, int(event_mask));
 
   if (! CwmMachineInst->trapEnd())
     return false;
@@ -277,8 +277,8 @@ addInput(uint event_mask)
 {
   int win_event_mask = CwmMachineInst->getWindowEventMask(xwin_);
 
-  if (! (win_event_mask & event_mask)) {
-    if (! selectInput(win_event_mask | event_mask))
+  if (! (uint(win_event_mask) & event_mask)) {
+    if (! selectInput(uint(win_event_mask) | event_mask))
       return false;
   }
 
@@ -303,7 +303,7 @@ void
 CwmWindow::
 grabButtonPress()
 {
-  Cursor cursor = screen_.getCursor(CWM_CURSOR_TITLE);
+  auto cursor = screen_.getCursor(CWM_CURSOR_TITLE);
 
   CwmMachineInst->grabButton(xwin_, AnyButton, AnyModifier, ButtonPressMask, cursor);
 }

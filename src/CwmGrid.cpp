@@ -14,10 +14,10 @@ CwmGrid(CwmScreen &screen1, int cell_width1, int cell_height1) :
   num_cols = screen.getWidth() /cell_width;
   num_rows = screen.getHeight()/cell_height;
 
-  cells = new CwmCell * [num_rows];
+  cells = new CwmCell * [uint(num_rows)];
 
   for (int col = 0; col < num_rows; col++)
-    cells[col] = new CwmCell [num_cols];
+    cells[col] = new CwmCell [uint(num_cols)];
 
   int y = 0;
 

@@ -72,12 +72,12 @@ restack()
 
   Window *windows = new Window [window_stack_.size()];
 
-  int num_window_stacks = window_stack_.size();
+  auto num_window_stacks = window_stack_.size();
 
-  for (int i = 0; i < num_window_stacks; ++i)
+  for (uint i = 0; i < num_window_stacks; ++i)
     windows[i] = window_stack_[i]->getFrameWindow()->getXWin();
 
-  CwmMachineInst->restackWindows(windows, window_stack_.size());
+  CwmMachineInst->restackWindows(windows, int(window_stack_.size()));
 
   delete [] windows;
 }
@@ -86,9 +86,9 @@ void
 CwmWindowGroup::
 map()
 {
-  int num_window_stacks = window_stack_.size();
+  auto num_window_stacks = window_stack_.size();
 
-  for (int i = 0; i < num_window_stacks; ++i)
+  for (uint i = 0; i < num_window_stacks; ++i)
     window_stack_[i]->getFrameWindow()->map();
 }
 
@@ -96,9 +96,9 @@ void
 CwmWindowGroup::
 unmap()
 {
-  int num_window_stacks = window_stack_.size();
+  auto num_window_stacks = window_stack_.size();
 
-  for (int i = 0; i < num_window_stacks; ++i)
+  for (uint i = 0; i < num_window_stacks; ++i)
     window_stack_[i]->getFrameWindow()->unmap();
 }
 
@@ -106,20 +106,20 @@ bool
 CwmWindowGroup::
 contains(CwmWMWindow *window)
 {
-  int num_window_stacks = window_stack_.size();
+  auto num_window_stacks = window_stack_.size();
 
-  for (int i = 0; i < num_window_stacks; ++i)
+  for (uint i = 0; i < num_window_stacks; ++i)
     if (window_stack_[i] == window)
       return true;
 
   return false;
 }
 
-int
+uint
 CwmWindowGroup::
 size() const
 {
-  return window_stack_.size();
+  return uint(window_stack_.size());
 }
 
 CwmWMWindow &
@@ -138,9 +138,9 @@ getBottomWindow() const
 
 CwmWMWindow &
 CwmWindowGroup::
-operator[](int i) const
+operator[](uint i) const
 {
-  if (i < 0 || i >= (int) window_stack_.size())
+  if (i < 0 || i >= uint(window_stack_.size()))
     throw "Invalid Index";
 
   return *(window_stack_[i]);
@@ -176,9 +176,9 @@ update()
 
   screen_window_groups_ = new CwmScreenWindowGroups(screen_);
 
-  int num_screen_window_groups_ = screen_window_groups_->size();
+  auto num_screen_window_groups_ = screen_window_groups_->size();
 
-  for (int i = 0; i < num_screen_window_groups_; ++i) {
+  for (uint i = 0; i < num_screen_window_groups_; ++i) {
     CwmWMWindow &window = (*screen_window_groups_)[i].getBottomWindow();
 
     if (window.getCirculateSkip())
@@ -208,7 +208,7 @@ void
 CwmCirculateWindowStack::
 circulateUp()
 {
-  int num_window_groups = window_groups_.size();
+  auto num_window_groups = window_groups_.size();
 
   if (num_window_groups > 1)
     raise(&getBottomGroup().getBottomWindow());
@@ -218,7 +218,7 @@ void
 CwmCirculateWindowStack::
 circulateDown()
 {
-  int num_window_groups = window_groups_.size();
+  auto num_window_groups = window_groups_.size();
 
   if (num_window_groups > 1)
     lower(&getTopGroup().getBottomWindow());
@@ -228,7 +228,7 @@ void
 CwmCirculateWindowStack::
 lower(CwmWMWindow *window)
 {
-  int num_window_groups = window_groups_.size();
+  auto num_window_groups = window_groups_.size();
 
   if (num_window_groups < 2) {
     window->getFrameWindow()->lower();
@@ -263,7 +263,7 @@ void
 CwmCirculateWindowStack::
 raise(CwmWMWindow *window)
 {
-  int num_window_groups = window_groups_.size();
+  auto num_window_groups = window_groups_.size();
 
   if (num_window_groups < 2) {
     window->getFrameWindow()->raise();
@@ -298,7 +298,7 @@ CwmWindowGroup *
 CwmCirculateWindowStack::
 getWindowGroup(CwmWMWindow *window)
 {
-  for (int i = 0; i < (int) window_groups_.size(); i++)
+  for (uint i = 0; i < uint(window_groups_.size()); i++)
     if (window_groups_[i]->contains(window))
       return window_groups_[i];
 
@@ -309,9 +309,9 @@ void
 CwmCirculateWindowStack::
 restack()
 {
-  int num_window_groups = window_groups_.size();
+  auto num_window_groups = window_groups_.size();
 
-  for (int i = 0; i < num_window_groups; i++)
+  for (uint i = 0; i < num_window_groups; i++)
     window_groups_[i]->restack();
 
   update();
@@ -319,13 +319,13 @@ restack()
   CwmAdvHintsInst->setStackedClientList(screen_);
 }
 
-int
+uint
 CwmCirculateWindowStack::
 size() const
 {
-  int num_window_groups = window_groups_.size();
+  auto num_window_groups = window_groups_.size();
 
-  return num_window_groups;
+  return uint(num_window_groups);
 }
 
 CwmWindowGroup &
@@ -344,11 +344,11 @@ getBottomGroup() const
 
 CwmWindowGroup &
 CwmCirculateWindowStack::
-operator[](int i) const
+operator[](uint i) const
 {
-  int num_window_groups = window_groups_.size();
+  auto num_window_groups = window_groups_.size();
 
-  if (i < 0 || i >= num_window_groups)
+  if (i < 0 || i >= uint(num_window_groups))
     throw "Invalid Index";
 
   return *window_groups_[i];
@@ -358,7 +358,7 @@ bool
 CwmCirculateWindowStack::
 isTop(CwmWMWindow *window)
 {
-  int num_window_groups = window_groups_.size();
+  auto num_window_groups = window_groups_.size();
 
   if (num_window_groups == 0)
     return false;
@@ -386,7 +386,7 @@ CwmScreenWindowGroups(CwmScreen &screen)
   if (! CwmMachineInst->getWindowChildren(root_xwin, &children, &num_children))
     return;
 
-  for (int i = (int) num_children - 1; i >= 0; i--) {
+  for (int i = int(num_children - 1); i >= 0; i--) {
     CwmWMWindow *window = CwmMachineInst->getWindowWMWindow(children[i]);
 
     if (! window || window->getParent() != 0)
@@ -398,25 +398,25 @@ CwmScreenWindowGroups(CwmScreen &screen)
   }
 
   if (children != 0)
-    XFree((char *) children);
+    XFree(children);
 }
 
 CwmScreenWindowGroups::
 ~CwmScreenWindowGroups()
 {
-  int num_window_groups = window_groups_.size();
+  auto num_window_groups = window_groups_.size();
 
-  for (int i = 0; i < num_window_groups; i++)
+  for (uint i = 0; i < num_window_groups; i++)
     delete window_groups_[i];
 }
 
-int
+uint
 CwmScreenWindowGroups::
 size() const
 {
-  int num_window_groups = window_groups_.size();
+  auto num_window_groups = window_groups_.size();
 
-  return num_window_groups;
+  return uint(num_window_groups);
 }
 
 CwmWindowGroup &
@@ -435,9 +435,9 @@ getBottomGroup() const
 
 CwmWindowGroup &
 CwmScreenWindowGroups::
-operator[](int i) const
+operator[](uint i) const
 {
-  int num_window_groups = window_groups_.size();
+  auto num_window_groups = window_groups_.size();
 
   if (i < 0 || i >= num_window_groups)
     throw "Invalid Index";
