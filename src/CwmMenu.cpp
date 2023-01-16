@@ -192,7 +192,7 @@ CwmMenuEntry *
 CwmMenuDef::
 getEntry(uint i)
 {
-  if (i < 0 || i >= uint(entries_.size()))
+  if (i >= uint(entries_.size()))
     throw "Invalid Menu Def Index";
 
   return entries_[i];
@@ -247,14 +247,14 @@ CwmMenuEntry::
 setClientData(CwmScreen *screen, CwmWMWindow *window, CwmDeskIcon *icon)
 {
   if      (type_ == CWM_MENU_BUTTON_TYPE) {
-    if (proc_ == reinterpret_cast<CwmMenuProc>(CwmFunctionDef::processProc)) {
+    if (proc_ == function_cast<CwmMenuProc>(CwmFunctionDef::processProc)) {
       auto *function = static_cast<CwmFunctionDef *>(data1_);
 
       function->setObjects(screen, window, icon);
     }
   }
   else if (type_ == CWM_MENU_TOGGLE_TYPE) {
-    if (proc_ == reinterpret_cast<CwmMenuProc>(CwmFunctionDef::processProc)) {
+    if (proc_ == function_cast<CwmMenuProc>(CwmFunctionDef::processProc)) {
       auto *function = static_cast<CwmFunctionDef *>(data1_);
 
       function->setObjects(screen, window, icon);
@@ -1630,13 +1630,13 @@ createDefaultRootMenu()
     menu_def->addTitle   ("Root Menu" );
     menu_def->addSplitter("----------");
     menu_def->addButton  ("", "New Window", '\0', "",
-                          reinterpret_cast<CwmMenuProc>(&CwmScreenMenu::runXCommandProc),
+                          function_cast<CwmMenuProc>(&CwmScreenMenu::runXCommandProc),
                           static_cast<CwmData>(const_cast<char *>("xterm &")));
     menu_def->addButton  ("", "Restart"   , '\0', "",
-                          reinterpret_cast<CwmMenuProc>(&CwmScreenMenu::restartCwmProc), nullptr);
+                          function_cast<CwmMenuProc>(&CwmScreenMenu::restartCwmProc), nullptr);
     menu_def->addSplitter("----------");
     menu_def->addButton  ("", "Quit"      , '\0', "",
-                          reinterpret_cast<CwmMenuProc>(&CwmScreenMenu::quitCwmProc), nullptr);
+                          function_cast<CwmMenuProc>(&CwmScreenMenu::quitCwmProc), nullptr);
   }
 
   return menu_def;

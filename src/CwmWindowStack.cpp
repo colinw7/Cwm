@@ -140,7 +140,7 @@ CwmWMWindow &
 CwmWindowGroup::
 operator[](uint i) const
 {
-  if (i < 0 || i >= uint(window_stack_.size()))
+  if (i >= uint(window_stack_.size()))
     throw "Invalid Index";
 
   return *(window_stack_[i]);
@@ -348,7 +348,7 @@ operator[](uint i) const
 {
   auto num_window_groups = window_groups_.size();
 
-  if (i < 0 || i >= uint(num_window_groups))
+  if (i >= uint(num_window_groups))
     throw "Invalid Index";
 
   return *window_groups_[i];
@@ -439,7 +439,7 @@ operator[](uint i) const
 {
   auto num_window_groups = window_groups_.size();
 
-  if (i < 0 || i >= num_window_groups)
+  if (i >= num_window_groups)
     throw "Invalid Index";
 
   return *(window_groups_[i]);

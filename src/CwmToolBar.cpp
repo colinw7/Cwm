@@ -342,7 +342,7 @@ buildMenu(CwmCirculateWindowStack &window_stack)
     }
     else
       menu_def->addButton("", window.getName(), '\0', "",
-                          reinterpret_cast<CwmMenuProc>(raiseWindowProc),
+                          function_cast<CwmMenuProc>(raiseWindowProc),
                           static_cast<CwmData>(&window));
   }
 
@@ -362,7 +362,7 @@ buildMenuCascade(CwmWindowGroup &window_group)
 
     if (&window != &bottom_window)
       menu_def->addButton("", window.getName(), '\0', "",
-                          reinterpret_cast<CwmMenuProc>(raiseWindowProc),
+                          function_cast<CwmMenuProc>(raiseWindowProc),
                           static_cast<CwmData>(&window));
   }
 

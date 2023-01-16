@@ -809,26 +809,26 @@ createMenuDef()
   menu_def_ = new CwmMenuDef();
 
   menu_def_->addButton("", "Restore", 'R', "Alt<Key>F5",
-                       reinterpret_cast<CwmMenuProc>(CwmDeskIcon::restoreProc),
+                       function_cast<CwmMenuProc>(CwmDeskIcon::restoreProc),
                        static_cast<CwmData>(this));
 
   menu_def_->addButton("", "Move", 'M', "Alt<Key>F7",
-                       reinterpret_cast<CwmMenuProc>(CwmDeskIcon::moveProc),
+                       function_cast<CwmMenuProc>(CwmDeskIcon::moveProc),
                        static_cast<CwmData>(this));
 
   menu_def_->addButton("", "Raise", 'a', "Alt<Key>F2",
-                       reinterpret_cast<CwmMenuProc>(CwmDeskIcon::raiseProc),
+                       function_cast<CwmMenuProc>(CwmDeskIcon::raiseProc),
                        static_cast<CwmData>(this));
 
   menu_def_->addButton("", "Lower", 'L', "Alt<Key>F3",
-                       reinterpret_cast<CwmMenuProc>(CwmDeskIcon::lowerProc),
+                       function_cast<CwmMenuProc>(CwmDeskIcon::lowerProc),
                        static_cast<CwmData>(this));
 
   if (window_->getCloseFunctionHint()) {
     menu_def_->addSplitter("--------");
 
     menu_def_->addButton("", "Close", 'C', "Alt<Key>F4",
-                         reinterpret_cast<CwmMenuProc>(CwmDeskIcon::closeProc),
+                         function_cast<CwmMenuProc>(CwmDeskIcon::closeProc),
                          static_cast<CwmData>(this));
   }
 }

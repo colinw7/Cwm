@@ -1243,7 +1243,7 @@ loadMenu(const std::string &path, const std::string &)
       function_def->setData(new std::string(data));
 
       menu_def->addButton(image, name, (mnemonic.size() > 0 ? mnemonic[0] : '\0'), accelerator,
-                          reinterpret_cast<CwmMenuProc>(CwmFunctionDef::processProc), function_def);
+                          function_cast<CwmMenuProc>(CwmFunctionDef::processProc), function_def);
     }
     else if (CStrUtil::casecmp(type, "toggle") == 0) {
       std::string name        = getSectionResource(path + "/name", *psection1, "toggle");
@@ -1258,7 +1258,7 @@ loadMenu(const std::string &path, const std::string &)
       function_def->setData(new std::string(data));
 
       menu_def->addToggle(image, name, (mnemonic.size() > 0 ? mnemonic[0] : '\0'), accelerator,
-                          reinterpret_cast<CwmMenuProc>(CwmFunctionDef::processProc), function_def);
+                          function_cast<CwmMenuProc>(CwmFunctionDef::processProc), function_def);
     }
     else if (CStrUtil::casecmp(type, "cascade") == 0) {
       std::string name  = getSectionResource(path + "/name", *psection1, "cascade");

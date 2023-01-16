@@ -312,7 +312,7 @@ processConfigureRequest(XConfigureRequestEvent *event)
 
     mask = CWX | CWY | CWWidth | CWHeight;
 
-    mask &= event->value_mask;
+    mask &= uint(event->value_mask);
 
     CwmMachineInst->debugf("Mask %x\n", mask);
 
@@ -375,7 +375,7 @@ processConfigureRequest(XConfigureRequestEvent *event)
 
     mask = CWX | CWY | CWWidth | CWHeight | CWBorderWidth;
 
-    mask &= event->value_mask;
+    mask &= uint(event->value_mask);
 
     CwmMachineInst->debugf("Mask %x\n", event->value_mask);
 

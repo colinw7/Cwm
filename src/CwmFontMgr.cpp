@@ -93,7 +93,7 @@ void
 CwmFont::
 drawString(CwmWindow *xwindow, CwmGraphics *graphics, int x, int y, const std::string &text)
 {
-  auto *xfont = cxfont_.cast<CXFont>();
+  auto *xfont = dynamic_cast<CXFont *>(cxfont_.get());
 
   auto *xrt_font = xfont->getXrtFont();
 
@@ -104,7 +104,7 @@ void
 CwmFont::
 drawString(CwmXPixmap *xpixmap, CwmGraphics *graphics, int x, int y, const std::string &text)
 {
-  auto *xfont = cxfont_.cast<CXFont>();
+  auto *xfont = dynamic_cast<CXFont *>(cxfont_.get());
 
   auto *xrt_font = xfont->getXrtFont();
 

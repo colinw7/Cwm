@@ -500,14 +500,14 @@ createMenuDef()
   menu_def_ = new CwmMenuDef();
 
   menu_def_->addButton("", "Restore", 'R', "Alt<Key>F5",
-                       reinterpret_cast<CwmMenuProc>(CwmToolBarIcon::restoreProc),
+                       function_cast<CwmMenuProc>(CwmToolBarIcon::restoreProc),
                        static_cast<CwmData>(this));
 
   if (window_->getCloseFunctionHint()) {
     menu_def_->addSplitter("--------");
 
     menu_def_->addButton("", "Close", 'C', "Alt<Key>F4",
-                         reinterpret_cast<CwmMenuProc>(CwmToolBarIcon::closeProc),
+                         function_cast<CwmMenuProc>(CwmToolBarIcon::closeProc),
                          static_cast<CwmData>(this));
   }
 }

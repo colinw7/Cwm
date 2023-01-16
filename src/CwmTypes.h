@@ -191,4 +191,11 @@ typedef void (*CwmSigHandler)
 
 typedef std::vector<std::string> StringVectorT;
 
+using NullFunction = void (*)(void);
+
+template<typename T, typename U>
+T function_cast(const U &u) {
+  return T(NullFunction(u));
+};
+
 #endif

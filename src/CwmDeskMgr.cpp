@@ -93,7 +93,7 @@ getMenuDef()
     auto mnemonic  = desks_[i]->getMnemonic();
 
     menu_def_->addToggle("", desk_name, mnemonic, "",
-                         reinterpret_cast<CwmMenuProc>(CwmDeskMgr::moveToDesk),
+                         function_cast<CwmMenuProc>(CwmDeskMgr::moveToDesk),
                          static_cast<CwmData>(this),
                          static_cast<CwmData>(desks_[i]));
   }
