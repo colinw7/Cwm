@@ -8,7 +8,7 @@ class CwmIdleTimer : public CXtTimer {
  public:
   CwmIdleTimer(CwmIdle *idle);
 
-  void timeOut();
+  void timeOut() override;
 };
 
 static const int CWM_IDLE_TIMEOUT = 1000;
@@ -17,7 +17,7 @@ CwmIdle::
 CwmIdle()
 {
   enabled_   = true;
-  timer_     = 0;
+  timer_     = nullptr;
   idle_xwin_ = None;
 }
 
@@ -60,7 +60,7 @@ start()
   if (enabled_ && idle_xwin_ != None) {
     CwmWindow *xwindow = CwmMachineInst->getWindowCwmXWindow(idle_xwin_);
 
-    if (xwindow != 0) {
+    if (xwindow) {
       CwmIdleState idle_state(false);
 
       xwindow->callCallbacks(CWM_CALLBACK_IDLE, &idle_state);
@@ -81,7 +81,7 @@ timeOut()
   if (! enabled_)
     return;
 
-  CwmScreen *pointer_screen = 0;
+  CwmScreen *pointer_screen = nullptr;
 
   int num_screens = CwmMachineInst->getNumScreens();
 
@@ -95,10 +95,10 @@ timeOut()
     }
   }
 
-  if (pointer_screen != 0) {
+  if (pointer_screen) {
     CwmWindow *xwindow = pointer_screen->getPointerWindow();
 
-    if (xwindow != 0) {
+    if (xwindow) {
       if (xwindow->getXWin() != idle_xwin_) {
         idle_xwin_ = xwindow->getXWin();
 

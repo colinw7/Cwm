@@ -89,7 +89,7 @@ processExpose(XExposeEvent *event)
 {
   CwmWindow *xwindow = CwmMachineInst->getWindowCwmXWindow(event->window);
 
-  if (xwindow == 0)
+  if (xwindow == nullptr)
     return false;
 
   if      (isMenu(xwindow))
@@ -128,7 +128,7 @@ processButtonPress(XButtonPressedEvent *event)
 {
   CwmWMWindow *window = CwmMachineInst->getWindowWMWindow(event->window);
 
-  if (window == 0)
+  if (window == nullptr)
     return false;
 
   CwmWindow *xwindow = CwmMachineInst->getWindowCwmXWindow(event->window);
@@ -290,91 +290,91 @@ bool
 CwmDecoration::
 isMenu(CwmWindow *xwindow)
 {
-  return (menu_child_ != 0 && xwindow == menu_child_->getXWindow());
+  return (menu_child_ != nullptr && xwindow == menu_child_->getXWindow());
 }
 
 bool
 CwmDecoration::
 isTitle(CwmWindow *xwindow)
 {
-  return (title_child_ != 0 && xwindow == title_child_->getXWindow());
+  return (title_child_ != nullptr && xwindow == title_child_->getXWindow());
 }
 
 bool
 CwmDecoration::
 isMinimize(CwmWindow *xwindow)
 {
-  return (minimize_child_ != 0 && xwindow == minimize_child_->getXWindow());
+  return (minimize_child_ != nullptr && xwindow == minimize_child_->getXWindow());
 }
 
 bool
 CwmDecoration::
 isMaximize(CwmWindow *xwindow)
 {
-  return (maximize_child_ != 0 && xwindow == maximize_child_->getXWindow());
+  return (maximize_child_ != nullptr && xwindow == maximize_child_->getXWindow());
 }
 
 bool
 CwmDecoration::
 isClose(CwmWindow *xwindow)
 {
-  return (close_child_ != 0 && xwindow == close_child_->getXWindow());
+  return (close_child_ != nullptr && xwindow == close_child_->getXWindow());
 }
 
 bool
 CwmDecoration::
 isNSide(CwmWindow *xwindow)
 {
-  return (n_side_child_ != 0 && xwindow == n_side_child_->getXWindow());
+  return (n_side_child_ != nullptr && xwindow == n_side_child_->getXWindow());
 }
 
 bool
 CwmDecoration::
 isSSide(CwmWindow *xwindow)
 {
-  return (s_side_child_ != 0 && xwindow == s_side_child_->getXWindow());
+  return (s_side_child_ != nullptr && xwindow == s_side_child_->getXWindow());
 }
 
 bool
 CwmDecoration::
 isWSide(CwmWindow *xwindow)
 {
-  return (w_side_child_ != 0 && xwindow == w_side_child_->getXWindow());
+  return (w_side_child_ != nullptr && xwindow == w_side_child_->getXWindow());
 }
 
 bool
 CwmDecoration::
 isESide(CwmWindow *xwindow)
 {
-  return (e_side_child_ != 0 && xwindow == e_side_child_->getXWindow());
+  return (e_side_child_ != nullptr && xwindow == e_side_child_->getXWindow());
 }
 
 bool
 CwmDecoration::
 isNWCorner(CwmWindow *xwindow)
 {
-  return (nw_corner_child_ != 0 && xwindow == nw_corner_child_->getXWindow());
+  return (nw_corner_child_ != nullptr && xwindow == nw_corner_child_->getXWindow());
 }
 
 bool
 CwmDecoration::
 isNECorner(CwmWindow *xwindow)
 {
-  return (ne_corner_child_ != 0 && xwindow == ne_corner_child_->getXWindow());
+  return (ne_corner_child_ != nullptr && xwindow == ne_corner_child_->getXWindow());
 }
 
 bool
 CwmDecoration::
 isSWCorner(CwmWindow *xwindow)
 {
-  return (sw_corner_child_ != 0 && xwindow == sw_corner_child_->getXWindow());
+  return (sw_corner_child_ != nullptr && xwindow == sw_corner_child_->getXWindow());
 }
 
 bool
 CwmDecoration::
 isSECorner(CwmWindow *xwindow)
 {
-  return (se_corner_child_ != 0 && xwindow == se_corner_child_->getXWindow());
+  return (se_corner_child_ != nullptr && xwindow == se_corner_child_->getXWindow());
 }
 
 void
@@ -382,33 +382,33 @@ CwmDecoration::
 print()
 {
   CwmMachineInst->logf("  Container %x\n",
-                       container_child_ ? container_child_->getXWindow() : 0);
+                       container_child_ ? container_child_->getXWindow() : nullptr);
   CwmMachineInst->logf("   Menu      %x\n",
-                       menu_child_      ? menu_child_     ->getXWindow() : 0);
+                       menu_child_      ? menu_child_     ->getXWindow() : nullptr);
   CwmMachineInst->logf("   Title     %x\n",
-                       title_child_     ? title_child_    ->getXWindow() : 0);
+                       title_child_     ? title_child_    ->getXWindow() : nullptr);
   CwmMachineInst->logf("   Minimize  %x\n",
-                       minimize_child_  ? minimize_child_ ->getXWindow() : 0);
+                       minimize_child_  ? minimize_child_ ->getXWindow() : nullptr);
   CwmMachineInst->logf("   Maximize  %x\n",
-                       maximize_child_  ? maximize_child_ ->getXWindow() : 0);
+                       maximize_child_  ? maximize_child_ ->getXWindow() : nullptr);
   CwmMachineInst->logf("   Close     %x\n",
-                       close_child_     ? close_child_    ->getXWindow() : 0);
+                       close_child_     ? close_child_    ->getXWindow() : nullptr);
   CwmMachineInst->logf("   N Side    %x\n",
-                       n_side_child_    ? n_side_child_   ->getXWindow() : 0);
+                       n_side_child_    ? n_side_child_   ->getXWindow() : nullptr);
   CwmMachineInst->logf("   S Side    %x\n",
-                       s_side_child_    ? s_side_child_   ->getXWindow() : 0);
+                       s_side_child_    ? s_side_child_   ->getXWindow() : nullptr);
   CwmMachineInst->logf("   W Side    %x\n",
-                       w_side_child_    ? w_side_child_   ->getXWindow() : 0);
+                       w_side_child_    ? w_side_child_   ->getXWindow() : nullptr);
   CwmMachineInst->logf("   E Side    %x\n",
-                       e_side_child_    ? e_side_child_   ->getXWindow() : 0);
+                       e_side_child_    ? e_side_child_   ->getXWindow() : nullptr);
   CwmMachineInst->logf("   NW Corner %x\n",
-                       nw_corner_child_ ? nw_corner_child_->getXWindow() : 0);
+                       nw_corner_child_ ? nw_corner_child_->getXWindow() : nullptr);
   CwmMachineInst->logf("   NE Corner %x\n",
-                       ne_corner_child_ ? ne_corner_child_->getXWindow() : 0);
+                       ne_corner_child_ ? ne_corner_child_->getXWindow() : nullptr);
   CwmMachineInst->logf("   SW Corner %x\n",
-                       sw_corner_child_ ? sw_corner_child_->getXWindow() : 0);
+                       sw_corner_child_ ? sw_corner_child_->getXWindow() : nullptr);
   CwmMachineInst->logf("   SE Corner %x\n",
-                       se_corner_child_ ? se_corner_child_->getXWindow() : 0);
+                       se_corner_child_ ? se_corner_child_->getXWindow() : nullptr);
 }
 
 void

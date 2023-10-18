@@ -46,7 +46,7 @@ parseShowFeedback(const std::string &str)
 {
   int feedback = CWM_FEEDBACK_NONE;
 
-  auto words = CStrUtil::toWords(str, 0);
+  auto words = CStrUtil::toWords(str, nullptr);
 
   for (int i = 0; i < int(words.size()); i++) {
     std::string word = words[i].getWord();
@@ -94,7 +94,7 @@ parseIconDecoration(const std::string &str)
 {
   int decoration = CWM_ICON_DECORATION_NONE;
 
-  CStrWords words = CStrUtil::toWords(str, 0);
+  CStrWords words = CStrUtil::toWords(str, nullptr);
 
   for (int i = 0; i < int(words.size()); i++) {
     if      (CStrUtil::casecmp(words[i].getWord(), "label") == 0)

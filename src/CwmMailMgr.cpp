@@ -12,7 +12,7 @@ class CwmMailMgrTimer : public CXtTimer {
  public:
   CwmMailMgrTimer(CwmMailMgr *mgr);
 
-  void timeOut();
+  void timeOut() override;
 };
 
 CwmMailMgr::
@@ -20,7 +20,7 @@ CwmMailMgr()
 {
   initialized_ = false;
   last_error_  = 0;
-  timer_       = 0;
+  timer_       = nullptr;
 }
 
 CwmMailMgr::

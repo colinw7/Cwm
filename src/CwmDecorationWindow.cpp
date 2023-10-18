@@ -3,7 +3,7 @@
 CwmWindowChild::
 CwmWindowChild(CwmDecoration *decoration, CwmWMWindow *window,
                uint event_mask, CwmCursorType cursor) :
- decoration_(decoration), window_(window), xwindow_(None),
+ decoration_(decoration), window_(window), xwindow_(nullptr),
  selected_(false), info_string_("")
 {
   xwindow_ = new CwmWindow(window_->getScreen(),

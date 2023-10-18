@@ -2,7 +2,7 @@
 
 CwmTabWindow::
 CwmTabWindow(CwmScreen &screen) :
- screen_(screen), xwindow_(0), graphics_(0)
+ screen_(screen), xwindow_(nullptr), graphics_(nullptr)
 {
   init();
 }
@@ -31,9 +31,7 @@ show(const std::string &str)
   x -= width /2;
   y -= height/2;
 
-  if (xwindow_ != 0  && str_    == str    &&
-      x_       == x     && y_      == y      &&
-      width_   == width && height_ == height)
+  if (xwindow_ && str_ == str && x_ == x && y_ == y && width_ == width && height_ == height)
     return;
 
   hide();
@@ -62,7 +60,7 @@ hide()
 {
   delete xwindow_;
 
-  xwindow_ = 0;
+  xwindow_ = nullptr;
 }
 
 void

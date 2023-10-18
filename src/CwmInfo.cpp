@@ -8,14 +8,14 @@ class CwmInfoTimer : public CXtTimer {
  public:
   CwmInfoTimer(CwmInfo *info);
 
-  void timeOut();
+  void timeOut() override;
 };
 
 static const int CWM_INFO_TIMEOUT = 2000;
 
 CwmInfo::
 CwmInfo(CwmScreen &screen1) :
- screen(screen1), xwindow(None), graphics(0)
+ screen(screen1), xwindow(nullptr), graphics(nullptr)
 {
   init();
 }
@@ -74,11 +74,11 @@ hide()
 {
   delete timer;
 
-  timer = 0;
+  timer = nullptr;
 
   delete xwindow;
 
-  xwindow = 0;
+  xwindow = nullptr;
 }
 
 void
@@ -90,7 +90,7 @@ init()
 
   graphics = new CwmGraphics(screen, font, color);
 
-  timer = 0;
+  timer = nullptr;
 }
 
 void

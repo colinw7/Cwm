@@ -36,7 +36,7 @@ open()
     return file_->open(CFile::Mode::APPEND);
   }
   else {
-    file_ = 0;
+    file_ = nullptr;
 
     return false;
   }
@@ -46,7 +46,7 @@ void
 CwmLog::
 print(const std::string &msg)
 {
-  if (file_ != 0) {
+  if (file_) {
     file_->write(COSTime::getTimeString() + ": " + msg);
 
     file_->flush();

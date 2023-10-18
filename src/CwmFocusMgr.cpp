@@ -19,7 +19,7 @@ class CwmFocusMgrTimer : CXtTimer {
 
   CwmFocusMgr *mgr() const { return mgr_; }
 
-  void timeOut();
+  void timeOut() override;
 };
 
 CwmFocusMgr::
@@ -164,7 +164,7 @@ setFocusWindow(CwmWMWindow *window)
 
     CwmWindow *xwindow = window->getUserWindow();
 
-    if (xwindow != 0) {
+    if (xwindow) {
       setInputFocus(xwindow);
 
       CwmScreen &screen = window->getScreen();
@@ -223,7 +223,7 @@ resetFocusWindow()
 
   setInputFocus(xwindow);
 
-  CwmAdvHintsInst->setActiveWindow(screen, 0);
+  CwmAdvHintsInst->setActiveWindow(screen, nullptr);
 }
 
 void
@@ -235,12 +235,12 @@ grabButtons(CwmWMWindow *window)
     return;
   }
 
-  if (grab_buttons_window_ != 0)
+  if (grab_buttons_window_)
     grab_buttons_window_->getFrameWindow()->ungrabButtonPress();
 
   grab_buttons_window_ = window;
 
-  if (grab_buttons_window_ != 0)
+  if (grab_buttons_window_)
     grab_buttons_window_->getFrameWindow()->grabButtonPress();
 }
 
@@ -253,7 +253,7 @@ ungrabButtons(CwmWMWindow *window)
     return;
   }
 
-  if (grab_buttons_window_ != 0)
+  if (grab_buttons_window_)
     grab_buttons_window_->getFrameWindow()->ungrabButtonPress();
 
   grab_buttons_window_ = nullptr;

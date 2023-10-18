@@ -16,8 +16,9 @@ class CwmTitleChild : public CwmWindowChild {
   CwmTitleChild(CwmDecoration *decoration, CwmWMWindow *window);
  ~CwmTitleChild();
 
-  void calcSize(int *x, int *y, int *width, int *height);
-  void detail();
+  void calcSize(int *x, int *y, int *width, int *height) override;
+
+  void detail() override;
 
  private:
   void detailGradient();

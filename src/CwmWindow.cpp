@@ -222,7 +222,7 @@ setStackMode(int stack_mode, CwmWMWindow *sibling)
 
   xwc.stack_mode = stack_mode;
 
-  if (sibling != 0) {
+  if (sibling) {
     xwc.sibling = sibling->getXWin();
 
     mask |= CWSibling;
@@ -230,7 +230,7 @@ setStackMode(int stack_mode, CwmWMWindow *sibling)
 
   CwmMachineInst->debugf("Stack Mode = %d\n", xwc.stack_mode);
 
-  if (sibling != 0)
+  if (sibling)
     CwmMachineInst->debugf("Sibling %s\n", sibling->getName().c_str());
 
   CwmMachineInst->configureWindow(xwin_, uint(mask), &xwc);
@@ -539,14 +539,14 @@ void
 CwmWindow::
 getPosition(int *x, int *y)
 {
-  CwmMachineInst->getWindowGeometry(xwin_, x, y, 0, 0, 0);
+  CwmMachineInst->getWindowGeometry(xwin_, x, y, nullptr, nullptr, nullptr);
 }
 
 void
 CwmWindow::
 getSize(int *width, int *height)
 {
-  CwmMachineInst->getWindowGeometry(xwin_, 0, 0, width, height, 0);
+  CwmMachineInst->getWindowGeometry(xwin_, nullptr, nullptr, width, height, nullptr);
 }
 
 void

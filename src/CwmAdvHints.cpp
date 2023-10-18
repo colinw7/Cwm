@@ -53,7 +53,7 @@ createAdvHintsWindow(CwmScreen &screen)
 
   const CXAtom &atom = CwmMachineInst->getAtom("_NET_SUPPORTING_WM_CHECK");
 
-  xwin_ = CwmMachineInst->createWindow(None, -200, -200, 5, 5, 0, 0, 0);
+  xwin_ = CwmMachineInst->createWindow(None, -200, -200, 5, 5, 0, 0, nullptr);
 
   CwmMachineInst->setWindowProperty(root_xwin, atom, xwin_);
   CwmMachineInst->setWindowProperty(xwin_    , atom, xwin_);

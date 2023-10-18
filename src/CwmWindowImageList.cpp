@@ -12,7 +12,7 @@ CwmWindowImageList(CwmWMWindow *window) :
   if (image_file != "") {
     CwmImage *image = CwmImageMgrInst->getImage(screen, image_file);
 
-    if (image != 0)
+    if (image)
       addImage(image, image_file);
   }
 
@@ -21,7 +21,7 @@ CwmWindowImageList(CwmWMWindow *window) :
   if (image_file != "") {
     CwmImage *image = CwmImageMgrInst->getImage(screen, image_file);
 
-    if (image != 0)
+    if (image)
       addImage(image, image_file);
   }
 
@@ -30,7 +30,7 @@ CwmWindowImageList(CwmWMWindow *window) :
   if (image_file != "") {
     CwmImage *image = CwmImageMgrInst->getImage(screen, image_file);
 
-    if (image != 0)
+    if (image)
       addImage(image, image_file);
   }
 
@@ -120,7 +120,7 @@ CwmImage *
 CwmWindowImageList::
 getImage(int width, int height)
 {
-  CwmWindowImage *image = 0;
+  CwmWindowImage *image = nullptr;
   int             dxy   = 0;
 
   WindowImageList::const_iterator pimage1 = images_.begin();
@@ -140,7 +140,7 @@ getImage(int width, int height)
   }
 
   if (! image)
-    return 0;
+    return nullptr;
 
   int dx = width  - image->getWidth ();
   int dy = height - image->getHeight();
@@ -162,7 +162,7 @@ CwmWindowImageList::
 getImage()
 {
   if (images_.size() == 0)
-    return 0;
+    return nullptr;
 
   return images_[0]->getImage();
 }

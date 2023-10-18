@@ -78,7 +78,7 @@ CwmHints(CwmWMWindow *window) :
 
   client_machine_ = "";
 
-  cmap_windows_     = 0;
+  cmap_windows_     = nullptr;
   num_cmap_windows_ = 0;
 
   take_focus_    = false;
@@ -341,13 +341,13 @@ readClassHint()
   res_name_  = "";
   res_class_ = "";
 
-  if (res_name != 0)
+  if (res_name)
     res_name_ = res_name;
 
   if (res_name_ == "")
     res_name_ = name_;
 
-  if (res_class != 0)
+  if (res_class)
     res_class_ = res_class;
 
   if (res_class_ == "" && res_name_ != "") {
@@ -408,7 +408,7 @@ readWMProtocols()
       delete_window_ = true;
   }
 
-  if (protocols != 0)
+  if (protocols)
     delete [] protocols;
 }
 
@@ -655,7 +655,7 @@ lookup(const std::string &name)
     if ((*pvalue1)->isName(name))
       return *pvalue1;
 
-  return 0;
+  return nullptr;
 }
 
 bool

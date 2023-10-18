@@ -36,7 +36,7 @@ class CQWmPager : public CQBypassWindow {
 
   void updateWindows();
 
-  QSize sizeHint() const { return QSize(512, 512); }
+  QSize sizeHint() const override { return QSize(512, 512); }
 
  private slots:
   void desktopSlot(bool b);
@@ -58,11 +58,11 @@ class CQWmPagerCanvas : public QWidget {
  public:
   CQWmPagerCanvas(CQWmPager *pager);
 
-  void paintEvent(QPaintEvent *);
+  void paintEvent(QPaintEvent *) override;
 
-  void mousePressEvent  (QMouseEvent *me);
-  void mouseMoveEvent   (QMouseEvent *me);
-  void mouseReleaseEvent(QMouseEvent *me);
+  void mousePressEvent  (QMouseEvent *me) override;
+  void mouseMoveEvent   (QMouseEvent *me) override;
+  void mouseReleaseEvent(QMouseEvent *me) override;
 
   QPoint mapPoint  (const QPoint &p) const;
   QPoint unmapPoint(const QPoint &p) const;

@@ -28,7 +28,7 @@ CwmToolBarCmd(CwmToolBar &toolbar, CwmToolBarIconDef *icon_def, int x) :
 
   image_ = CwmImageMgrInst->getImage(screen_, icon_def->getIcon(), 16, 16);
 
-  if (image_ == 0)
+  if (! image_)
     image_ = CwmImageMgrInst->getImage(screen_, "", 16, 16);
 
   //------

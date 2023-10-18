@@ -128,7 +128,7 @@ CwmToolBar(CwmToolBarMgr &mgr1) :
     icon_area_x2_ -= clock_->getWidth();
   }
   else
-    clock_ = 0;
+    clock_ = nullptr;
 
   //------
 
@@ -212,7 +212,7 @@ redraw()
 {
   graphics_->drawButtonOut(xwindow_, 0, 0, xwindow_->getWidth(), xwindow_->getHeight(), border_);
 
-  if (clock_ != 0)
+  if (clock_)
     clock_->redraw();
 
   menu_->redraw();
@@ -258,21 +258,21 @@ bool
 CwmToolBar::
 isToolIcon(CwmWindow *xwindow)
 {
-  return (getToolIcon(xwindow) != 0);
+  return (getToolIcon(xwindow) != nullptr);
 }
 
 bool
 CwmToolBar::
 isToolIcon(Window xwin)
 {
-  return (getToolIcon(xwin) != 0);
+  return (getToolIcon(xwin) != nullptr);
 }
 
 bool
 CwmToolBar::
 isToolIcon(CwmWMWindow *window)
 {
-  return (getToolIcon(window) != 0);
+  return (getToolIcon(window) != nullptr);
 }
 
 CwmToolBarIcon *
@@ -380,7 +380,7 @@ raiseWindowProc(CwmWMWindow *window, CwmData)
 
   CwmToolBar *toolbar = window->getDesk()->getToolBar();
 
-  if (toolbar != 0 && toolbar->getAddWindows())
+  if (toolbar && toolbar->getAddWindows())
     toolbar->redraw();
 }
 
@@ -402,7 +402,7 @@ void
 CwmToolBar::
 enable()
 {
-  if (clock_ != 0)
+  if (clock_)
     clock_->enable();
 }
 
@@ -410,7 +410,7 @@ void
 CwmToolBar::
 disable()
 {
-  if (clock_ != 0)
+  if (clock_)
     clock_->disable();
 }
 
@@ -466,7 +466,7 @@ processExpose(CwmWindow *xwindow)
 
   CwmToolBarIcon *icon = getToolIcon(xwindow);
 
-  if (icon != 0) {
+  if (icon) {
     icon->redraw();
 
     return true;
@@ -499,7 +499,7 @@ processButtonPress(Window xwin, int button)
 
   CwmToolBarIcon *tool_icon = getToolIcon(xwin);
 
-  if (tool_icon != 0) {
+  if (tool_icon) {
     if      (button == 1) {
       CwmWMWindow *window = tool_icon->getWindow();
 

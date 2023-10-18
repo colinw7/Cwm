@@ -455,7 +455,7 @@ drawLine(const CImageGC &gc, int x1, int y1, int x2, int y2)
      draw_(draw), gc_(gc) {
     }
 
-    void drawPoint(int x, int y) {
+    void drawPoint(int x, int y) override {
       draw_->drawPoint(*gc_, x, y);
     }
 

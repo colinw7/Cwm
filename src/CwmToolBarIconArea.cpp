@@ -41,8 +41,8 @@ CwmToolBarIconArea(CwmToolBar &toolbar1, int x, int width) :
 
   //------
 
-  restore_event_ = 0;
-  close_event_   = 0;
+  restore_event_ = nullptr;
+  close_event_   = nullptr;
 }
 
 CwmToolBarIconArea::
@@ -92,7 +92,7 @@ getIcon(CwmWindow *xwindow)
     if (icon->getXWindow() == xwindow)
       return icon;
 
-  return 0;
+  return nullptr;
 }
 
 CwmToolBarIcon *
@@ -103,7 +103,7 @@ getIcon(Window xwin)
     if (icon->getXWindow()->getXWin() == xwin)
       return icon;
 
-  return 0;
+  return nullptr;
 }
 
 CwmToolBarIcon *
@@ -114,7 +114,7 @@ getIcon(CwmWMWindow *window)
     if (icon->getWindow() == window)
       return icon;
 
-  return 0;
+  return nullptr;
 }
 
 void
@@ -234,7 +234,7 @@ CXNamedEvent *
 CwmToolBarIconArea::
 getRestoreEvent()
 {
-  if (restore_event_ == 0)
+  if (! restore_event_)
     restore_event_ = new CXNamedEvent("Alt<Key>F5");
 
   return restore_event_;
@@ -244,7 +244,7 @@ CXNamedEvent *
 CwmToolBarIconArea::
 getCloseEvent()
 {
-  if (close_event_ == 0)
+  if (! close_event_)
     close_event_ = new CXNamedEvent("Alt<Key>F4");
 
   return close_event_;
@@ -286,7 +286,7 @@ CwmToolBarIcon(CwmToolBarIconArea &icon_area1, CwmWMWindow *window1) :
 
   border_     = toolbar_.getBorder();
   positioned_ = false;
-  image_      = 0;
+  image_      = nullptr;
 
   uint event_mask = ButtonPressMask | ButtonReleaseMask |
                     EnterWindowMask | LeaveWindowMask   |
@@ -314,7 +314,7 @@ CwmToolBarIcon(CwmToolBarIconArea &icon_area1, CwmWMWindow *window1) :
 
   //------
 
-  menu_def_ = 0;
+  menu_def_ = nullptr;
 
   //------
 
@@ -389,7 +389,7 @@ redraw()
                            xwindow_->getHeight(),
                            border_);
 
-  if (image_ != 0) {
+  if (image_) {
     int x1 = border_ + 2;
     int y1 = xwindow_->getHeight()/2;
 
@@ -410,7 +410,7 @@ redraw()
 
   int x1 = border_ + 2;
 
-  if (image_ != 0)
+  if (image_)
     x1 += image_->getWidth() + 2;
 
   int y1 = border_ + 1;
@@ -485,7 +485,7 @@ void
 CwmToolBarIcon::
 processMenu()
 {
-  if (menu_def_ == 0)
+  if (! menu_def_)
     createMenuDef();
 
   CwmScreen &screen = window_->getScreen();
@@ -629,7 +629,7 @@ operator()(CwmToolBarIcon *icon1, CwmToolBarIcon *icon2)
   CwmUserWindow *user1 = icon1->getWindow()->getUser();
   CwmUserWindow *user2 = icon2->getWindow()->getUser();
 
-  if (user1 == 0 || user2 == 0)
+  if (user1 == nullptr || user2 == nullptr)
     return false;
 
   int cmp = user1->getX() - user2->getX();

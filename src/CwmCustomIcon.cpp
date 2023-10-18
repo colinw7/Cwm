@@ -115,7 +115,7 @@ getImage(CwmScreen &screen) const
 {
   CwmImage *image = CwmImageMgrInst->getImage(screen, getIcon());
 
-  if (image != 0 && (image->getWidth() > 64 || image->getHeight() > 64))
+  if (image && (image->getWidth() > 64 || image->getHeight() > 64))
     image = CwmImageMgrInst->getImage(screen, getIcon(), 64, 64);
 
   if (! image)

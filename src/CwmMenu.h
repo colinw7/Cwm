@@ -23,13 +23,13 @@ class CwmMenuDef {
 
   void addTitle(const std::string &text);
   void addButton(const std::string &image, const std::string &text, int mnemonic,
-                 const std::string &accelerator, CwmMenuProc proc, CwmData data1=0,
-                 CwmData data2=0, CwmData data3=0, CwmData data4=0, CwmData data5=0,
-                 CwmData data6=0);
+                 const std::string &accelerator, CwmMenuProc proc, CwmData data1=nullptr,
+                 CwmData data2=nullptr, CwmData data3=nullptr, CwmData data4=nullptr,
+                 CwmData data5=nullptr, CwmData data6=nullptr);
   void addToggle(const std::string &image, const std::string &text, int mnemonic,
-                 const std::string &accelerator, CwmMenuProc proc, CwmData data1=0,
-                 CwmData data2=0, CwmData data3=0, CwmData data4=0, CwmData data5=0,
-                 CwmData data6=0);
+                 const std::string &accelerator, CwmMenuProc proc, CwmData data1=nullptr,
+                 CwmData data2=nullptr, CwmData data3=nullptr, CwmData data4=nullptr,
+                 CwmData data5=nullptr, CwmData data6=nullptr);
   void addSplitter(const std::string &text);
   void addCascade(const std::string &text, CwmMenuDef *menu_def);
   void addEnd();
@@ -101,16 +101,17 @@ class CwmMenuEntry {
 class CwmMenuTitleEntry : public CwmMenuEntry {
  public:
   CwmMenuTitleEntry(const std::string &text) :
-   CwmMenuEntry(CWM_MENU_TITLE_TYPE, "", text, '\0', "", 0, 0, 0, 0, 0, 0, 0) {
+   CwmMenuEntry(CWM_MENU_TITLE_TYPE, "", text, '\0', "",
+                nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr) {
   }
 };
 
 class CwmMenuButtonEntry : public CwmMenuEntry {
  public:
   CwmMenuButtonEntry(const std::string &image, const std::string &text, int mnemonic,
-                     const std::string &accelerator, CwmMenuProc proc, CwmData data1 = 0,
-                     CwmData data2 = 0, CwmData data3 = 0, CwmData data4 = 0,
-                     CwmData data5 = 0, CwmData data6 = 0) :
+                     const std::string &accelerator, CwmMenuProc proc, CwmData data1 = nullptr,
+                     CwmData data2 = nullptr, CwmData data3 = nullptr, CwmData data4 = nullptr,
+                     CwmData data5 = nullptr, CwmData data6 = nullptr) :
    CwmMenuEntry(CWM_MENU_BUTTON_TYPE, image, text, mnemonic, accelerator,
                 reinterpret_cast<CwmMenuProc>(proc),
                 reinterpret_cast<CwmData>(data1), data2, data3, data4, data5, data6) {
@@ -120,9 +121,9 @@ class CwmMenuButtonEntry : public CwmMenuEntry {
 class CwmMenuToggleEntry : public CwmMenuEntry {
  public:
   CwmMenuToggleEntry(const std::string & /*image*/, const std::string &text, int mnemonic,
-                     const std::string &accelerator, CwmMenuProc proc, CwmData data1 = 0,
-                     CwmData data2 = 0, CwmData data3 = 0, CwmData data4 = 0,
-                     CwmData data5 = 0, CwmData data6 = 0) :
+                     const std::string &accelerator, CwmMenuProc proc, CwmData data1 = nullptr,
+                     CwmData data2 = nullptr, CwmData data3 = nullptr, CwmData data4 = nullptr,
+                     CwmData data5 = nullptr, CwmData data6 = nullptr) :
    CwmMenuEntry(CWM_MENU_TOGGLE_TYPE, "", text, mnemonic, accelerator,
                 reinterpret_cast<CwmMenuProc>(proc),
                 reinterpret_cast<CwmData>(data1), data2, data3, data4, data5, data6) {
@@ -132,15 +133,16 @@ class CwmMenuToggleEntry : public CwmMenuEntry {
 class CwmMenuSplitterEntry : public CwmMenuEntry {
  public:
   CwmMenuSplitterEntry(const std::string &text) :
-   CwmMenuEntry(CWM_MENU_SPLITTER_TYPE, "", text, '\0', "", 0, 0, 0, 0, 0, 0, 0) {
+   CwmMenuEntry(CWM_MENU_SPLITTER_TYPE, "", text, '\0', "",
+                nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr) {
   }
 };
 
 class CwmMenuCascadeEntry : public CwmMenuEntry {
  public:
   CwmMenuCascadeEntry(const std::string &text, CwmMenuDef *menu_def) :
-   CwmMenuEntry(CWM_MENU_CASCADE_TYPE, "", text, '\0', "", 0,
-                reinterpret_cast<CwmData>(menu_def), 0, 0, 0, 0, 0) {
+   CwmMenuEntry(CWM_MENU_CASCADE_TYPE, "", text, '\0', "", nullptr,
+                reinterpret_cast<CwmData>(menu_def), nullptr, nullptr, nullptr, nullptr, nullptr) {
   }
 };
 
@@ -289,11 +291,11 @@ class CwmMenuItem {
   bool isToggle() const { return type_ == CWM_MENU_TOGGLE_TYPE; }
 
   bool isCascade() const {
-    return type_ == CWM_MENU_CASCADE_TYPE && data1_ != 0;
+    return type_ == CWM_MENU_CASCADE_TYPE && data1_ != nullptr;
   }
 
   bool isActiveButton() const {
-    return type_ == CWM_MENU_BUTTON_TYPE && proc_ != 0;
+    return type_ == CWM_MENU_BUTTON_TYPE && proc_ != nullptr;
   }
 
   void setSelected(bool flag) { selected_ = flag; }
@@ -352,7 +354,7 @@ class CwmNamedMenuMgr {
 
 class CwmNamedMenu {
  public:
-  CwmNamedMenu(const std::string &name, CwmMenuDef *menu_def=0);
+  CwmNamedMenu(const std::string &name, CwmMenuDef *menu_def=nullptr);
  ~CwmNamedMenu();
 
   std::string  getName() const { return name_; }

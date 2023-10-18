@@ -85,7 +85,7 @@ openXtDisplay(const std::string &display_name)
   for (i = 0; i < argc; ++i)
     argv1[i] = strdup(argv[i]);
 
-  argv1[i] = 0;
+  argv1[i] = nullptr;
 
   Display *display = CXMachineInst->openXtDisplay(display_name, "Cwm", &argc, argv1);
 
@@ -206,7 +206,7 @@ getWindowCwmXWindow(Window xwin)
     if ((*p1)->getXWin() == xwin)
       return *p1;
 
-  return 0;
+  return nullptr;
 }
 
 bool

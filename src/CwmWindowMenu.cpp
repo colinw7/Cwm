@@ -236,7 +236,7 @@ pasteProc(CwmWMWindow *window, CwmData data)
 {
   std::string *text = static_cast<std::string *>(data);
 
-  if (data != 0)
+  if (data)
     CwmPaste::pasteText(window, *text);
 }
 

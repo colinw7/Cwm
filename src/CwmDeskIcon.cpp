@@ -20,11 +20,11 @@ CwmDeskIconMgr(CwmDesk &desk) :
   desk_mgr->addNotifyProc(CWM_DESK_MGR_NOTIFY_CHANGE_END,
                           &CwmDeskIconMgr::deskChangeEndNotifyProc, this);
 
-  move_event_    = 0;
-  lower_event_   = 0;
-  raise_event_   = 0;
-  close_event_   = 0;
-  restore_event_ = 0;
+  move_event_    = nullptr;
+  lower_event_   = nullptr;
+  raise_event_   = nullptr;
+  close_event_   = nullptr;
+  restore_event_ = nullptr;
 }
 
 CwmDeskIconMgr::
@@ -75,7 +75,7 @@ destroyNotifyProc(CwmWMWindow *window, CwmWindowNotifyType, void *data)
   if (mgr->isWindowOnDesk(window)) {
     CwmDeskIcon *icon = mgr->lookup(window);
 
-    if (icon != 0)
+    if (icon)
       mgr->removeDeskIcon(icon);
 
     delete icon;
@@ -91,7 +91,7 @@ iconiseNotifyProc(CwmWMWindow *window, CwmWindowNotifyType, void *data)
   if (mgr->isWindowOnDesk(window)) {
     CwmDeskIcon *icon = mgr->lookup(window);
 
-    if (icon != 0)
+    if (icon)
       icon->map();
   }
 }
@@ -105,7 +105,7 @@ restoreNotifyProc(CwmWMWindow *window, CwmWindowNotifyType, void *data)
   if (mgr->isWindowOnDesk(window)) {
     CwmDeskIcon *icon = mgr->lookup(window);
 
-    if (icon != 0)
+    if (icon)
       icon->unmap();
   }
 }
@@ -204,14 +204,14 @@ lookup(Window xwin)
   if (picon != desk_icon_map_.end())
     return (*picon).second;
   else
-    return 0;
+    return nullptr;
 }
 
 CXNamedEvent *
 CwmDeskIconMgr::
 getMoveEvent()
 {
-  if (move_event_ == 0)
+  if (move_event_ == nullptr)
     move_event_ = new CXNamedEvent("Alt<Key>F7");
 
   return move_event_;
@@ -221,7 +221,7 @@ CXNamedEvent *
 CwmDeskIconMgr::
 getLowerEvent()
 {
-  if (lower_event_ == 0)
+  if (lower_event_ == nullptr)
     lower_event_ = new CXNamedEvent("Alt<Key>F3");
 
   return lower_event_;
@@ -231,7 +231,7 @@ CXNamedEvent *
 CwmDeskIconMgr::
 getRaiseEvent()
 {
-  if (raise_event_ == 0)
+  if (raise_event_ == nullptr)
     raise_event_ = new CXNamedEvent("Alt<Key>F2");
 
   return raise_event_;
@@ -241,7 +241,7 @@ CXNamedEvent *
 CwmDeskIconMgr::
 getRestoreEvent()
 {
-  if (restore_event_ == 0)
+  if (restore_event_ == nullptr)
     restore_event_ = new CXNamedEvent("Alt<Key>F5");
 
   return restore_event_;
@@ -251,7 +251,7 @@ CXNamedEvent *
 CwmDeskIconMgr::
 getCloseEvent()
 {
-  if (close_event_ == 0)
+  if (close_event_ == nullptr)
     close_event_ = new CXNamedEvent("Alt<Key>F4");
 
   return close_event_;
@@ -283,10 +283,10 @@ CwmDeskIcon(CwmDeskIconMgr &mgr, CwmWMWindow *window) :
   if (CwmResourceDataInst->getIconImageDecoration())
     image_ = window->getImage();
   else
-    image_ = 0;
+    image_ = nullptr;
 
-  pixmap_mask_  = 0;
-  label_mask_   = 0;
+  pixmap_mask_  = nullptr;
+  label_mask_   = nullptr;
   mask_created_ = false;
 
   //------
@@ -299,7 +299,7 @@ CwmDeskIcon(CwmDeskIconMgr &mgr, CwmWMWindow *window) :
     fmt_string_ = new CFmtString(name, icon_label_width);
   }
   else
-    fmt_string_ = 0;
+    fmt_string_ = nullptr;
 
   //------
 
@@ -353,7 +353,7 @@ move()
   bool has_focus = CwmMachineInst->isFocusWindow(window_);
 
   if (has_focus) {
-    CwmMachineInst->setFocusWindow(0);
+    CwmMachineInst->setFocusWindow(nullptr);
 
     redraw();
   }
@@ -796,7 +796,7 @@ void
 CwmDeskIcon::
 processMenu()
 {
-  if (menu_def_ == 0)
+  if (menu_def_ == nullptr)
     createMenuDef();
 
   CwmMenu::processWindowMenu(screen_, xwindow_, menu_def_);
@@ -913,7 +913,7 @@ namedMenuProc(CwmDeskIcon *icon, CwmData data)
 
   CwmMenuDef *menu_def_ = CwmNamedMenuMgrInst->lookupMenuDef(*name);
 
-  if (menu_def_ == 0) {
+  if (menu_def_ == nullptr) {
     CwmMachineInst->logf("Menu %s not found\n", (*name).c_str());
     return;
   }
@@ -1035,7 +1035,7 @@ lookup(const std::string &pattern)
 
 CwmCustomDeskIcon::
 CwmCustomDeskIcon(const std::string &pattern) :
- pattern_(pattern), compile_(0), icon_(""), icon_small_("")
+ pattern_(pattern), compile_(nullptr), icon_(""), icon_small_("")
 {
   compile_ = new CGlob(pattern_.c_str());
 }

@@ -36,7 +36,7 @@ createGnomeWindow(CwmScreen &screen)
 
   const CXAtom &atom = CwmMachineInst->getAtom("_WIN_SUPPORTING_WM_CHECK");
 
-  Window xwin = CwmMachineInst->createWindow(None, -200, -200, 5, 5, 0, 0, 0);
+  Window xwin = CwmMachineInst->createWindow(None, -200, -200, 5, 5, 0, 0, nullptr);
 
   CwmMachineInst->setWindowProperty(root_xwin, atom, xwin);
   CwmMachineInst->setWindowProperty(xwin     , atom, xwin);

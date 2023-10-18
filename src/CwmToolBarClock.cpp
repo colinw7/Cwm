@@ -9,7 +9,7 @@ class CwmToolBarClockTimer : public CXtTimer {
  public:
   CwmToolBarClockTimer(CwmToolBarClock *clock);
 
-  void timeOut();
+  void timeOut() override;
 };
 
 CwmToolBarClock::
@@ -31,7 +31,7 @@ CwmToolBarClock(CwmToolBar &toolbar1) :
 
   //------
 
-  timer_ = 0;
+  timer_ = nullptr;
 
   //------
 
@@ -114,7 +114,7 @@ disable()
 {
   delete timer_;
 
-  timer_ = 0;
+  timer_ = nullptr;
 }
 
 int

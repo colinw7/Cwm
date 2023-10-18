@@ -11,8 +11,8 @@ CwmDeskMgr(CwmScreen &screen, int num_desks) :
     desks_.push_back(desk);
   }
 
-  current_desk_ = 0;
-  menu_def_     = 0;
+  current_desk_ = nullptr;
+  menu_def_     = nullptr;
 }
 
 CwmDeskMgr::
@@ -43,7 +43,7 @@ changeDesk(CwmDesk *desk)
 
   callNotifyProcs(CWM_DESK_MGR_NOTIFY_CHANGE_START);
 
-  if (current_desk_ != 0)
+  if (current_desk_)
     current_desk_->hide();
 
   current_desk_ = desk;
@@ -80,7 +80,7 @@ CwmMenuDef *
 CwmDeskMgr::
 getMenuDef()
 {
-  if (menu_def_ != 0)
+  if (menu_def_)
     return menu_def_;
 
   menu_def_ = new CwmMenuDef();
@@ -114,7 +114,7 @@ getDeskNum(CwmWMWindow *window)
 {
   CwmDesk *desk = getDesk(window);
 
-  if (desk != 0)
+  if (desk)
     return desk->getNum();
 
   return 0;
@@ -126,7 +126,7 @@ getDesk(int num)
 {
   if (num < 0 || num >= int(desks_.size())) {
     CwmMachineInst->logf("Invalid Desk Number %d\n", num);
-    return 0;
+    return nullptr;
   }
 
   return desks_[uint(num)];
@@ -148,7 +148,7 @@ getDesk(CwmWMWindow *window)
         return desk;
   }
 
-  return 0;
+  return nullptr;
 }
 
 int
@@ -331,7 +331,7 @@ disable()
 
 CwmDesk::
 CwmDesk(CwmDeskMgr *mgr, int num) :
- mgr_(mgr), num_(num), root_image_(0)
+ mgr_(mgr), num_(num), root_image_(nullptr)
 {
   name_ = CwmDeskResourceMgrInst->getDeskName(num);
 
@@ -345,12 +345,12 @@ CwmDesk(CwmDeskMgr *mgr, int num) :
   if (CwmDeskResourceMgrInst->getDeskDisplayIcons(num))
     icon_mgr_ = new CwmDeskIconMgr(*this);
   else
-    icon_mgr_ = 0;
+    icon_mgr_ = nullptr;
 
   if (CwmDeskResourceMgrInst->getDeskDisplayToolBar(num))
     toolbar_mgr_ = new CwmToolBarMgr(*this);
   else
-    toolbar_mgr_ = 0;
+    toolbar_mgr_ = nullptr;
 }
 
 CwmDesk::
@@ -421,7 +421,7 @@ void
 CwmDesk::
 drawRootImage()
 {
-  if (root_image_ == 0)
+  if (root_image_ == nullptr)
     initRootImage();
 
   CwmGrabServer grab;
@@ -449,17 +449,17 @@ CwmToolBar *
 CwmDesk::
 getToolBar() const
 {
-  if (toolbar_mgr_ != 0)
+  if (toolbar_mgr_)
     return toolbar_mgr_->getToolBar();
   else
-    return 0;
+    return nullptr;
 }
 
 void
 CwmDesk::
 enable()
 {
-  if (toolbar_mgr_ != 0)
+  if (toolbar_mgr_)
     toolbar_mgr_->enable();
 }
 
@@ -467,6 +467,6 @@ void
 CwmDesk::
 disable()
 {
-  if (toolbar_mgr_ != 0)
+  if (toolbar_mgr_)
     toolbar_mgr_->disable();
 }

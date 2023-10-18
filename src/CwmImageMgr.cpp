@@ -82,13 +82,13 @@ getImage(CwmScreen &screen, const std::string &name, int width, int height)
   if (! named_image) {
     if (name != "") {
       if (name[0] == ' ')
-        return 0;
+        return nullptr;
 
       std::string pathname = getPathName(name);
 
       if (pathname == "") {
         CwmMachineInst->logf("File %s not found on Path\n", name.c_str());
-        return 0;
+        return nullptr;
       }
 
       named_image = new CwmNamedImage(name, pathname);
@@ -112,13 +112,13 @@ getTiledImage(CwmScreen &screen, const std::string &name, int width, int height,
   if (! named_image) {
     if (name != "") {
       if (name[0] == ' ')
-        return 0;
+        return nullptr;
 
       std::string pathname = getPathName(name);
 
       if (pathname == "") {
         CwmMachineInst->logf("File %s not found on Path\n", name.c_str());
-        return 0;
+        return nullptr;
       }
 
       named_image = new CwmNamedImage(name, pathname);
@@ -154,7 +154,7 @@ lookup(const std::string &name)
     if ((*pimage1)->getName() == name)
       return *pimage1;
 
-  return 0;
+  return nullptr;
 }
 
 std::string
@@ -291,7 +291,7 @@ lookup(CwmScreen &screen)
     if (&(*pimage1)->getScreen() == &screen)
       return *pimage1;
 
-  return 0;
+  return nullptr;
 }
 
 CwmScreenImage::
@@ -357,7 +357,7 @@ lookup(int width, int height)
         (*pimage1)->getHeight() == height)
       return *pimage1;
 
-  return 0;
+  return nullptr;
 }
 
 CwmImage *
@@ -368,7 +368,7 @@ lookupBest(int width, int height)
   ImageList::const_iterator pimage2 = images_.end  ();
 
   if (pimage1 == pimage2)
-    return 0;
+    return nullptr;
 
   int dx = abs((*pimage1)->getWidth () - width );
   int dy = abs((*pimage1)->getHeight() - height);
@@ -407,7 +407,7 @@ lookupTiled(int width, int height, int halign, int valign)
         (*ptimage1)->getVAlign() == valign)
       return *ptimage1;
 
-  return 0;
+  return nullptr;
 }
 
 CwmTiledImage::
@@ -481,8 +481,8 @@ void
 CwmImage::
 init()
 {
-  pixmap_      = 0;
-  pixmap_mask_ = 0;
+  pixmap_      = nullptr;
+  pixmap_mask_ = nullptr;
 }
 
 CwmImage::
@@ -499,12 +499,12 @@ draw(CwmWindow *xwindow, CwmGraphics *graphics, int x, int y)
   if (! pixmap_)
     createPixmap(graphics);
 
-  if (pixmap_mask_ != 0)
+  if (pixmap_mask_)
     graphics->startClip(pixmap_mask_, x, y);
 
   graphics->copyArea(pixmap_, xwindow, 0, 0, width_, height_, x, y);
 
-  if (pixmap_mask_ != 0)
+  if (pixmap_mask_)
     graphics->endClip();
 }
 
@@ -515,12 +515,12 @@ draw(CwmXPixmap *xpixmap, CwmGraphics *graphics, int x, int y)
   if (! pixmap_)
     createPixmap(graphics);
 
-  if (pixmap_mask_ != 0)
+  if (pixmap_mask_)
     graphics->startClip(pixmap_mask_, x, y);
 
   graphics->copyArea(pixmap_, xpixmap, 0, 0, width_, height_, x, y);
 
-  if (pixmap_mask_ != 0)
+  if (pixmap_mask_)
     graphics->endClip();
 }
 

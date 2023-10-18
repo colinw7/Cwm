@@ -239,7 +239,7 @@ restartCwmProc(CwmScreen &screen, CwmData data)
 {
   std::string *cmd = static_cast<std::string *>(data);
 
-  if (cmd == 0 || *cmd == "") {
+  if (cmd == nullptr || *cmd == "") {
     int    argc;
     char **argv;
 

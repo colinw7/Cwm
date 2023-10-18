@@ -10,7 +10,7 @@ static const int border = 2;
 
 CwmFrameWindow::
 CwmFrameWindow(CwmWMWindow *window1) :
- window(window1), xwindow(None), positioned(false)
+ window(window1), xwindow(nullptr), positioned(false)
 {
   CwmScreen &screen = window->getScreen();
 

@@ -9,8 +9,8 @@ static const uint event_mask =
 CwmTitleChild::
 CwmTitleChild(CwmDecoration *decoration, CwmWMWindow *window) :
  CwmWindowChild(decoration, window, event_mask, CWM_CURSOR_TITLE),
- gradient1_(0), gradient2_(0), gradient3_(0), gradient4_(0),
- gradient_width_(0), gradient_height_(0), focus_graphics_(0), nofocus_graphics_(0)
+ gradient1_(nullptr), gradient2_(nullptr), gradient3_(nullptr), gradient4_(nullptr),
+ gradient_width_(0), gradient_height_(0), focus_graphics_(nullptr), nofocus_graphics_(nullptr)
 {
   sides_ = CSIDE_TYPE_HORIZONTAL;
 }
@@ -94,13 +94,13 @@ detailGradient()
     delete gradient3_;
     delete gradient4_;
 
-    gradient1_ = 0;
-    gradient2_ = 0;
-    gradient3_ = 0;
-    gradient4_ = 0;
+    gradient1_ = nullptr;
+    gradient2_ = nullptr;
+    gradient3_ = nullptr;
+    gradient4_ = nullptr;
   }
 
-  if (gradient1_ == 0) {
+  if (gradient1_ == nullptr) {
     CwmColor *color1 = CwmResourceDataInst->getTitleGradientColor(window_->getScreen());
     CwmColor *color2 = CwmResourceDataInst->getTitleGradientFocusColor(window_->getScreen());
 
@@ -131,7 +131,7 @@ detailGradient()
     gradient_height_ = height;
   }
 
-  CGradient *gradient = 0;
+  CGradient *gradient = nullptr;
 
   if (decoration_->hasFocus()) {
     if (selected_)
@@ -175,14 +175,14 @@ detailSolid()
   if (width <= 2 || height <= 2)
     return;
 
-  if (focus_graphics_ == 0) {
+  if (focus_graphics_ == nullptr) {
     CwmFont  *font  = CwmResourceDataInst->getFocusFont(window_->getScreen());
     CwmColor *color = CwmResourceDataInst->getTitleFocusColor(window_->getScreen());
 
     focus_graphics_ = new CwmGraphics(window_->getScreen(), font, color);
   }
 
-  if (nofocus_graphics_ == 0) {
+  if (nofocus_graphics_ == nullptr) {
     CwmFont  *font  = CwmResourceDataInst->getFont(window_->getScreen());
     CwmColor *color = CwmResourceDataInst->getTitleColor(window_->getScreen());
 

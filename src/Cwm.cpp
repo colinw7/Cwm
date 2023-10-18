@@ -87,7 +87,7 @@ saveArgs(int argc, char **argv)
   for (i = 0; i < argc; i++)
     argv_[i] = strdup(argv[i]);
 
-  argv_[i] = 0;
+  argv_[i] = nullptr;
 }
 
 void
@@ -192,7 +192,7 @@ processScreenWindows(CwmScreen &screen)
     }
   }
 
-  if (children != 0)
+  if (children)
     XFree(children);
 }
 
@@ -277,7 +277,7 @@ printScreenWindows(CwmScreen &screen)
   for (int i = 0; i < num_children; ++i)
     CwmMachineInst->logf("Window %x\n", int(children[i]));
 
-  if (children != 0)
+  if (children)
     XFree(children);
 }
 
@@ -297,7 +297,7 @@ restart(CwmScreen &, const std::string &program)
     execvp(argv_[0], argv_);
   }
   else {
-    CStrWords words = CStrUtil::toWords(program, 0);
+    CStrWords words = CStrUtil::toWords(program, nullptr);
 
     char **words1 = new char * [words.size() + 1];
 

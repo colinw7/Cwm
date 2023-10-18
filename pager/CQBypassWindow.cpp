@@ -120,7 +120,7 @@ paintEvent(QPaintEvent *)
 
   QFontMetrics fm(font());
 
-  int tw = fm.width(windowTitle());
+  int tw = fm.horizontalAdvance(windowTitle());
   int th = fm.height();
 
   int titleHeight = th + 4;

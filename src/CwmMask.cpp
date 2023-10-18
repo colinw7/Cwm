@@ -6,7 +6,7 @@ CwmMask(CwmScreen &screen, CwmGraphics *graphics, int width, int height) :
 {
   xpixmap_ = new CwmXPixmap(screen_, width_, height_, 1);
 
-  graphics_ = new CwmGraphics(*xpixmap_, graphics->getFont(), 0);
+  graphics_ = new CwmGraphics(*xpixmap_, graphics->getFont(), nullptr);
 
   graphics_->setForeground(0);
 

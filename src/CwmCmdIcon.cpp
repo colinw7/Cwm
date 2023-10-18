@@ -54,7 +54,7 @@ lookup(Window xwin)
   CmdIconMap::iterator picon1 = command_icon_map_.find(xwin);
 
   if (picon1 == command_icon_map_.end())
-    return 0;
+    return nullptr;
 
   return (*picon1).second;
 }
@@ -89,8 +89,8 @@ CwmCmdIcon(CwmScreen &screen, CwmCustomIcon &icon_def) :
 
   image_ = icon_def.getImage(screen);
 
-  pixmap_mask_ = None;
-  label_mask_  = None;
+  pixmap_mask_ = nullptr;
+  label_mask_  = nullptr;
 
   //------
 
@@ -245,7 +245,7 @@ createMask()
     label_mask_->combine(xwindow_, label_dx_, pixmap_height_, ShapeUnion);
   }
   else
-    label_mask_ = 0;
+    label_mask_ = nullptr;
 }
 
 void

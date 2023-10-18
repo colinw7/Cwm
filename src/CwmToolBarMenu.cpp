@@ -47,7 +47,7 @@ CwmToolBarMenu(CwmToolBar &toolbar) :
 
   image_ = CwmImageMgrInst->getImage(screen, name);
 
-  if (image_ == 0) {
+  if (! image_) {
     CImageNameSrc src(name);
 
     CImagePtr image1 = CImageMgrInst->createImage(src);
@@ -124,10 +124,10 @@ processMenu()
 
   CwmMenuDef *menu_def = CwmNamedMenuMgrInst->lookupMenuDef(name);
 
-  if (menu_def != 0) {
+  if (menu_def) {
     CwmScreen &screen = toolbar_.getScreen();
 
-    menu_def->setClientData(&screen, 0, 0);
+    menu_def->setClientData(&screen, nullptr, nullptr);
 
     CwmMenu::processWindowMenu(screen, xwindow_, menu_def, 0, 0,
                                CHALIGN_TYPE_LEFT, CVALIGN_TYPE_BOTTOM);

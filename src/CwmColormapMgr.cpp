@@ -2,7 +2,7 @@
 
 CwmColormapMgr::
 CwmColormapMgr(CwmScreen &screen) :
- screen_(screen), window_(0), cmap_(screen.getColormap())
+ screen_(screen), window_(nullptr), cmap_(screen.getColormap())
 {
 }
 
@@ -33,7 +33,7 @@ uninstall()
 {
   Colormap cmap = screen_.getColormap();
 
-  install(0, cmap);
+  install(nullptr, cmap);
 }
 
 void

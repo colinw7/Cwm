@@ -29,7 +29,7 @@ void
 CwmWindowGroup::
 stackChildren(CwmWMWindow *window)
 {
-  const CwmWMWindow::WMWindowList children = window->getChildren();
+  const auto &children = window->getChildren();
 
   for (auto &child : children) {
     stackChildren(child);
@@ -47,7 +47,7 @@ stackParents(CwmWMWindow *window)
   if (! parent)
     return;
 
-  const CwmWMWindow::WMWindowList children = parent->getChildren();
+  const auto &children = parent->getChildren();
 
   for (auto &child : children) {
     if (child == window)
@@ -70,7 +70,7 @@ restack()
   if (window_stack_.empty())
     return;
 
-  Window *windows = new Window [window_stack_.size()];
+  auto *windows = new Window [window_stack_.size()];
 
   auto num_window_stacks = window_stack_.size();
 
@@ -150,7 +150,7 @@ operator[](uint i) const
 
 CwmCirculateWindowStack::
 CwmCirculateWindowStack(CwmScreen &screen) :
- screen_(screen), screen_window_groups_(0)
+ screen_(screen), screen_window_groups_(nullptr)
 {
   update();
 }
@@ -179,7 +179,7 @@ update()
   auto num_screen_window_groups_ = screen_window_groups_->size();
 
   for (uint i = 0; i < num_screen_window_groups_; ++i) {
-    CwmWMWindow &window = (*screen_window_groups_)[i].getBottomWindow();
+    auto &window = (*screen_window_groups_)[i].getBottomWindow();
 
     if (window.getCirculateSkip())
       continue;
@@ -188,13 +188,13 @@ update()
       if (! (types & CWM_WINDOW_TYPE_ICONISED))
         continue;
 
-      CwmDeskMgr *desk_mgr = screen_.getDeskMgr();
+      auto *desk_mgr = screen_.getDeskMgr();
 
-      CwmDesk *desk = desk_mgr->getCurrentDesk();
+      auto *desk = desk_mgr->getCurrentDesk();
 
-      CwmDeskIconMgr *desk_icon_mgr = desk->getDeskIconMgr();
+      auto *desk_icon_mgr = desk->getDeskIconMgr();
 
-      CwmDeskIcon *desk_icon = desk_icon_mgr->lookup(&window);
+      auto *desk_icon = desk_icon_mgr->lookup(&window);
 
       if (! desk_icon)
         continue;
@@ -235,16 +235,16 @@ lower(CwmWMWindow *window)
     return;
   }
 
-  CwmWindowGroup *bottom_group = &getBottomGroup();
-  CwmWindowGroup *lower_group  = getWindowGroup(window);
+  auto *bottom_group = &getBottomGroup();
+  auto *lower_group  = getWindowGroup(window);
 
   if (! lower_group) {
     window->getFrameWindow()->lower();
     return;
   }
 
-  CwmWMWindow &bottom_window = bottom_group->getBottomWindow();
-  CwmWMWindow &lower_window  = lower_group ->getTopWindow();
+  auto &bottom_window = bottom_group->getBottomWindow();
+  auto &lower_window  = lower_group ->getTopWindow();
 
   XWindowChanges xwc;
 
@@ -270,16 +270,16 @@ raise(CwmWMWindow *window)
     return;
   }
 
-  CwmWindowGroup *top_group   = &getTopGroup();
-  CwmWindowGroup *raise_group = getWindowGroup(window);
+  auto *top_group   = &getTopGroup();
+  auto *raise_group = getWindowGroup(window);
 
   if (! raise_group) {
     window->getFrameWindow()->raise();
     return;
   }
 
-  CwmWMWindow &top_window   = top_group  ->getTopWindow();
-  CwmWMWindow &raise_window = raise_group->getTopWindow();
+  auto &top_window   = top_group  ->getTopWindow();
+  auto &raise_window = raise_group->getTopWindow();
 
   XWindowChanges xwc;
 
@@ -302,7 +302,7 @@ getWindowGroup(CwmWMWindow *window)
     if (window_groups_[i]->contains(window))
       return window_groups_[i];
 
-  return 0;
+  return nullptr;
 }
 
 void
@@ -363,9 +363,9 @@ isTop(CwmWMWindow *window)
   if (num_window_groups == 0)
     return false;
 
-  CwmWindowGroup &window_group = getTopGroup();
+  auto &window_group = getTopGroup();
 
-  CwmWMWindow *top_window = &window_group.getTopWindow();
+  auto *top_window = &window_group.getTopWindow();
 
   return (window == top_window);
 }
@@ -375,7 +375,7 @@ isTop(CwmWMWindow *window)
 CwmScreenWindowGroups::
 CwmScreenWindowGroups(CwmScreen &screen)
 {
-  Window root_xwin = screen.getRoot()->getXWin();
+  auto root_xwin = screen.getRoot()->getXWin();
 
   if (! CwmMachineInst->isValidWindow(root_xwin))
     return;
@@ -387,17 +387,17 @@ CwmScreenWindowGroups(CwmScreen &screen)
     return;
 
   for (int i = int(num_children - 1); i >= 0; i--) {
-    CwmWMWindow *window = CwmMachineInst->getWindowWMWindow(children[i]);
+    auto *window = CwmMachineInst->getWindowWMWindow(children[i]);
 
-    if (! window || window->getParent() != 0)
+    if (! window || window->getParent())
       continue;
 
-    CwmWindowGroup *window_group = new CwmWindowGroup(window);
+    auto *window_group = new CwmWindowGroup(window);
 
     window_groups_.push_back(window_group);
   }
 
-  if (children != 0)
+  if (children)
     XFree(children);
 }
 

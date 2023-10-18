@@ -35,7 +35,7 @@ class CQWmPagerXcbEventFilter : public QAbstractNativeEventFilter {
     activeAtom_     = CXMachineInst->getAtom("_NET_ACTIVE_WINDOW");
   }
 
-  bool nativeEventFilter(const QByteArray &eventType, void *message, long *) {
+  bool nativeEventFilter(const QByteArray &eventType, void *message, long *) override {
     if (eventType == "xcb_generic_event_t") {
       auto *ev = static_cast<xcb_generic_event_t *>(message);
 
@@ -364,7 +364,7 @@ mousePressEvent(QMouseEvent *me)
 
   pressWin_ = 0;
 
-  for (size_t i = size_t(windows.size() - 1); i >= 0; --i) {
+  for (int i = int(windows.size() - 1); i >= 0; --i) {
     if (windows[i].xwin == topWin_)
       continue;
 
@@ -377,7 +377,7 @@ mousePressEvent(QMouseEvent *me)
   if (! pressWin_ || pressWin_ == topWin_)
     return;
 
-  if (me->button() == Qt::MidButton) {
+  if (me->button() == Qt::MiddleButton) {
     std::cerr << "Close: " << pressWin_ << "\n";
 
     CXMachineInst->sendClose(pressWin_);

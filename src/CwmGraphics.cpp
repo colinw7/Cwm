@@ -45,7 +45,7 @@ void
 CwmGraphics::
 init()
 {
-  stipple_bitmap_ = 0;
+  stipple_bitmap_ = nullptr;
 }
 
 void

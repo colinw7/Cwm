@@ -14,11 +14,11 @@ class CQBypassWindow : public QWidget {
  public:
   CQBypassWindow();
 
-  void mousePressEvent(QMouseEvent *me);
-  void mouseMoveEvent(QMouseEvent *me);
-  void mouseReleaseEvent(QMouseEvent *me);
+  void mousePressEvent(QMouseEvent *me) override;
+  void mouseMoveEvent(QMouseEvent *me) override;
+  void mouseReleaseEvent(QMouseEvent *me) override;
 
-  void paintEvent(QPaintEvent *);
+  void paintEvent(QPaintEvent *) override;
 
   void updateSize(const QPoint &pos);
 

@@ -19,7 +19,9 @@
 #include <CwmAdvHints.h>
 #include <CwmEventMgr.h>
 #include <CXScreen.h>
+
 #include <CFuncs.h>
+#include <CStrUtil.h>
 
 #include <X11/XKBlib.h>
 #include <climits>
@@ -599,7 +601,7 @@ createGC(CwmColor *color)
 {
   GC gc;
 
-  if (color != 0)
+  if (color)
     gc = CwmMachineInst->createGC(color->getBg(), color->getFg());
   else
     gc = CwmMachineInst->createGC(0, 1);

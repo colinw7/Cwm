@@ -71,7 +71,7 @@ add(CXNamedEvent *event, CwmFunctionDef *function, CwmData data)
   for (uint i = 0; i < num_functions; i++) {
     CXNamedEvent *event1 = functions_[i]->getEvent();
 
-    if (event1 != 0 && event1->matchEvent(event)) {
+    if (event1 && event1->matchEvent(event)) {
       functions_[i]->setFunction(function, data);
 
       return;
@@ -125,7 +125,7 @@ CwmRootEventFunction::
 
 CwmRootImage::
 CwmRootImage(CwmScreen &screen, const std::string &spec) :
- screen_(screen), image_(0), x_(0), y_(0), bg_(0), fg_(0), bgindex_(-1)
+ screen_(screen), image_(nullptr), x_(0), y_(0), bg_(0), fg_(0), bgindex_(-1)
 {
   CwmRootImageSpec image_spec(spec);
 
@@ -144,7 +144,7 @@ CwmRootImage(CwmScreen &screen, const std::string &spec) :
   x_ = 0;
   y_ = 0;
 
-  image_ = 0;
+  image_ = nullptr;
 
   if (image_spec.image_file_.size() == 0)
     return;
@@ -161,7 +161,7 @@ CwmRootImage(CwmScreen &screen, const std::string &spec) :
   else {
     image_ = CwmImageMgrInst->getImage(screen_, image_spec.image_file_);
 
-    if (image_ != 0) {
+    if (image_) {
       if (image_spec.halign_ == CHALIGN_TYPE_CENTER)
         x_ = (screen_.getWidth() - image_->getWidth())/2;
       else
@@ -208,7 +208,7 @@ draw()
 
   CImagePtr image1 = image_->getImage();
 
-  CwmColor *color = 0;
+  CwmColor *color = nullptr;
 
   if (bgindex_ != -1 && image1->hasColormap()) {
     double r, g, b, a;
@@ -226,7 +226,7 @@ draw()
     color = screen_.getColor(pixel, pixel);
   }
 
-  CwmGraphics *graphics = new CwmGraphics(screen_, 0, color);
+  CwmGraphics *graphics = new CwmGraphics(screen_, nullptr, color);
 
   CwmXPixmap *xpixmap = new CwmXPixmap(screen_, screen_.getWidth(), screen_.getHeight());
 
@@ -266,7 +266,7 @@ bool
 CwmRootImageSpec::
 decode(std::string spec)
 {
-  CStrWords words = CStrUtil::toWords(spec, 0);
+  CStrWords words = CStrUtil::toWords(spec, nullptr);
 
   if (words.size() == 0)
     return false;
